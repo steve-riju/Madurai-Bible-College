@@ -1,0 +1,17 @@
+/* src/styles/_global.scss */
+body {
+  font-family: $font-family;
+  background-color: $page-bg;
+  margin: 0;
+  padding: 0;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+a {
+  text-decoration: none;
+  color: inherit;
+}   

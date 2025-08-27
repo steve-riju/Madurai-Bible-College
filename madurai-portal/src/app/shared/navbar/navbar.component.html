@@ -1,0 +1,10 @@
+<nav class="navbar">
+  <div class="logo">
+    📖 Madurai Bible College
+  </div>
+
+  <div class="nav-links" *ngIf="userRole">
+    <span>Welcome, <b>{{ userRole | titlecase }}</b></span>
+    <button (click)="logout()">Logout</button>
+  </div>
+</nav>
