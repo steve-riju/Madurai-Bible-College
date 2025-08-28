@@ -9,6 +9,9 @@ import { EventsComponent } from './events/events.component';
 import { FaqsComponent } from './faqs/faqs.component';
 import { SharedModule } from '../../shared/shared.module';
 import { AdminLayoutComponent } from './admin-layout/admin-layout.component';
+import { EnrollmentsComponent } from './enrollments/enrollments.component';
+import { AdmissionsComponent } from './admissions/admissions.component';
+import { OfferingsComponent } from './offerings/offerings.component';
 
 
 @NgModule({
@@ -18,7 +21,10 @@ import { AdminLayoutComponent } from './admin-layout/admin-layout.component';
     CoursesComponent,
     EventsComponent,
     FaqsComponent,
-    AdminLayoutComponent
+    AdminLayoutComponent,
+    EnrollmentsComponent,
+    AdmissionsComponent,
+    OfferingsComponent
   ],
   imports: [
     CommonModule,
