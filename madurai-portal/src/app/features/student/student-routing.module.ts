@@ -7,16 +7,24 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { EventsComponent } from './events/events.component';
 import { ProfileComponent } from './profile/profile.component';
 
+import { StudentLayoutComponent } from './student-layout/student-layout.component';
 import { AuthGuard } from '../../shared/auth.guard';
 
-
 const routes: Routes = [
-  { path: 'assignments', component: AssignmentsComponent, canActivate: [AuthGuard], data: { role: 'student' } },
-  { path: 'courses', component: CoursesComponent, canActivate: [AuthGuard], data: { role: 'student' } },
-  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard], data: { role: 'student' } },
-  { path: 'events', component: EventsComponent, canActivate: [AuthGuard], data: { role: 'student' } },
-  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard], data: { role: 'student' } },
-  { path: '**', redirectTo: 'dashboard' }
+  {
+    path: '',
+    component: StudentLayoutComponent,
+    canActivate: [AuthGuard],
+    data: { role: 'student' },
+    children: [
+      { path: 'dashboard', component: DashboardComponent },
+      { path: 'profile', component: ProfileComponent },
+      { path: 'courses', component: CoursesComponent },
+      { path: 'assignments', component: AssignmentsComponent },
+      { path: 'events', component: EventsComponent },
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
+    ]
+  }
 ];
 
 @NgModule({
@@ -24,4 +32,3 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class StudentRoutingModule {}
-

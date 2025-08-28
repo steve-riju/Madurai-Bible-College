@@ -1,0 +1,20 @@
+<app-navbar (toggleSidebar)="toggleSidebar()"></app-navbar>
+
+<div class="student-container">
+  <aside class="sidebar" [class.open]="sidebarOpen">
+    <ul>
+      <li routerLink="dashboard" routerLinkActive="active">📊 Dashboard</li>
+      <li routerLink="profile" routerLinkActive="active">👤 Profile</li>
+      <li routerLink="courses" routerLinkActive="active">📚 Courses</li>
+      <li routerLink="assignments" routerLinkActive="active">📝 Assignments</li>
+      <li routerLink="events" routerLinkActive="active">📅 Events</li>
+    </ul>
+    <div class="faq">FAQ</div>
+  </aside>
+
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+
+  <div class="overlay" *ngIf="sidebarOpen" (click)="toggleSidebar()"></div>
+</div>

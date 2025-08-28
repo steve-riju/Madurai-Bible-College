@@ -1,0 +1,20 @@
+<app-navbar (toggleSidebar)="onToggleSidebar()"></app-navbar>
+
+<div class="teacher-container">
+  <div class="sidebar" [class.open]="sidebarOpen">
+    <ul>
+      <li routerLink="/teacher/dashboard" routerLinkActive="active">📊 Dashboard</li>
+      <li routerLink="/teacher/courses" routerLinkActive="active">📚 Course Content</li>
+      <li routerLink="/teacher/assignments" routerLinkActive="active">📝 Assignments</li>
+      <li routerLink="/teacher/profile" routerLinkActive="active">👤 Profile</li>
+    </ul>
+    <div class="faq">Help / FAQ</div>
+  </div>
+
+  <div class="main-content">
+    <router-outlet></router-outlet>
+  </div>
+
+  <!-- Dim background when sidebar is open (mobile only) -->
+  <div class="overlay" *ngIf="sidebarOpen" (click)="onToggleSidebar()"></div>
+</div>

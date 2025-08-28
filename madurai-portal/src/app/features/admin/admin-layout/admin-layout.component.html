@@ -1,0 +1,23 @@
+<app-navbar (toggleSidebar)="onToggleSidebar()"></app-navbar>
+
+<div class="admin-container">
+  <div class="sidebar" [class.open]="sidebarOpen">
+    <ul>
+      <li routerLink="/admin/dashboard" routerLinkActive="active">📊 Dashboard</li>
+      <li routerLink="/admin/users" routerLinkActive="active">👥 Users</li>
+      <li routerLink="/admin/courses" routerLinkActive="active">📚 Courses</li>
+      <li routerLink="/admin/enrollments" routerLinkActive="active">📝 Enrollments</li>
+      <li routerLink="/admin/admissions" routerLinkActive="active">📄 Admissions</li>
+      <li routerLink="/admin/offerings" routerLinkActive="active">💰 Offerings</li>
+      <li routerLink="/admin/events" routerLinkActive="active">📅 Events</li>
+      <li routerLink="/admin/faqs" routerLinkActive="active">❓ FAQs</li>
+    </ul>
+    <div class="faq">Help / Support</div>
+  </div>
+
+  <div class="main-content">
+    <router-outlet></router-outlet>
+  </div>
+
+  <div class="overlay" *ngIf="sidebarOpen" (click)="onToggleSidebar()"></div>
+</div>

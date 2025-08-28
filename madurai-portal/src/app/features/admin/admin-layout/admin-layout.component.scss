@@ -1,0 +1,132 @@
+@import 'variables';
+@import 'mixins';
+
+:host {
+  display: flex;
+  flex-direction: column; /* This stacks the navbar on top of the content container */
+  height: 100vh;
+  background: $page-bg;
+  font-family: $font-family;
+}
+
+/* This rule makes the navbar a fixed-height item at the top */
+::ng-deep app-navbar {
+  flex-shrink: 0;
+  height: 70px; /* Define your admin navbar's height */
+}
+
+/* Container for the sidebar and main content area */
+.admin-container {
+  display: flex;
+  width: 100%;
+  flex-grow: 1; /* This makes the container fill all remaining vertical space */
+  position: relative; /* Needed for the mobile overlay */
+  overflow: hidden; /* Prevents the main page from scrolling */
+}
+
+/* Sidebar */
+.sidebar {
+  background: linear-gradient(180deg, #e6f2ff, #f4f7fc);
+  padding: 16px;
+  width: 220px;
+  box-shadow: $shadow;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.3s ease-in-out;
+  height: 100%; /* The sidebar will fill the height of its parent (.admin-container) */
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      display: block;
+      padding: 12px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      color: $text-color;
+      font-weight: 500;
+      @include hover-effect($primary-color);
+
+      &.active {
+        background: $primary-color;
+        color: #fff;
+        font-weight: 600;
+      }
+    }
+  }
+
+  .faq {
+    margin-top: auto;
+    font-weight: 600;
+    color: $primary-color;
+    cursor: pointer;
+    @include hover-effect($primary-color);
+    padding: 100px;
+    border-radius: 8px;
+    text-align: center;
+  }
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto; /* This allows only the main content to scroll */
+  height: 100%;
+}
+
+/* 📱 Mobile First */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 70px; /* UPDATED: This must match the navbar height */
+    left: 0;
+    height: calc(100% - 70px); /* UPDATED: This must match the navbar height */
+    transform: translateX(-100%);
+    z-index: 1000;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  /* Dim overlay when sidebar open */
+  .overlay {
+    position: fixed;
+    top: 70px; /* UPDATED: This must match the navbar height */
+    left: 0;
+    width: 100%;
+    height: calc(100% - 70px); /* UPDATED: This must match the navbar height */
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 999;
+  }
+
+  .main-content {
+    padding: 16px;
+  }
+}
+
+/* 💻 Tablet & Desktop */
+@media (min-width: 769px) {
+  .sidebar {
+    position: relative;
+    transform: none;
+  }
+
+  .main-content {
+    padding: 30px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .sidebar {
+    width: 250px;
+  }
+
+  .main-content {
+    padding: 40px;
+  }
+}

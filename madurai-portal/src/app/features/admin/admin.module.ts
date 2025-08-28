@@ -8,6 +8,7 @@ import { CoursesComponent } from './courses/courses.component';
 import { EventsComponent } from './events/events.component';
 import { FaqsComponent } from './faqs/faqs.component';
 import { SharedModule } from '../../shared/shared.module';
+import { AdminLayoutComponent } from './admin-layout/admin-layout.component';
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import { SharedModule } from '../../shared/shared.module';
     UsersComponent,
     CoursesComponent,
     EventsComponent,
-    FaqsComponent
+    FaqsComponent,
+    AdminLayoutComponent
   ],
   imports: [
     CommonModule,

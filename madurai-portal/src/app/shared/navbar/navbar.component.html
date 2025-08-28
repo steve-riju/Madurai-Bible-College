@@ -4,6 +4,11 @@
   </div>
 
   <div class="nav-links" *ngIf="userRole">
+    <!-- Hamburger button (only for small screens) -->
+    <button class="hamburger" (click)="toggleSidebar.emit()">
+      ☰
+    </button>
+
     <span>Welcome, <b>{{ userRole | titlecase }}</b></span>
     <button (click)="logout()">Logout</button>
   </div>

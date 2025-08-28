@@ -7,6 +7,7 @@ import { MaterialsComponent } from './materials/materials.component';
 import { AssignmentsComponent } from './assignments/assignments.component';
 import { ProfileComponent } from './profile/profile.component';
 import { SharedModule } from '../../shared/shared.module';
+import { TeacherLayoutComponent } from './teacher-layout/teacher-layout.component';
 
 
 @NgModule({
@@ -14,7 +15,8 @@ import { SharedModule } from '../../shared/shared.module';
     DashboardComponent,
     MaterialsComponent,
     AssignmentsComponent,
-    ProfileComponent
+    ProfileComponent,
+    TeacherLayoutComponent
   ],
   imports: [
     CommonModule,

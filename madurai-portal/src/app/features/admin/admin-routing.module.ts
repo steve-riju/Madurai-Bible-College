@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
+import { AdminLayoutComponent } from './admin-layout/admin-layout.component';
 import { CoursesComponent } from './courses/courses.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { EventsComponent } from './events/events.component';
@@ -10,12 +11,20 @@ import { UsersComponent } from './users/users.component';
 import { AuthGuard } from '../../shared/auth.guard';
 
 const routes: Routes = [
-  { path: 'courses', component: CoursesComponent, canActivate: [AuthGuard], data: { role: 'admin' } },
-  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard], data: { role: 'admin' } },
-  { path: 'events', component: EventsComponent, canActivate: [AuthGuard], data: { role: 'admin' } },
-  { path: 'faqs', component: FaqsComponent, canActivate: [AuthGuard], data: { role: 'admin' } },
-  { path: 'users', component: UsersComponent, canActivate: [AuthGuard], data: { role: 'admin' } },
-  { path: '**', redirectTo: 'dashboard' }
+  {
+    path: '',
+    component: AdminLayoutComponent,
+    canActivate: [AuthGuard],
+    data: { role: 'admin' },
+    children: [
+      { path: 'dashboard', component: DashboardComponent },
+      { path: 'users', component: UsersComponent },
+      { path: 'courses', component: CoursesComponent },
+      { path: 'events', component: EventsComponent },
+      { path: 'faqs', component: FaqsComponent },
+      { path: '**', redirectTo: 'dashboard' }
+    ]
+  }
 ];
 
 @NgModule({

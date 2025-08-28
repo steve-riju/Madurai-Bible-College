@@ -8,6 +8,7 @@ import { AssignmentsComponent } from './assignments/assignments.component';
 import { EventsComponent } from './events/events.component';
 import { ProfileComponent } from './profile/profile.component';
 import { SharedModule } from '../../shared/shared.module';
+import { StudentLayoutComponent } from './student-layout/student-layout.component';
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import { SharedModule } from '../../shared/shared.module';
     CoursesComponent,
     AssignmentsComponent,
     EventsComponent,
-    ProfileComponent
+    ProfileComponent,
+    StudentLayoutComponent
   ],
   imports: [
     CommonModule,

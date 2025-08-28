@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { AuthService } from '../../shared/auth.service';
 
 @Component({
@@ -7,6 +7,8 @@ import { AuthService } from '../../shared/auth.service';
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit {
+  @Output() toggleSidebar = new EventEmitter<void>();
+
   userRole: string | null = null;
 
   constructor(private authService: AuthService) {}
