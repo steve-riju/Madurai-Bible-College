@@ -1,46 +1,65 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
+
+interface AuthResponse {
+  accessToken: string;
+  refreshToken: string;
+  tokenType: string;
+  username: string;
+  role: 'STUDENT' | 'TEACHER' | 'ADMIN';
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private userRole: 'student' | 'teacher' | 'admin' | null = null;
+  private apiUrl = 'http://localhost:8080/api/auth'; // 🔹 Spring Boot backend
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private http: HttpClient) {}
 
-  // ✅ simulate login
-  login(role: 'student' | 'teacher' | 'admin'): void {
-    this.userRole = role;
-    localStorage.setItem('userRole', role);
+  // ✅ Login with backend
+  login(username: string, password: string): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, { username, password }).pipe(
+      tap((response) => {
+  const normalizedRole = response.role.toLowerCase(); // 🔹 convert to lowercase
 
-    // redirect after login
-    if (role === 'student') {
-      this.router.navigate(['/student/dashboard']);
-    } else if (role === 'teacher') {
-      this.router.navigate(['/teacher/dashboard']);
-    } else if (role === 'admin') {
-      this.router.navigate(['/admin/dashboard']);
-    }
+  // Store tokens
+  localStorage.setItem('accessToken', response.accessToken);
+  localStorage.setItem('refreshToken', response.refreshToken);
+  localStorage.setItem('userRole', normalizedRole);
+  localStorage.setItem('username', response.username);
+
+  // Redirect by role
+  if (normalizedRole === 'student') {
+    this.router.navigate(['/student/dashboard']);
+  } else if (normalizedRole === 'teacher') {
+    this.router.navigate(['/teacher/dashboard']);
+  } else if (normalizedRole === 'admin') {
+    this.router.navigate(['/admin/dashboard']);
+  }
+})
+
+    );
   }
 
-  // ✅ get current role
-  getUserRole(): string | null {
-    if (!this.userRole) {
-      this.userRole = localStorage.getItem('userRole') as 'student' | 'teacher' | 'admin' | null;
-    }
-    return this.userRole;
-  }
-
-  // ✅ logout
+  // ✅ Logout
   logout(): void {
-    this.userRole = null;
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
     localStorage.removeItem('userRole');
+    localStorage.removeItem('username');
     this.router.navigate(['/auth/login']);
   }
 
-  // ✅ check login status
+  // ✅ Get role from localStorage
+  getUserRole(): string | null {
+    return localStorage.getItem('userRole');
+  }
+
   isLoggedIn(): boolean {
-    return this.getUserRole() !== null;
+    return !!localStorage.getItem('accessToken');
   }
 }

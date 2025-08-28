@@ -54,18 +54,20 @@ export class LoginComponent {
   }
 
   onSubmit() {
-    if (this.loginForm.invalid || !this.selectedRole) {
-      this.errorMessage = 'Please fill in all fields.';
-      return;
-    }
+  if (this.loginForm.invalid) {
+    this.errorMessage = 'Please fill in all fields.';
+    return;
+  }
 
-    const { username, password } = this.loginForm.value;
+  const { username, password } = this.loginForm.value;
 
-    // 🔹 Dummy role-based login check
-    if (username === this.selectedRole && password === '1234') {
-      this.authService.login(this.selectedRole as 'student' | 'teacher' | 'admin');
-    } else {
+  this.authService.login(username, password).subscribe({
+    next: () => {
+      // redirect handled in service
+    },
+    error: () => {
       this.errorMessage = 'Invalid credentials. Please try again.';
     }
-  }
+  });
+}
 }
