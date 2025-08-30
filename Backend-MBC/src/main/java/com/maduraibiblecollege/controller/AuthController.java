@@ -3,7 +3,7 @@ package com.maduraibiblecollege.controller;
 import com.maduraibiblecollege.dto.AuthRequest;
 import com.maduraibiblecollege.dto.RegisterRequest;
 import com.maduraibiblecollege.dto.AuthResponse;
-
+import com.maduraibiblecollege.dto.RefreshTokenRequest;
 import com.maduraibiblecollege.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,9 +31,10 @@ public class AuthController {
   }
 
   @PostMapping("/refresh")
-  public ResponseEntity<AuthResponse> refresh(@RequestBody String refreshToken) {
-    return ResponseEntity.ok(authService.refresh(refreshToken));
+  public ResponseEntity<AuthResponse> refresh(@RequestBody RefreshTokenRequest request) {
+      return ResponseEntity.ok(authService.refresh(request.getRefreshToken()));
   }
+
 
   @GetMapping("/me")
   public ResponseEntity<?> me(@AuthenticationPrincipal Object user) {

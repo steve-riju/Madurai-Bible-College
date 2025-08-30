@@ -3,13 +3,13 @@
     📖 Madurai Bible College
   </div>
 
-  <div class="nav-links" *ngIf="userRole">
+  <div class="nav-links" *ngIf="username">
     <!-- Hamburger button (only for small screens) -->
     <button class="hamburger" (click)="toggleSidebar.emit()">
       ☰
     </button>
 
-    <span>Welcome, <b>{{ userRole | titlecase }}</b></span>
+    <span>Welcome, <b>{{ username | titlecase }}</b></span>
     <button (click)="logout()">Logout</button>
   </div>
 </nav>

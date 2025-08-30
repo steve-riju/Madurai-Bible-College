@@ -1,1 +1,76 @@
-<p>users works!</p>
+<div class="users-wrapper">
+  <h2 class="title">Manage Users</h2>
+
+  <!-- Add User Form -->
+  <form [formGroup]="userForm" (ngSubmit)="addUser()" class="user-form">
+    <div class="form-group">
+      <input formControlName="username" placeholder="Username" />
+    </div>
+    <div class="form-group">
+      <input formControlName="email" placeholder="Email" type="email" />
+    </div>
+    <div class="form-group">
+      <select formControlName="role">
+        <option value="STUDENT">Student</option>
+        <option value="TEACHER">Teacher</option>
+        <option value="ADMIN">Admin</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <input formControlName="password" placeholder="Password" type="password" />
+    </div>
+    <button type="submit" [disabled]="userForm.invalid" class="btn-primary">Add</button>
+  </form>
+
+  <!-- Filters -->
+  <div class="filters">
+    <select [(ngModel)]="filterRole" (change)="applyFilters()">
+      <option value="">All Roles</option>
+      <option value="STUDENT">Student</option>
+      <option value="TEACHER">Teacher</option>
+      <option value="ADMIN">Admin</option>
+    </select>
+    <input type="text" [(ngModel)]="searchTerm" (input)="applyFilters()" placeholder="Search users..." />
+    <button (click)="toggleSort()" class="btn-secondary">Sort {{sortAsc ? '▲' : '▼'}}</button>
+  </div>
+
+  <!-- Users Table -->
+  <div class="users-table-wrapper">
+    <table class="users-table">
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th class="action-col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let u of pagedUsers; let i = index">
+          <td><b>{{u.username}}</b></td>
+          <td>{{u.email}}</td>
+          <td>{{u.role}}</td>
+          <td>
+            <ng-container *ngIf="confirmDeleteId !== u.id; else confirmBlock">
+              <button (click)="confirmDeleteId = u.id" class="btn-danger">Delete</button>
+            </ng-container>
+            <ng-template #confirmBlock>
+              <div class="confirm-box">
+                <span>Confirm?</span>
+                <button class="btn-danger" (click)="deleteUser(u.id)">Yes</button>
+                <button class="btn-secondary" (click)="confirmDeleteId = null">No</button>
+              </div>
+            </ng-template>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination Controls -->
+  <div class="pagination">
+    <button [disabled]="currentPage === 1" (click)="prevPage()">Prev</button>
+    <span>Page {{currentPage}} / {{totalPages}}</span>
+    <button [disabled]="currentPage === totalPages" (click)="nextPage()">Next</button>
+  </div>
+</div>

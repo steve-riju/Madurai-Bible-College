@@ -16,7 +16,7 @@ interface AuthResponse {
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:8080/api/auth'; // 🔹 Spring Boot backend
+  private apiUrl = 'http://192.168.1.6:8080/api/auth'; // 🔹 Spring Boot backend
 
   constructor(private router: Router, private http: HttpClient) {}
 
@@ -59,7 +59,18 @@ export class AuthService {
     return localStorage.getItem('userRole');
   }
 
-  isLoggedIn(): boolean {
+  // Get username from localStorage
+ getUsername(): string | null {
+  return localStorage.getItem('username');
+}
+
+
+ isLoggedIn(): boolean {
     return !!localStorage.getItem('accessToken');
   }
+
+  refresh(refreshToken: string) {
+  return this.http.post<AuthResponse>(`${this.apiUrl}/refresh`, { refreshToken });
+}
+
 }

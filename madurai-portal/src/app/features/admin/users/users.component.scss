@@ -1,0 +1,152 @@
+@import 'variables';
+@import 'mixins';
+
+.users-wrapper {
+  background: $card-bg;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: $shadow;
+  margin-bottom: 3rem;
+}
+
+/* Title */
+.title {
+  @include responsive-font(20px, 28px);
+  color: $primary-color;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+/* Add User Form */
+.user-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-bottom: 2rem;
+
+  input, select {
+    @extend .form-control;
+  }
+
+  .form-control {
+    padding: 0.6rem;
+    border: 1px solid lighten($text-color, 40%);
+    border-radius: 6px;
+    font-size: 0.95rem;
+    width: 100%;
+  }
+
+  .btn-primary {
+    margin-top: 0.5rem;
+    background: $secondary-color;
+    color: white;
+    border-radius: 6px;
+    padding: 0.7rem;
+    font-size: 1rem;
+    font-weight: 500;
+    @include hover-effect($secondary-color);
+  }
+}
+
+/* Filters */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+
+  select, input {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    flex: 1 1 150px;
+  }
+
+  .btn-secondary {
+    background: $primary-color;
+    color: #fff;
+    border-radius: 6px;
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    @include hover-effect($primary-color);
+  }
+}
+
+/* Users Table */
+.users-table-wrapper {
+  overflow-x: auto;
+}
+
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th, td {
+    padding: 0.9rem;
+    border-bottom: 1px solid #eee;
+    text-align: left;
+  }
+
+  th {
+    background: lighten($primary-color, 45%);
+    font-weight: 600;
+    color: $text-color;
+  }
+}
+
+.action-col {
+  width: 160px;
+  text-align: center;
+}
+
+/* Buttons */
+.btn-danger {
+  background: red;
+  color: white;
+  padding: 0.4rem 0.9rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  @include hover-effect(red);
+}
+
+.btn-secondary {
+  background: #777;
+  color: white;
+  padding: 0.4rem 0.9rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+}
+
+/* Confirm Box */
+.confirm-box {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  span {
+    font-size: 0.85rem;
+    color: $text-color;
+  }
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+
+  button {
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    background: $secondary-color;
+    color: white;
+    &:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+  }
+}

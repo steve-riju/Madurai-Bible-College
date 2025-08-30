@@ -9,12 +9,12 @@ import { AuthService } from '../../shared/auth.service';
 export class NavbarComponent implements OnInit {
   @Output() toggleSidebar = new EventEmitter<void>();
 
-  userRole: string | null = null;
+  username: string | null = null;   // 🔹 use username instead of role
 
   constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
-    this.userRole = this.authService.getUserRole();
+    this.username = this.authService.getUsername();   // 🔹 fetch username
   }
 
   logout(): void {

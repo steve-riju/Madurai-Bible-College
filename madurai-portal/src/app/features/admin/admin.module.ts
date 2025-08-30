@@ -12,6 +12,7 @@ import { AdminLayoutComponent } from './admin-layout/admin-layout.component';
 import { EnrollmentsComponent } from './enrollments/enrollments.component';
 import { AdmissionsComponent } from './admissions/admissions.component';
 import { OfferingsComponent } from './offerings/offerings.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -29,7 +30,9 @@ import { OfferingsComponent } from './offerings/offerings.component';
   imports: [
     CommonModule,
     AdminRoutingModule,
-    SharedModule
+    SharedModule,
+    FormsModule,
+    ReactiveFormsModule
   ]
 })
 export class AdminModule { }
