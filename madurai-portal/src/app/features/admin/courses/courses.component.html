@@ -1,1 +1,238 @@
-<p>courses works!</p>
+<div class="admin-courses-container">
+  <!-- global banners -->
+  <div *ngIf="errorMsg" class="banner banner-error">{{ errorMsg }}</div>
+  <div *ngIf="successMsg" class="banner banner-success">{{ successMsg }}</div>
+
+  <!-- Courses Section -->
+  <div class="section-card">
+    <h2>📘 Courses</h2>
+
+    <form #courseForm="ngForm" (ngSubmit)="courseForm.valid && addCourse()" class="form-inline" novalidate>
+      <div class="field">
+        <input
+          [(ngModel)]="newCourse.code" name="code" placeholder="Code"
+          required minlength="2" maxlength="20" #code="ngModel" />
+        <div class="field-error" *ngIf="code.invalid && (code.dirty || code.touched)">
+          <span *ngIf="code.errors?.['required']">Code is required.</span>
+          <span *ngIf="code.errors?.['minlength']">Code must be at least 2 chars.</span>
+          <span *ngIf="code.errors?.['maxlength']">Code is too long.</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <input
+          [(ngModel)]="newCourse.name" name="name" placeholder="Name"
+          required minlength="3" maxlength="120" #name="ngModel" />
+        <div class="field-error" *ngIf="name.invalid && (name.dirty || name.touched)">
+          <span *ngIf="name.errors?.['required']">Name is required.</span>
+          <span *ngIf="name.errors?.['minlength']">Name must be at least 3 chars.</span>
+          <span *ngIf="name.errors?.['maxlength']">Name is too long.</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <input
+          [(ngModel)]="newCourse.credits" name="credits" type="number"
+          placeholder="Credits" required min="0" max="40" #credits="ngModel" />
+        <div class="field-error" *ngIf="credits.invalid && (credits.dirty || credits.touched)">
+          <span *ngIf="credits.errors?.['required']">Credits required.</span>
+          <span *ngIf="credits.errors?.['min']">Credits cannot be negative.</span>
+          <span *ngIf="credits.errors?.['max']">Credits too high.</span>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary" [disabled]="courseForm.invalid || savingCourse">
+  <span *ngIf="!savingCourse">Add</span>
+  <span *ngIf="savingCourse">Saving...</span>
+</button>
+
+    </form>
+
+    <table class="data-table" *ngIf="courses.length > 0; else noCourses">
+      <thead>
+      <tr>
+        <th>ID</th><th>Code</th><th>Name</th><th>Credits</th><th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let c of courses">
+        <td>{{ c.id }}</td>
+        <td>{{ c.code }}</td>
+        <td>{{ c.name }}</td>
+        <td>{{ c.credits }}</td>
+        <td>
+          <ng-container *ngIf="confirmDeleteCourseId !== c.id; else confirmCourseTpl">
+            <button (click)="askDeleteCourse(c.id!)" class="btn btn-danger">Delete</button>
+          </ng-container>
+          <ng-template #confirmCourseTpl>
+            <div class="confirm-inline">
+              <span>Confirm?</span>
+              <button class="btn btn-danger" (click)="deleteCourse(c.id!)" [disabled]="deletingCourseId === c.id">
+  <span *ngIf="deletingCourseId !== c.id">Yes</span>
+  <span *ngIf="deletingCourseId === c.id">Deleting...</span>
+</button>
+
+              <button class="btn btn-ghost" (click)="cancelDeleteCourse()">No</button>
+            </div>
+          </ng-template>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <ng-template #noCourses>
+      <p class="empty-text">No courses added yet.</p>
+    </ng-template>
+  </div>
+
+  <!-- Semesters Section -->
+  <div class="section-card">
+    <h2>📅 Semesters</h2>
+
+    <form #semForm="ngForm" (ngSubmit)="semForm.valid && addSemester()" class="form-inline" novalidate>
+      <div class="field">
+        <input
+          [(ngModel)]="newSemester.name" name="sname" placeholder="Name"
+          required minlength="2" maxlength="80" #sname="ngModel" />
+        <div class="field-error" *ngIf="sname.invalid && (sname.dirty || sname.touched)">
+          <span *ngIf="sname.errors?.['required']">Name is required.</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <input
+          [(ngModel)]="newSemester.startDate" name="sdate" type="date"
+          required #sdate="ngModel" />
+        <div class="field-error" *ngIf="sdate.invalid && (sdate.dirty || sdate.touched)">
+          <span *ngIf="sdate.errors?.['required']">Start date is required.</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <input
+          [(ngModel)]="newSemester.endDate" name="edate" type="date"
+          required #edate="ngModel" />
+        <div class="field-error" *ngIf="edate.invalid && (edate.dirty || edate.touched)">
+          <span *ngIf="edate.errors?.['required']">End date is required.</span>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary" [disabled]="semForm.invalid || savingSemester">
+  <span *ngIf="!savingSemester">Add</span>
+  <span *ngIf="savingSemester">Saving...</span>
+</button>
+
+    </form>
+
+    <table class="data-table" *ngIf="semesters.length > 0; else noSemesters">
+      <thead>
+      <tr>
+        <th>ID</th><th>Name</th><th>Duration</th><th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let s of semesters">
+        <td>{{ s.id }}</td>
+        <td>{{ s.name }}</td>
+        <td>{{ s.startDate }} → {{ s.endDate }}</td>
+        <td>
+          <ng-container *ngIf="confirmDeleteSemesterId !== s.id; else confirmSemTpl">
+            <button (click)="askDeleteSemester(s.id!)" class="btn btn-danger">Delete</button>
+          </ng-container>
+          <ng-template #confirmSemTpl>
+            <div class="confirm-inline">
+              <span>Confirm?</span>
+              <button class="btn btn-danger" (click)="deleteSemester(s.id!)" [disabled]="deletingSemesterId === s.id">
+  <span *ngIf="deletingSemesterId !== s.id">Yes</span>
+  <span *ngIf="deletingSemesterId === s.id">Deleting...</span>
+</button>
+
+              <button class="btn btn-ghost" (click)="cancelDeleteSemester()">No</button>
+            </div>
+          </ng-template>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <ng-template #noSemesters>
+      <p class="empty-text">No semesters created yet.</p>
+    </ng-template>
+  </div>
+
+  <!-- Assign Teacher Section -->
+  <div class="section-card">
+    <h2>👨‍🏫 Assign Teacher</h2>
+
+    <form #assignForm="ngForm" (ngSubmit)="assignForm.valid && assignTeacher()" class="form-inline" novalidate>
+      <div class="field">
+        <select [(ngModel)]="assignment.courseId" name="course" required #courseSel="ngModel">
+          <option value="">Select Course</option>
+          <option *ngFor="let c of courses" [value]="c.id">{{ c.name }}</option>
+        </select>
+        <div class="field-error" *ngIf="courseSel.invalid && (courseSel.dirty || courseSel.touched)">
+          <span>Course is required.</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <select [(ngModel)]="assignment.semesterId" name="semester" required #semSel="ngModel">
+          <option value="">Select Semester</option>
+          <option *ngFor="let s of semesters" [value]="s.id">{{ s.name }}</option>
+        </select>
+        <div class="field-error" *ngIf="semSel.invalid && (semSel.dirty || semSel.touched)">
+          <span>Semester is required.</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <select [(ngModel)]="assignment.teacherId" name="teacher" required #teacherSel="ngModel">
+          <option value="" selected>Select Teacher</option>
+          <option *ngFor="let t of teachers" [value]="t.id">{{ t.username }}</option>
+        </select>
+        <div class="field-error" *ngIf="teacherSel.invalid && (teacherSel.dirty || teacherSel.touched)">
+          <span>Teacher is required.</span>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-success" [disabled]="assignForm.invalid || assigning">
+  <span *ngIf="!assigning">Assign</span>
+  <span *ngIf="assigning">Assigning...</span>
+</button>
+
+    </form>
+
+    <table class="data-table" *ngIf="assignments.length > 0; else noAssignments">
+      <thead>
+      <tr>
+        <th>ID</th><th>Course</th><th>Semester</th><th>Teacher</th><th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let a of assignments">
+        <td>{{ a.id }}</td>
+        <td>{{ courseNameById(a.courseId) }}</td>
+        <td>{{ semesterNameById(a.semesterId) }}</td>
+        <td>{{ a.teacherName }}</td>
+        <td>
+          <ng-container *ngIf="confirmUnassignId !== a.id; else confirmUnassignTpl">
+            <button (click)="askUnassign(a.id!)" class="btn btn-danger">Unassign</button>
+          </ng-container>
+          <ng-template #confirmUnassignTpl>
+            <div class="confirm-inline">
+              <span>Confirm?</span>
+              <button class="btn btn-danger" (click)="deleteAssignment(a.id!)" [disabled]="unassigningId === a.id">
+  <span *ngIf="unassigningId !== a.id">Yes</span>
+  <span *ngIf="unassigningId === a.id">Removing...</span>
+</button>
+
+              <button class="btn btn-ghost" (click)="cancelUnassign()">No</button>
+            </div>
+          </ng-template>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <ng-template #noAssignments>
+      <p class="empty-text">No teacher assignments yet.</p>
+    </ng-template>
+  </div>
+</div>

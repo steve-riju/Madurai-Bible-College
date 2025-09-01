@@ -1,5 +1,6 @@
 package com.maduraibiblecollege.controller.admin;
 
+import com.maduraibiblecollege.entity.Role;
 import com.maduraibiblecollege.entity.User;
 import com.maduraibiblecollege.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -68,4 +69,11 @@ public class AdminUserController {
         userRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+    
+ // ✅ Get only Teachers
+    @GetMapping("/teachers")
+    public ResponseEntity<List<User>> getTeachers() {
+        return ResponseEntity.ok(userRepository.findByRole(Role.TEACHER));
+    }
+
 }
