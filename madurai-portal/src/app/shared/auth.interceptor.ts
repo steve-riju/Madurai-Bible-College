@@ -6,19 +6,18 @@ import {
   HttpEvent,
   HttpErrorResponse
 } from '@angular/common/http';
-import { Observable, throwError, BehaviorSubject } from 'rxjs';
-import { catchError, switchMap, filter, take } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { catchError, switchMap } from 'rxjs/operators';
 import { AuthService } from './auth.service';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  private isRefreshing = false;
-  private refreshTokenSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const token = localStorage.getItem('accessToken');
+    const token = this.authService.getAccessToken();
     let authReq = req;
 
     if (token) {
@@ -27,7 +26,6 @@ export class AuthInterceptor implements HttpInterceptor {
 
     return next.handle(authReq).pipe(
       catchError(error => {
-        // Expired or invalid token
         if (error instanceof HttpErrorResponse && error.status === 403) {
           return this.handle403Error(authReq, next);
         }
@@ -42,34 +40,25 @@ export class AuthInterceptor implements HttpInterceptor {
     });
   }
 
-  private handle403Error(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (!this.isRefreshing) {
-      this.isRefreshing = true;
-      this.refreshTokenSubject.next(null);
-
-      const refreshToken = localStorage.getItem('refreshToken');
-      if (refreshToken) {
-        return this.authService.refresh(refreshToken).pipe(
-          switchMap((res) => {
-            this.isRefreshing = false;
-            localStorage.setItem('accessToken', res.accessToken);
-            this.refreshTokenSubject.next(res.accessToken);
-            return next.handle(this.addTokenHeader(req, res.accessToken));
-          }),
-          catchError((err) => {
-            this.isRefreshing = false;
-            this.authService.logout(); // force logout if refresh fails
-            return throwError(() => err);
-          })
-        );
-      }
+  private handle403Error(request: HttpRequest<any>, next: HttpHandler) {
+    if (request.url.includes('/auth/refresh')) {
+      this.authService.logout();
+      this.router.navigate(['/auth/login'], { queryParams: { sessionExpired: true } });
+      return throwError(() => new Error('Session expired, please re-login'));
     }
 
-    // Wait until refresh finishes, then retry
-    return this.refreshTokenSubject.pipe(
-      filter(token => token != null),
-      take(1),
-      switchMap((token) => next.handle(this.addTokenHeader(req, token!)))
+    return this.authService.refreshToken().pipe(
+      switchMap((newToken: string) => {
+        const newReq = request.clone({
+          setHeaders: { Authorization: `Bearer ${newToken}` }
+        });
+        return next.handle(newReq);
+      }),
+      catchError(() => {
+        this.authService.logout();
+        this.router.navigate(['/auth/login'], { queryParams: { sessionExpired: true } });
+        return throwError(() => new Error('Session expired, please re-login'));
+      })
     );
   }
 }

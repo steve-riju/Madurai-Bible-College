@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { trigger, style, animate, transition } from '@angular/animations';
 import { AuthService } from '../../../shared/auth.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -26,11 +27,12 @@ export class LoginComponent {
   errorMessage: string = '';
   passwordVisible: boolean = false;
 
-  constructor(private fb: FormBuilder, private authService: AuthService) {
+  constructor(private fb: FormBuilder, private authService: AuthService, private route: ActivatedRoute) {
     this.loginForm = this.fb.group({
       username: ['', Validators.required],
       password: ['', Validators.required]
     });
+    
   }
 
   selectRole(role: string) {
@@ -70,4 +72,12 @@ export class LoginComponent {
     }
   });
 }
+ngOnInit(): void {
+  this.route.queryParams.subscribe(params => {
+    if (params['sessionExpired']) {
+      this.errorMessage = "Your session has expired. Please log in again.";
+    }
+  });
+}
+
 }

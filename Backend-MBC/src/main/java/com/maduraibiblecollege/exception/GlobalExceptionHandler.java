@@ -97,6 +97,27 @@ public class GlobalExceptionHandler {
 		error.put("error", ex.getMessage());
 		return ResponseEntity.badRequest().body(error);
 	}
+	
+	@SuppressWarnings("deprecation")
+	@ExceptionHandler({
+	    io.jsonwebtoken.ExpiredJwtException.class,
+	    io.jsonwebtoken.MalformedJwtException.class,
+	    io.jsonwebtoken.SignatureException.class,
+	    io.jsonwebtoken.UnsupportedJwtException.class,
+	    IllegalArgumentException.class
+	})
+	public ResponseEntity<ApiError> handleJwtException(RuntimeException ex, HttpServletRequest req) {
+	    ApiError body = new ApiError(
+	            Instant.now(),
+	            HttpStatus.FORBIDDEN.value(),
+	            "JWT Authentication Failed",
+	            ex.getMessage() != null ? ex.getMessage() : "Invalid or expired token.",
+	            req.getRequestURI(),
+	            null
+	    );
+	    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(body);
+	}
+
 
 
 }
