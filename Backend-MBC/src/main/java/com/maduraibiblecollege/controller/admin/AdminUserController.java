@@ -75,5 +75,12 @@ public class AdminUserController {
     public ResponseEntity<List<User>> getTeachers() {
         return ResponseEntity.ok(userRepository.findByRole(Role.TEACHER));
     }
+    
+ // ✅ Get only Students
+    @GetMapping("/students")
+    public ResponseEntity<List<User>> getStudents() {
+        return ResponseEntity.ok(userRepository.findByRole(Role.STUDENT));
+    }
+
 
 }

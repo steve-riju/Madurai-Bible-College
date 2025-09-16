@@ -15,7 +15,8 @@ export interface User {
   providedIn: 'root'
 })
 export class AdminUsersService {
-  private apiUrl = 'http://192.168.1.6:8080/api/admin/users';
+  // private apiUrl = 'http://192.168.1.6:8080/api/admin/users';
+  private apiUrl = 'http://localhost:8080/api/admin/users';
 
   constructor(private http: HttpClient) {}
 
@@ -38,4 +39,13 @@ export class AdminUsersService {
   deleteUser(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+
+  getStudents(): Observable<User[]> {
+  return this.http.get<User[]>(`${this.apiUrl}/students`);
+}
+
+getTeachers(): Observable<User[]> {
+  return this.http.get<User[]>(`${this.apiUrl}/teachers`);
+}
+
 }

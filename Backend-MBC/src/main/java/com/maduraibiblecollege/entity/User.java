@@ -29,6 +29,9 @@ public class User implements UserDetails {
   @Enumerated(EnumType.STRING)
   @Column(nullable = false, length = 20)
   private Role role;
+  
+  @Column(length = 50)
+  private String name;
 
   private boolean enabled = true;
 

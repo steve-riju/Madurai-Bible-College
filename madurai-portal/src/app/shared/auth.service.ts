@@ -15,7 +15,9 @@ interface AuthResponse {
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://192.168.1.6:8080/api/auth';
+  // private apiUrl = 'http://192.168.1.6:8080/api/auth'; at valakom 
+  // private apiUrl = 'http://192.168.30.10:8080/api/admin/users'; //at mlty
+  private apiUrl = 'http://localhost:8080/api/auth';
 
   constructor(private router: Router, private http: HttpClient) {}
 

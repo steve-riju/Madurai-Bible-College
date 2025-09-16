@@ -5,12 +5,12 @@
 
   <!-- Courses Section -->
   <div class="section-card">
-    <h2>📘 Courses</h2>
+    <h2>📘Assign Courses</h2>
 
     <form #courseForm="ngForm" (ngSubmit)="courseForm.valid && addCourse()" class="form-inline" novalidate>
       <div class="field">
         <input
-          [(ngModel)]="newCourse.code" name="code" placeholder="Code"
+          [(ngModel)]="newCourse.code" name="code" placeholder="Course Code"
           required minlength="2" maxlength="20" #code="ngModel" />
         <div class="field-error" *ngIf="code.invalid && (code.dirty || code.touched)">
           <span *ngIf="code.errors?.['required']">Code is required.</span>
@@ -21,7 +21,7 @@
 
       <div class="field">
         <input
-          [(ngModel)]="newCourse.name" name="name" placeholder="Name"
+          [(ngModel)]="newCourse.name" name="name" placeholder="Course Name"
           required minlength="3" maxlength="120" #name="ngModel" />
         <div class="field-error" *ngIf="name.invalid && (name.dirty || name.touched)">
           <span *ngIf="name.errors?.['required']">Name is required.</span>
@@ -86,12 +86,12 @@
 
   <!-- Semesters Section -->
   <div class="section-card">
-    <h2>📅 Semesters</h2>
+    <h2>📅 Assign Semesters</h2>
 
     <form #semForm="ngForm" (ngSubmit)="semForm.valid && addSemester()" class="form-inline" novalidate>
       <div class="field">
         <input
-          [(ngModel)]="newSemester.name" name="sname" placeholder="Name"
+          [(ngModel)]="newSemester.name" name="sname" placeholder="Sem Name"
           required minlength="2" maxlength="80" #sname="ngModel" />
         <div class="field-error" *ngIf="sname.invalid && (sname.dirty || sname.touched)">
           <span *ngIf="sname.errors?.['required']">Name is required.</span>
