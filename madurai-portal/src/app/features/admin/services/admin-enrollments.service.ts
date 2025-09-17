@@ -53,8 +53,7 @@ export interface CreateBatchWithEnrollmentsRequest {
 export class AdminEnrollmentsService {
   private apiUrl = 'http://localhost:8080/api/admin/enrollments';
   private batchApiUrl = 'http://localhost:8080/api/admin/batches';
-  private semesterApiUrl = 'http://localhost:8080/api/admin/semesters'; // ✅ Backend must expose this
-
+  private semesterApiUrl = 'http://localhost:8080/api/admin/semesters';
 
   constructor(private http: HttpClient) {}
 
@@ -74,20 +73,19 @@ export class AdminEnrollmentsService {
     return this.http.get<EnrollmentDto[]>(`${this.apiUrl}`);
   }
 
-  enrollBatch(req: BatchEnrollmentRequest): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/batch`, req);
+  createBatchWithEnrollments(req: CreateBatchWithEnrollmentsRequest): Observable<BatchDto> {
+    return this.http.post<BatchDto>(`${this.batchApiUrl}/with-enrollments`, req);
   }
 
   removeEnrollment(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  createBatchWithEnrollments(req: CreateBatchWithEnrollmentsRequest): Observable<BatchDto> {
-    return this.http.post<BatchDto>(`${this.batchApiUrl}/with-enrollments`, req);
+  deleteBatch(batchId: number): Observable<void> {
+    return this.http.delete<void>(`${this.batchApiUrl}/${batchId}`);
   }
 
   getSemesters(): Observable<SemesterDto[]> {
     return this.http.get<SemesterDto[]>(`${this.semesterApiUrl}`);
   }
-  
 }

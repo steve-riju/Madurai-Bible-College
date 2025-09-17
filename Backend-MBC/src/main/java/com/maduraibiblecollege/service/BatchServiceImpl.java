@@ -202,6 +202,21 @@ public class BatchServiceImpl implements BatchService {
 		return toDto(savedBatch);
 	}
 
+	@Transactional
+	public void deleteBatch(Long id) {
+	    Batch batch = batchRepository.findById(id)
+	            .orElseThrow(() -> new RuntimeException("Batch not found"));
+
+	    // remove enrollments first
+	    enrollmentRepository.deleteAllByBatch(batch);
+
+	    // clear join tables
+	    batch.getStudents().clear();
+	    batch.getCourses().clear();
+
+	    batchRepository.delete(batch);
+	}
+
 
 
 

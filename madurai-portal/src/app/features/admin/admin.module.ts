@@ -9,7 +9,7 @@ import { EventsComponent } from './events/events.component';
 import { FaqsComponent } from './faqs/faqs.component';
 import { SharedModule } from '../../shared/shared.module';
 import { AdminLayoutComponent } from './admin-layout/admin-layout.component';
-import { EnrollmentsComponent } from './enrollments/enrollments.component';
+import { EnrollmentsComponent, InlineConfirmDialog } from './enrollments/enrollments.component';
 import { AdmissionsComponent } from './admissions/admissions.component';
 import { OfferingsComponent } from './offerings/offerings.component';
 
@@ -25,6 +25,9 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { MatDialogModule } from '@angular/material/dialog';
+
 
 
 @NgModule({
@@ -38,6 +41,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     EnrollmentsComponent,
     AdmissionsComponent,
     OfferingsComponent,
+    InlineConfirmDialog
    ],
   imports: [
     CommonModule,
@@ -56,6 +60,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatTableModule,
     MatIconModule,
     MatSnackBarModule,
+    NgxMatSelectSearchModule,
+    MatDialogModule
   ]
 })
 export class AdminModule { }

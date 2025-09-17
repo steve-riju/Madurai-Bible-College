@@ -3,6 +3,7 @@ package com.maduraibiblecollege.controller.admin;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -56,6 +57,11 @@ public class AdminBatchController {
 @PostMapping("/with-enrollments")
 public ResponseEntity<BatchDto> createBatchWithEnrollments(@RequestBody CreateBatchWithEnrollmentsRequest request) {
   return ResponseEntity.ok(batchService.createBatchWithEnrollments(request));
+}
+@DeleteMapping("/{id}")
+public ResponseEntity<Void> deleteBatch(@PathVariable Long id) {
+    batchService.deleteBatch(id);
+    return ResponseEntity.noContent().build();
 }
 
 }

@@ -16,6 +16,7 @@ public interface BatchService {
  BatchDto getBatch(Long id);
  List<BatchDto> searchBatches(String keyword);
 BatchDto createBatchWithEnrollments(CreateBatchWithEnrollmentsRequest request);
+void deleteBatch(Long id);
 
 }
 
