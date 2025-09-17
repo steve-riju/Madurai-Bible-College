@@ -1,12 +1,19 @@
 package com.maduraibiblecollege.entity;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "enrollments")
@@ -30,6 +37,6 @@ public class Enrollment {
     @JoinColumn(name = "batch_id", nullable = false)
     private Batch batch; // added
 
-    private LocalDate enrolledAt = LocalDate.now();
+    private LocalDateTime enrolledAt = LocalDateTime.now(); 
     private String status = "ACTIVE"; // ACTIVE, COMPLETED, DROPPED
 }

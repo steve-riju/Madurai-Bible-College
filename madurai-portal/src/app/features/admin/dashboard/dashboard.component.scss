@@ -1,0 +1,176 @@
+@import 'variables';
+@import 'mixins';
+
+
+
+.dashboard-container {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+
+  @media (min-width: 768px) {
+    padding: 1.5rem;
+  }
+}
+
+
+
+.card {
+  background-color: $card-bg;
+  border-radius: 0.75rem;
+  box-shadow: $shadow;
+  padding: 1.5rem;
+  width: 100%;
+  @include hover-effect($primary-color);
+}
+
+.card-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: $text-color;
+}
+
+
+
+// Grid for the top overview stats
+.stats-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: 1fr; // Mobile-first: 1 column
+
+  @media (min-width: 540px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+// Grid for the events and admissions sections
+.content-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: 1fr; // Mobile-first: 1 column
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  // FIX: This allows grid items to shrink and prevents them from overlapping.
+  > .card {
+    min-width: 0;
+  }
+}
+
+
+// Overview Stat Cards
+.stat-card {
+  @extend .card; // Inherits base card styles
+  padding: 1rem;
+  text-align: center;
+
+  &__title {
+    color: $light-text-color;
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+  }
+
+  &__value {
+    font-weight: 700;
+    @include responsive-font(1.75rem, 2rem);
+
+    &--blue { color: #2563eb; }
+    &--green { color: #16a34a; }
+    &--purple { color: #9333ea; }
+    &--orange { color: #ea580c; }
+  }
+}
+
+// Upcoming Events List
+.events-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  
+  &__item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem; // Added gap for better spacing
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #e2e8f0;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &__title {
+    font-weight: 500;
+    // IMPROVEMENT: Prevents long titles from breaking the layout
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__date {
+    font-size: 0.875rem;
+    color: $light-text-color;
+    white-space: nowrap;
+    flex-shrink: 0; // Prevents the date from being compressed
+  }
+}
+
+// Generic Table used for Admissions and Offerings
+.table-wrapper {
+  overflow-x: auto; // Ensures table is scrollable on small screens
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th, td {
+    padding: 0.75rem;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  thead {
+    tr {
+      border-bottom: 2px solid #e2e8f0;
+    }
+    th {
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: $light-text-color;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid #e2e8f0;
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+
+  // Specific cell styling
+  .status {
+    font-weight: 600;
+    &--approved { color: #16a34a; }
+    &--rejected { color: #dc2626; }
+    &--pending  { color: #d97706; }
+  }
+
+  .amount {
+    font-weight: 600;
+    color: $secondary-color;
+  }
+}

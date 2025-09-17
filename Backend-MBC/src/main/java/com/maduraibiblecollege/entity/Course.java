@@ -23,5 +23,6 @@ public class Course {
     private String name;       // e.g., "Data Structures"
 
     private int credits;
+    private boolean active = true; // ✅ Added for dashboard
 }
 

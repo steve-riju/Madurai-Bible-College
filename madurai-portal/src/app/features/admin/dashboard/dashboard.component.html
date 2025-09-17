@@ -1,4 +1,84 @@
-<div class="dashboard">
-  <h1>Admin Dashboard</h1>
-  <p>Welcome, Admin! 🛠️</p>
+<div class="dashboard-container p-6 space-y-8" *ngIf="dashboardData">
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <h3 class="stat-card__title">Students</h3>
+      <p class="stat-card__value stat-card__value--blue">{{ dashboardData.userStats.students }}</p>
+    </div>
+    <div class="stat-card">
+      <h3 class="stat-card__title">Teachers</h3>
+      <p class="stat-card__value stat-card__value--green">{{ dashboardData.userStats.teachers }}</p>
+    </div>
+    <div class="stat-card">
+      <h3 class="stat-card__title">Courses</h3>
+      <p class="stat-card__value stat-card__value--purple">{{ dashboardData.courseStats.totalCourses }}</p>
+    </div>
+    <div class="stat-card">
+      <h3 class="stat-card__title">Enrollments</h3>
+      <p class="stat-card__value stat-card__value--orange">{{ dashboardData.enrollmentStats.current }}</p>
+    </div>
+  </div>
+
+  <div class="content-grid">
+    <div class="card">
+      <h3 class="card-title">Upcoming Events</h3>
+      <ul class="events-list">
+        <li *ngFor="let event of dashboardData.events" class="events-list__item">
+          <span class="events-list__title">{{ event.title }}</span>
+          <span class="events-list__date">{{ event.date | date }}</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3 class="card-title">Recent Admissions</h3>
+      <div class="table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let admission of dashboardData.admissions">
+              <td>{{ admission.name }}</td>
+              <td>
+                <span class="status" [ngClass]="{
+                  'status--approved': admission.status === 'Approved',
+                  'status--rejected': admission.status === 'Rejected',
+                  'status--pending': admission.status === 'Pending'
+                }">
+                  {{ admission.status }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 class="card-title">Recent Offerings</h3>
+    <div class="table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Donor</th>
+            <th>Amount</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let offering of dashboardData.offerings">
+            <td>{{ offering.donor }}</td>
+            <td class="amount">₹{{ offering.amount }}</td>
+            <td>{{ offering.date | date }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
 </div>

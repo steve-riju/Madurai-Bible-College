@@ -31,7 +31,7 @@ public class CourseServiceImpl implements CourseService {
 
 	@Override
 	public CourseDto createCourse(CourseDto dto) {
-		Course course = new Course(null, dto.getCode(), dto.getName(), dto.getCredits());
+		Course course = new Course(null, dto.getCode(), dto.getName(), dto.getCredits(),true);// true means private boolean active = true; Added for dashboard
 		course = courseRepo.save(course);
 		return new CourseDto(course.getId(), course.getCode(), course.getName(), course.getCredits());
 	}
