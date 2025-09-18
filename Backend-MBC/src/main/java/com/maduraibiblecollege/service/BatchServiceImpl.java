@@ -20,7 +20,9 @@ import com.maduraibiblecollege.repository.CourseAssignedRepository;
 import com.maduraibiblecollege.repository.EnrollmentRepository;
 import com.maduraibiblecollege.repository.UserRepository;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -215,6 +217,24 @@ public class BatchServiceImpl implements BatchService {
 	    batch.getCourses().clear();
 
 	    batchRepository.delete(batch);
+	}
+
+	@Override
+	public List<BatchDto> getBatchesForTeacher(Long teacherId) {
+	    // ✅ Step 1: Find all CourseAssigned for this teacher
+	    List<CourseAssigned> courses = courseAssignedRepository.findByTeacherId(teacherId);
+
+	    // ✅ Step 2: Collect batches containing those CourseAssigned
+	    Set<Batch> teacherBatches = new HashSet<>();
+	    for (CourseAssigned ca : courses) {
+	    	teacherBatches.addAll(batchRepository.findByCourses_Id(ca.getId()));
+
+	    }
+
+	    // ✅ Step 3: Map to DTO
+	    return teacherBatches.stream()
+	            .map(this::toDto)
+	            .collect(Collectors.toList());
 	}
 
 

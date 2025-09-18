@@ -28,7 +28,7 @@ cors:
 cloudflare:
   r2:
     bucket: mbc-materials
-    account-id: YOUR_R2_ACCOUNT_ID
-    access-key: YOUR_R2_ACCESS_KEY
-    secret-key: YOUR_R2_SECRET_KEY
-    endpoint: https://b760a524631241dadea5ca96805a7479.r2.cloudflarestorage.com # my orginal acc id b760a524631241dadea5ca96805a7479
+    account-id: a4736b6513d529ed278ec671be367fa7
+    access-key: 62cd7a8f15b501285af6f6bc8501f70e
+    secret-key: 2d7dce6d7465373d689e695fc1d9ec7d9cdf1f80f65a411ae5171f5ddcc5f228
+    endpoint: https://a4736b6513d529ed278ec671be367fa7.r2.cloudflarestorage.com # MDU clg orginal acc id a4736b6513d529ed278ec671be367fa7

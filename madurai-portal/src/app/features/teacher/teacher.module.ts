@@ -8,7 +8,7 @@ import { AssignmentsComponent } from './assignments/assignments.component';
 import { ProfileComponent } from './profile/profile.component';
 import { SharedModule } from '../../shared/shared.module';
 import { TeacherLayoutComponent } from './teacher-layout/teacher-layout.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -23,7 +23,8 @@ import { FormsModule } from '@angular/forms';
     CommonModule,
     TeacherRoutingModule,
     SharedModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ]
 })
 export class TeacherModule { }

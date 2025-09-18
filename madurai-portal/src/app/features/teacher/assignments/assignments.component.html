@@ -1,1 +1,32 @@
-<p>assignments works!</p>
+<div class="card">
+  <h2>Create Assignment</h2>
+
+  <form [formGroup]="assignmentForm" (ngSubmit)="onCreate()">
+    <input formControlName="title" placeholder="Assignment Title" />
+    <textarea formControlName="description" placeholder="Write assignment details here"></textarea>
+
+    <select formControlName="batchId">
+      <option value="" disabled>Select Batch</option>
+      <option *ngFor="let b of batches" [value]="b.id">{{ b.name }}</option>
+    </select>
+    <p>Start Date</p>
+    <input type="datetime-local" formControlName="startDate" placeholder="Start Date" />
+    <p>End Date</p>
+    <input type="datetime-local" formControlName="endDate" placeholder="End Date" />
+    <input type="number" formControlName="maxMarks" placeholder="Maximum Marks" />
+    <input type="file" (change)="onFiles($event)" multiple />
+
+    <button type="submit" [disabled]="assignmentForm.invalid">Publish</button>
+  </form>
+
+  <h3 class="mt-6">Published Assignments</h3>
+  <ul>
+    <li *ngFor="let a of assignments">
+      <strong>{{ a.title }}</strong>
+      <span>{{ a.batchName }}</span>
+      <span>🕒 Due: {{ a.deadline | date:'MMM d, y, h:mm a' }}</span>
+      <span>Status: {{ a.status }}</span>
+      <button (click)="viewSubmissions(a.id)">View Submissions</button>
+    </li>
+  </ul>
+</div>
