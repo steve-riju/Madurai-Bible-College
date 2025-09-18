@@ -75,6 +75,14 @@
       <optional>true</optional>
     </dependency>
     
+    <!-- Cloudflare R2 -->
+	<dependency>
+	  <groupId>software.amazon.awssdk</groupId>
+	  <artifactId>s3</artifactId>
+	  <version>2.20.79</version> <!-- use latest stable -->
+	</dependency>
+
+    
     <!-- dev tools -->
     <dependency>
 			<groupId>org.springframework.boot</groupId>

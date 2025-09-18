@@ -1,1 +1,95 @@
-<p>materials works!</p>
+<div class="materials-container">
+  <h2 class="page-title">📚 Manage Course Materials</h2>
+
+  <!-- Upload / Edit Form -->
+  <form
+    class="material-form"
+    (submit)="editingMaterial ? saveEdit() : uploadMaterial()"
+  >
+    <!-- Course -->
+    <div class="form-group">
+      <label for="course">Course</label>
+      <select
+        [(ngModel)]="selectedCourseId"
+        name="courseId"
+        id="course"
+        required
+      >
+        <option value="" disabled selected>Select a course</option>
+        <option *ngFor="let c of courses" [value]="c.id">
+          {{ c.name }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Title -->
+    <div class="form-group">
+      <label for="title">Title</label>
+      <input
+        [(ngModel)]="title"
+        name="title"
+        id="title"
+        type="text"
+        required
+      />
+    </div>
+
+    <!-- Description -->
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea [(ngModel)]="description" name="description" id="description"></textarea>
+    </div>
+
+    <!-- File Input (only on create) -->
+    <div class="form-group" *ngIf="!editingMaterial">
+      <label for="file">File</label>
+      <input type="file" id="file" (change)="onFileChange($event)" />
+    </div>
+
+    <!-- Buttons -->
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">
+        {{ editingMaterial ? "Save Changes" : "Upload Material" }}
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="resetForm()">
+        Reset
+      </button>
+    </div>
+  </form>
+
+  <!-- Course Materials List -->
+  <div
+    *ngFor="let course of courses"
+    class="course-card"
+    (click)="loadMaterials(course.id)"
+  >
+    <h3 class="course-title">{{ course.name }}</h3>
+
+    <ul
+      class="material-list"
+      *ngIf="materials[course.id] && materials[course.id].length > 0; else noMaterials"
+    >
+      <li *ngFor="let m of materials[course.id]" class="material-item">
+        <div class="material-info">
+          <strong>{{ m.title }}</strong>
+          <p class="desc">{{ m.description }}</p>
+          <a [href]="m.fileUrl" target="_blank" class="download-link">
+            Download
+          </a>
+        </div>
+        <div class="material-actions">
+          <button class="btn btn-warning" (click)="editMaterial(m)">
+            Edit
+          </button>
+          <button class="btn btn-danger" (click)="deleteMaterial(m)">
+            Delete
+          </button>
+        </div>
+      </li>
+    </ul>
+
+    <ng-template #noMaterials>
+      <p class="empty-text">No materials uploaded yet.</p>
+    </ng-template>
+  </div>
+</div>

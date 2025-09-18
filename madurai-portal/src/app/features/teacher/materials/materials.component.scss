@@ -1,0 +1,161 @@
+@import 'variables';
+@import 'mixins';
+
+.materials-container {
+  padding: 1rem;
+  margin-bottom: 2rem;
+
+  .page-title {
+    @include responsive-font(1.2rem, 1.6rem);
+    margin-bottom: 1rem;
+    font-weight: 600;
+    color: $primary-color;
+  }
+
+  .material-form {
+    background: $card-bg;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    box-shadow: $shadow;
+    margin-bottom: 1.5rem;
+
+    .form-group {
+      margin-bottom: 1rem;
+
+      label {
+        display: block;
+        font-size: 0.9rem;
+        font-weight: 500;
+        margin-bottom: 0.25rem;
+        color: $text-color;
+      }
+
+      input,
+      textarea,
+      select {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #ddd;
+        border-radius: 0.5rem;
+        font-size: 0.9rem;
+      }
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 0.5rem;
+
+      .btn {
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        font-size: 0.9rem;
+        @include hover-effect(#000);
+      }
+
+      .btn-primary {
+        background: $primary-color;
+        color: #fff;
+      }
+
+      .btn-secondary {
+        background: #aaa;
+        color: #fff;
+      }
+    }
+  }
+
+  .course-card {
+    background: $card-bg;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    box-shadow: $shadow;
+    margin-bottom: 1rem;
+
+    .course-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: $secondary-color;
+    }
+
+    .material-list {
+      list-style: none;
+      padding: 0;
+
+      .material-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #eee;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        .material-info {
+          max-width: 70%;
+
+          strong {
+            display: block;
+            margin-bottom: 0.25rem;
+            color: $text-color;
+          }
+
+          .desc {
+            font-size: 0.85rem;
+            color: $light-text-color;
+            margin-bottom: 0.25rem;
+          }
+
+          .download-link {
+            font-size: 0.85rem;
+            color: $secondary-color;
+            text-decoration: underline;
+          }
+        }
+
+        .material-actions {
+          display: flex;
+          flex-direction: column;
+          gap: 0.25rem;
+
+          .btn {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.8rem;
+          }
+
+          .btn-warning {
+            background: #f59e0b;
+            color: #fff;
+          }
+
+          .btn-danger {
+            background: #dc2626;
+            color: #fff;
+          }
+        }
+      }
+    }
+
+    .empty-text {
+      font-size: 0.85rem;
+      color: $light-text-color;
+      font-style: italic;
+    }
+  }
+}
+
+/* ✅ Mobile-first by default.
+   Larger screens only adjust spacing/font */
+@media (min-width: 768px) {
+  .materials-container {
+    .material-form {
+      padding: 1.5rem;
+    }
+
+    .course-card {
+      padding: 1.5rem;
+    }
+  }
+}

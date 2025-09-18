@@ -20,6 +20,9 @@ public interface CourseService {
 	void deleteSemester(Long id);
 	void deleteAssignment(Long id);
 	void unassignTeacher(Long id);
+	
+	List<CourseDto> getCoursesByTeacherUsername(String username);
+
 
 }
 

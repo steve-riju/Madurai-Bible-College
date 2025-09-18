@@ -40,8 +40,6 @@ public class AuthService {
   }
 
   public AuthResponse authenticate(AuthRequest req) {
-	    System.out.println(">>> Login attempt with username: " + req.username());
-	    System.out.println(">>> Raw password entered: " + req.password());
 
 	    authManager.authenticate(
 	        new UsernamePasswordAuthenticationToken(req.username(), req.password())

@@ -29,9 +29,6 @@ public class AdminEnrollmentController {
     private final BatchRepository batchRepository;
     private final CourseAssignedRepository courseAssignedRepository;
 
-    /**
-     * Returns students in simple DTO form: { id, name }
-     */
     @GetMapping("/students")
     public ResponseEntity<List<StudentDto>> getStudents() {
         List<StudentDto> dtos = userRepository.findAll().stream()
@@ -41,10 +38,7 @@ public class AdminEnrollmentController {
         return ResponseEntity.ok(dtos);
     }
 
-    /**
-     * Return batches as simple DTOs so FE can list them if needed.
-     * BatchDto contains id, name, semesterId, semesterName (we use batch.semesterId for semesterName here).
-     */
+   
     @GetMapping("/batches")
     public ResponseEntity<List<BatchDto>> getBatches() {
         List<BatchDto> dtos = batchRepository.findAll().stream()
@@ -53,7 +47,6 @@ public class AdminEnrollmentController {
                     dto.setId(b.getId());
                     dto.setName(b.getName());
                     dto.setSemesterId(b.getSemesterId());
-                    // If you later change Batch to hold Semester entity, change this mapping to fetch semester.getName()
                     dto.setSemesterName(b.getSemesterId());
                     dto.setCourses(b.getCourses().stream()
                             .map(ca -> ca.getCourse().getName())
@@ -67,10 +60,6 @@ public class AdminEnrollmentController {
         return ResponseEntity.ok(dtos);
     }
 
-    /**
-     * Return CourseAssigned entries in a simplified DTO: id = courseAssigned.id, name = course.name
-     * so frontend can show human name but send courseAssigned.id back on enroll.
-     */
     @GetMapping("/courses")
     public ResponseEntity<List<CourseDto>> getCourses() {
         List<CourseDto> dtos = courseAssignedRepository.findAll().stream()
@@ -79,15 +68,11 @@ public class AdminEnrollmentController {
         return ResponseEntity.ok(dtos);
     }
 
-    /**
-     * All enrollments — delegated to EnrollmentService which already returns EnrollmentDto objects.
-     */
     @GetMapping
     public ResponseEntity<List<EnrollmentDto>> getAllEnrollments() {
         return ResponseEntity.ok(enrollmentService.getAllEnrollments());
     }
 
-    // existing endpoints for enroll/ batch enroll / delete can remain unchanged:
     @PostMapping
     public ResponseEntity<?> enrollStudent(@RequestBody com.maduraibiblecollege.dto.EnrollmentRequest request) {
         return ResponseEntity.ok(enrollmentService.enrollStudent(request));

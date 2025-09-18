@@ -142,6 +142,22 @@ public class CourseServiceImpl implements CourseService {
 			throw new IllegalStateException("Teacher cannot be unassigned because of existing dependencies.");
 		}
 	}
+	
+	@Override
+	public List<CourseDto> getCoursesByTeacherUsername(String username) {
+	    User teacher = userRepo.findByUsername(username)
+	            .orElseThrow(() -> new RuntimeException("Teacher not found"));
+
+	    return assignedRepo.findByTeacherId(teacher.getId())
+	            .stream()
+	            .map(a -> new CourseDto(
+	                    a.getCourse().getId(),
+	                    a.getCourse().getCode(),
+	                    a.getCourse().getName(),
+	                    a.getCourse().getCredits()
+	            ))
+	            .toList();
+	}
 
 
 

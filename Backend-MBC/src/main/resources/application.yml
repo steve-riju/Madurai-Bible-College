@@ -17,10 +17,18 @@ spring:
 app:
   jwt:
     secret: "bXktdmVyeS1sb25nLXN1cGVyLXNlY3JldC1rZXktY2hhbmdlLW1lLWxhdGVyIQ==" # base64 string
-    expiration-ms: 3600000        # 1 hour access token
+    expiration-ms: 3600000          # 1 hour access token
     refresh-expiration-ms: 1209600000 # 14 days refresh
 
 # CORS (Angular default dev origin)
 cors:
   allowed-origins:
     - "http://localhost:4200"
+
+cloudflare:
+  r2:
+    bucket: mbc-materials
+    account-id: YOUR_R2_ACCOUNT_ID
+    access-key: YOUR_R2_ACCESS_KEY
+    secret-key: YOUR_R2_SECRET_KEY
+    endpoint: https://b760a524631241dadea5ca96805a7479.r2.cloudflarestorage.com # my orginal acc id b760a524631241dadea5ca96805a7479

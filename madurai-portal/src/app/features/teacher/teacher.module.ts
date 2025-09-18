@@ -8,6 +8,7 @@ import { AssignmentsComponent } from './assignments/assignments.component';
 import { ProfileComponent } from './profile/profile.component';
 import { SharedModule } from '../../shared/shared.module';
 import { TeacherLayoutComponent } from './teacher-layout/teacher-layout.component';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { TeacherLayoutComponent } from './teacher-layout/teacher-layout.componen
   imports: [
     CommonModule,
     TeacherRoutingModule,
-    SharedModule
+    SharedModule,
+    FormsModule
   ]
 })
 export class TeacherModule { }
