@@ -5,7 +5,7 @@
 
   <!-- Courses Section -->
   <div class="section-card">
-    <h2>📘Assign Courses</h2>
+    <h2>📘 Create Courses</h2>
 
     <form #courseForm="ngForm" (ngSubmit)="courseForm.valid && addCourse()" class="form-inline" novalidate>
       <div class="field">
@@ -86,7 +86,7 @@
 
   <!-- Semesters Section -->
   <div class="section-card">
-    <h2>📅 Assign Semesters</h2>
+    <h2>📅 Create Semesters</h2>
 
     <form #semForm="ngForm" (ngSubmit)="semForm.valid && addSemester()" class="form-inline" novalidate>
       <div class="field">
@@ -165,7 +165,7 @@
     <form #assignForm="ngForm" (ngSubmit)="assignForm.valid && assignTeacher()" class="form-inline" novalidate>
       <div class="field">
         <select [(ngModel)]="assignment.courseId" name="course" required #courseSel="ngModel">
-          <option value="">Select Course</option>
+          <option value=null disabled>Select Course</option>
           <option *ngFor="let c of courses" [value]="c.id">{{ c.name }}</option>
         </select>
         <div class="field-error" *ngIf="courseSel.invalid && (courseSel.dirty || courseSel.touched)">
@@ -175,7 +175,7 @@
 
       <div class="field">
         <select [(ngModel)]="assignment.semesterId" name="semester" required #semSel="ngModel">
-          <option value="">Select Semester</option>
+          <option value=null disabled>Select Semester</option>
           <option *ngFor="let s of semesters" [value]="s.id">{{ s.name }}</option>
         </select>
         <div class="field-error" *ngIf="semSel.invalid && (semSel.dirty || semSel.touched)">
@@ -185,7 +185,7 @@
 
       <div class="field">
         <select [(ngModel)]="assignment.teacherId" name="teacher" required #teacherSel="ngModel">
-          <option value="" selected>Select Teacher</option>
+          <option value=null disabled>Select Teacher</option>
           <option *ngFor="let t of teachers" [value]="t.id">{{ t.username }}</option>
         </select>
         <div class="field-error" *ngIf="teacherSel.invalid && (teacherSel.dirty || teacherSel.touched)">

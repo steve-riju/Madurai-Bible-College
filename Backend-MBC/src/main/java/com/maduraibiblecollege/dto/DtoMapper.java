@@ -16,10 +16,6 @@ public final class DtoMapper {
 
     private DtoMapper() {}
 
-    private static LocalDateTime toLocalDateTime(Instant instant) {
-        return instant != null ? 
-            LocalDateTime.ofInstant(instant, ZoneId.systemDefault()) : null;
-    }
 
     public static AssignmentDto toAssignmentDto(Assignment a) {
         if (a == null) return null;
@@ -29,8 +25,8 @@ public final class DtoMapper {
         dto.setTitle(a.getTitle());
         dto.setDescription(a.getDescription());
 
-        dto.setCreatedAt(toLocalDateTime(a.getStartDate()));   // ✅ proper type
-        dto.setDeadline(toLocalDateTime(a.getEndDate()));      // ✅ proper type
+        dto.setCreatedAt(a.getStartDate());   // ✅ proper type
+        dto.setDeadline(a.getEndDate());      // ✅ proper type
 
         dto.setPublished(a.getStatus() != null && a.getStatus().name().equalsIgnoreCase("PUBLISHED"));
         dto.setBatchId(a.getBatch() != null ? a.getBatch().getId() : null);

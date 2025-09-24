@@ -1,15 +1,29 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
+// Angular Material Modules
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatListModule } from '@angular/material/list';
+import { MtxDatetimepickerModule } from '@ng-matero/extensions/datetimepicker';
+import { MtxNativeDatetimeModule } from '@ng-matero/extensions/core'; 
+
+// Feature Routing
 import { TeacherRoutingModule } from './teacher-routing.module';
+
+// Shared
+import { SharedModule } from '../../shared/shared.module';
+
+// Components
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { MaterialsComponent } from './materials/materials.component';
 import { AssignmentsComponent } from './assignments/assignments.component';
 import { ProfileComponent } from './profile/profile.component';
-import { SharedModule } from '../../shared/shared.module';
 import { TeacherLayoutComponent } from './teacher-layout/teacher-layout.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
 
 @NgModule({
   declarations: [
@@ -21,10 +35,20 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   ],
   imports: [
     CommonModule,
+    RouterModule,         // ✅ for <router-outlet>
     TeacherRoutingModule,
-    SharedModule,
-    FormsModule,
-    ReactiveFormsModule
+    SharedModule,         // ✅ should export NavbarComponent
+    FormsModule,          // ✅ for [(ngModel)]
+    ReactiveFormsModule,
+
+    // Angular Material
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatListModule,
+    MtxDatetimepickerModule,
+    MtxNativeDatetimeModule
   ]
 })
-export class TeacherModule { }
+export class TeacherModule {}

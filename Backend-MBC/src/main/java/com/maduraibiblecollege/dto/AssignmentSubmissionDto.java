@@ -1,6 +1,6 @@
 package com.maduraibiblecollege.dto;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.maduraibiblecollege.entity.assignmnets.SubmissionStatus;
@@ -20,7 +20,7 @@ public class AssignmentSubmissionDto {
     private String studentName;
 
     private String textAnswer;
-    private Instant submittedAt;
+    private LocalDateTime submittedAt;
     private SubmissionStatus status;
 
     private Integer marksObtained;

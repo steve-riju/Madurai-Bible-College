@@ -2,7 +2,7 @@ package com.maduraibiblecollege.entity.assignmnets;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.maduraibiblecollege.entity.User;
@@ -29,7 +29,7 @@ public class AssignmentSubmission {
     @Column(columnDefinition = "TEXT")
     private String textAnswer;
 
-    private Instant submittedAt;
+    private LocalDateTime submittedAt;
 
     @Enumerated(EnumType.STRING)
     private SubmissionStatus status; // SUBMITTED, REJECTED, GRADED, DRAFT

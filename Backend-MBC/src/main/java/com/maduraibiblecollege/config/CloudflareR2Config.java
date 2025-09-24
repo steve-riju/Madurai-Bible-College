@@ -32,6 +32,7 @@ public class CloudflareR2Config {
                 .region(Region.of("auto")) // R2 ignores region, "auto" works
                 .build();
     }
+    
 }
 
 

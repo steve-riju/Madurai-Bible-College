@@ -5,79 +5,71 @@
   background: $card-bg;
   box-shadow: $shadow;
   border-radius: 12px;
-  padding: 1.5rem;
-  margin: 1rem 0;
+  padding: 1rem;
+  margin: 1rem 0 3rem;
 
   h2 {
     color: $primary-color;
     margin-bottom: 1rem;
-    margin-top: 0;
-    @include responsive-font(1.2rem, 1.6rem);
+    font-size: 1.25rem;
+    font-weight: 600;
   }
 
   form {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 1rem;
 
-    input,
-    textarea,
-    select {
-      padding: 0.65rem 0.75rem;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      font-size: 0.95rem;
+    mat-form-field {
       width: 100%;
-      box-sizing: border-box;
-      color: $text-color;
-      background: #fff;
-      font-family: inherit;
 
-      &:focus {
-        outline: none;
-        border-color: $secondary-color;
-        box-shadow: 0 0 0 3px rgba($secondary-color, 0.1);
+      ::ng-deep .mat-form-field-outline {
+        border-radius: 8px;
+      }
+
+      ::ng-deep .mat-input-element {
+        font-size: 0.95rem;
+        font-family: inherit;
       }
     }
 
-    textarea {
-      min-height: 100px;
-      resize: vertical;
-    }
-
-    input[type="file"] {
+    input[type='file'] {
+      margin-top: 0.5rem;
       padding: 0.5rem;
       border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 0.9rem;
+
       &::-webkit-file-upload-button {
         background: darken($primary-color, 5%);
         color: #fff;
         border: none;
-        padding: 0.5rem 1rem;
+        padding: 0.4rem 0.8rem;
         border-radius: 6px;
         font-size: 0.85rem;
-        font-weight: 500;
         cursor: pointer;
-        transition: background-color 0.2s ease;
+        transition: 0.2s;
+
         &:hover {
-         background: $primary-color;
+          background: $primary-color;
         }
       }
     }
 
-    button[type="submit"] {
+    button[type='submit'] {
+      margin-top: 0.5rem;
       background: $secondary-color;
       color: #fff;
       padding: 0.75rem;
       border-radius: 8px;
       font-weight: 600;
       text-align: center;
+      width: 100%;
       @include hover-effect($secondary-color);
 
       &:disabled {
-        background-color: #ccc;
+        background-color: #ccc !important;
         cursor: not-allowed;
-        transform: none;
-        box-shadow: none;
       }
     }
   }
@@ -90,49 +82,80 @@
     padding-bottom: 0.5rem;
   }
 
-  ul {
-    list-style: none;
+  mat-list {
+    margin-top: 1rem;
     padding: 0;
-    margin: 1rem 0 0;
 
-    li {
+    mat-list-item {
       background: #f9f9f9;
-      padding: 0.75rem 1rem;
       margin-bottom: 0.75rem;
       border-left: 4px solid $primary-color;
       border-radius: 8px;
+      padding: 0.75rem 1rem;
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
+      gap: 0.4rem;
 
-      @media (min-width: 768px) {
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        gap: 1rem;
+      .flex {
+        display: flex;
+        flex-direction: column;
+        gap: 0.2rem;
       }
 
       strong {
-        flex-grow: 1;
         font-weight: 600;
+        font-size: 1rem;
       }
 
       span {
-        font-size: 0.9rem;
+        font-size: 0.875rem;
         color: $light-text-color;
-        white-space: nowrap;
+        word-break: break-word;
       }
 
       button {
+        margin-top: 0.5rem;
         background: $primary-color;
         color: #fff;
         padding: 0.4rem 0.8rem;
         border-radius: 6px;
         font-size: 0.85rem;
         font-weight: 500;
+        text-align: center;
+        width: fit-content;
         @include hover-effect($primary-color);
-        flex-shrink: 0;
+      }
+
+      @media (min-width: 640px) {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+
+        button {
+          margin-top: 0;
+        }
       }
     }
+  }
+}
+
+/* Date picker adjustments for mobile */
+::ng-deep .mat-datetimepicker-content {
+  max-width: 100% !important;
+}
+
+::ng-deep .mat-datetimepicker {
+  width: 100% !important;
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
+  .card {
+    padding: 2rem;
+  }
+
+  form button[type='submit'] {
+    width: auto;
+    align-self: flex-start;
   }
 }

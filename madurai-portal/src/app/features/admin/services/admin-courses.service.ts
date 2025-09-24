@@ -6,7 +6,7 @@ export interface Course {
   id?: number;
   code: string;
   name: string;
-  credits: number;
+  credits: number | string;
 }
 
 export interface Semester {
@@ -18,9 +18,9 @@ export interface Semester {
 
 export interface CourseAssignment {
   id?: number;
-  courseId: number;
-  semesterId: number;
-  teacherId: number;
+  courseId: number | null;
+  semesterId: number | null;
+  teacherId: number | null;
   teacherName?: string;
 }
 

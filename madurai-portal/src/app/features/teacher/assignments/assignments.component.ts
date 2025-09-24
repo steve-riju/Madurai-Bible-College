@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { TeacherAssignmentsService } from '../services/teacher-assignments.service';
 
 export interface BatchDto {
@@ -11,19 +11,15 @@ export interface AssignmentDto {
   id: number;
   title: string;
   description: string;
-
-  createdAt: string;     // ISO datetime
-  deadline: string;      // ISO datetime
-  endDate?: string;      // ✅ for template binding
-  status?: string;       // ✅ for template binding
+  createdAt: string;
+  deadline: string;
+  endDate?: string;
+  status?: string;
   published: boolean;
-
   batchId: number;
   batchName: string;
-
   teacherId: number;
   teacherName: string;
-
   attachmentUrls: string[];
 }
 
@@ -44,9 +40,6 @@ export interface SubmissionDto {
   rejectionReason?: string;
 }
 
-
-
-
 @Component({
   selector: 'app-assignments',
   templateUrl: './assignments.component.html',
@@ -61,40 +54,62 @@ export class AssignmentsComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private assignmentsService: TeacherAssignmentsService) {
     this.assignmentForm = this.fb.group({
-      title: [''],
-      description: [''],
-      batchId: [null],
-      startDate: [''],
-      endDate: [''],
-      maxMarks: [],
-      status: ['PUBLISHED']
+      title: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
+      description: ['', [Validators.required, this.wordCountValidator(500)]],
+      batchId: [null, Validators.required],
+      startDate: ['', Validators.required],
+      endDate: ['', Validators.required],
+      maxMarks: [null, [Validators.required, Validators.min(1)]],
+      status: ['PUBLISHED', Validators.required]
+    }, { validators: this.dateRangeValidator });
+  }
+
+  ngOnInit() {
+    this.assignmentsService.getBatches().subscribe(batches => {
+      this.batches = batches;
+    });
+
+    this.assignmentsService.getAllAssignments().subscribe(asgs => {
+      this.assignments = asgs;
     });
   }
 
- ngOnInit() {
-  // load batches
-  this.assignmentsService.getBatches().subscribe(batches => {
-    this.batches = batches;
-  });
+  // ✅ Custom validator: max word count
+  wordCountValidator(maxWords: number) {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (!control.value) return null;
+      const wordCount = control.value.trim().split(/\s+/).length;
+      return wordCount > maxWords ? { wordCount: true } : null;
+    };
+  }
 
-  // load assignments (all or by batch)
-  this.assignmentsService.getAllAssignments().subscribe(asgs => {
-    this.assignments = asgs;
-  });
-}
-
+  // ✅ Custom validator: start < end date
+  dateRangeValidator(group: AbstractControl): ValidationErrors | null {
+    const start = group.get('startDate')?.value;
+    const end = group.get('endDate')?.value;
+    if (start && end && new Date(start) >= new Date(end)) {
+      return { dateRange: true };
+    }
+    return null;
+  }
 
   onFiles(event: any) {
     this.files = Array.from(event.target.files);
   }
 
   onCreate() {
+    if (this.assignmentForm.invalid) return;
+
     const fd = new FormData();
     const data = this.assignmentForm.value;
     fd.append('data', new Blob([JSON.stringify(data)], { type: 'application/json' }));
+
     this.files.forEach(f => fd.append('files', f, f.name));
+
     this.assignmentsService.createAssignment(fd).subscribe(res => {
-      this.assignments.push(res); // update UI after creation
+      this.assignments.push(res);
+      this.assignmentForm.reset({ status: 'PUBLISHED' });
+      this.files = [];
     });
   }
 

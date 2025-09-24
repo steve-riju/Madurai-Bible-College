@@ -1,32 +1,109 @@
-<div class="card">
+<div class="card p-6">
   <h2>Create Assignment</h2>
 
-  <form [formGroup]="assignmentForm" (ngSubmit)="onCreate()">
-    <input formControlName="title" placeholder="Assignment Title" />
-    <textarea formControlName="description" placeholder="Write assignment details here"></textarea>
+  <form [formGroup]="assignmentForm" (ngSubmit)="onCreate()" class="grid gap-4">
 
-    <select formControlName="batchId">
-      <option value="" disabled>Select Batch</option>
-      <option *ngFor="let b of batches" [value]="b.id">{{ b.name }}</option>
-    </select>
-    <p>Start Date</p>
-    <input type="datetime-local" formControlName="startDate" placeholder="Start Date" />
-    <p>End Date</p>
-    <input type="datetime-local" formControlName="endDate" placeholder="End Date" />
-    <input type="number" formControlName="maxMarks" placeholder="Maximum Marks" />
+    <!-- Title -->
+    <mat-form-field appearance="outline">
+      <mat-label>Assignment Title</mat-label>
+      <input matInput formControlName="title" />
+      <mat-error *ngIf="assignmentForm.get('title')?.hasError('required')">
+        Title is required
+      </mat-error>
+      <mat-error *ngIf="assignmentForm.get('title')?.hasError('maxlength')">
+        Max 100 characters allowed
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Description -->
+    <mat-form-field appearance="outline">
+      <mat-label>Description</mat-label>
+      <textarea matInput rows="5" formControlName="description"></textarea>
+      <mat-error *ngIf="assignmentForm.get('description')?.hasError('required')">
+        Description is required
+      </mat-error>
+      <mat-error *ngIf="assignmentForm.get('description')?.hasError('wordCount')">
+        Maximum 500 words allowed
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Batch -->
+    <mat-form-field appearance="outline">
+      <mat-label>Select Batch</mat-label>
+      <mat-select formControlName="batchId">
+        <mat-option *ngFor="let b of batches" [value]="b.id">{{ b.name }}</mat-option>
+      </mat-select>
+      <mat-error *ngIf="assignmentForm.get('batchId')?.hasError('required')">
+        Batch is required
+      </mat-error>
+    </mat-form-field>
+
+<!-- Start Date & Time -->
+<mat-form-field appearance="outline">
+  <mat-label>Start Date & Time</mat-label>
+  <input matInput
+         [mtxDatetimepicker]="startPicker"
+         formControlName="startDate"
+         placeholder="Choose start date & time">
+  <mtx-datetimepicker-toggle matSuffix [for]="startPicker"></mtx-datetimepicker-toggle>
+  <mtx-datetimepicker #startPicker type="datetime"></mtx-datetimepicker>
+  <mat-error *ngIf="assignmentForm.get('startDate')?.hasError('required')">
+    Start date is required
+  </mat-error>
+</mat-form-field>
+
+<!-- End Date & Time -->
+<mat-form-field appearance="outline">
+  <mat-label>End Date & Time</mat-label>
+  <input matInput
+         [mtxDatetimepicker]="endPicker"
+         formControlName="endDate"
+         placeholder="Choose end date & time">
+  <mtx-datetimepicker-toggle matSuffix [for]="endPicker"></mtx-datetimepicker-toggle>
+  <mtx-datetimepicker #endPicker type="datetime"></mtx-datetimepicker>
+  <mat-error *ngIf="assignmentForm.get('endDate')?.hasError('required')">
+    End date is required
+  </mat-error>
+  <mat-error *ngIf="assignmentForm.hasError('dateRange')">
+    End date must be after start date
+  </mat-error>
+</mat-form-field>
+
+
+    <!-- Max Marks -->
+    <mat-form-field appearance="outline">
+      <mat-label>Maximum Marks</mat-label>
+      <input matInput type="number" formControlName="maxMarks" />
+      <mat-error *ngIf="assignmentForm.get('maxMarks')?.hasError('required')">
+        Maximum marks are required
+      </mat-error>
+      <mat-error *ngIf="assignmentForm.get('maxMarks')?.hasError('min')">
+        Must be at least 1
+      </mat-error>
+    </mat-form-field>
+
+    <!-- File Upload (Optional) -->
     <input type="file" (change)="onFiles($event)" multiple />
+    <p *ngIf="files.length">Selected {{ files.length }} file(s)</p>
 
-    <button type="submit" [disabled]="assignmentForm.invalid">Publish</button>
+    <!-- Submit -->
+    <button mat-raised-button color="primary" type="submit" [disabled]="assignmentForm.invalid">
+      Publish
+    </button>
   </form>
 
   <h3 class="mt-6">Published Assignments</h3>
-  <ul>
-    <li *ngFor="let a of assignments">
-      <strong>{{ a.title }}</strong>
-      <span>{{ a.batchName }}</span>
-      <span>🕒 Due: {{ a.deadline | date:'MMM d, y, h:mm a' }}</span>
-      <span>Status: {{ a.status }}</span>
-      <button (click)="viewSubmissions(a.id)">View Submissions</button>
-    </li>
-  </ul>
+  <mat-list>
+    <mat-list-item *ngFor="let a of assignments">
+      <div class="flex flex-col">
+        <strong>{{ a.title }}</strong>
+        <span>{{ a.batchName }}</span>
+        <span>🕒 Due: {{ a.deadline | date:'MMM d, y, h:mm a' }}</span>
+        <span>Status: {{ a.status }}</span>
+      </div>
+      <button mat-stroked-button color="accent" (click)="viewSubmissions(a.id)">
+        View Submissions
+      </button>
+    </mat-list-item>
+  </mat-list>
 </div>

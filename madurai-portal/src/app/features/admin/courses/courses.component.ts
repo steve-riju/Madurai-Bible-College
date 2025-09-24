@@ -14,9 +14,9 @@ export class CoursesComponent implements OnInit {
   assignments: CourseAssignment[] = [];
 
   // form models (template-driven)
-  newCourse: Course = { code: '', name: '', credits: 0 };
+  newCourse: Course = { code: '', name: '', credits: '' };
   newSemester: Semester = { name: '', startDate: '', endDate: '' };
-  assignment: CourseAssignment = { courseId: 0, semesterId: 0, teacherId: 0 };
+  assignment: CourseAssignment = { courseId: null, semesterId: null, teacherId: null };
   
 
   // UI state
@@ -214,10 +214,10 @@ export class CoursesComponent implements OnInit {
 }
 
   // helpers for display
-  courseNameById(id?: number) {
+  courseNameById(id?: number | null) {
     return this.courses.find(c => c.id === id)?.name || id;
   }
-  semesterNameById(id?: number) {
+  semesterNameById(id?: number | null) {
     return this.semesters.find(s => s.id === id)?.name || id;
   }
 }

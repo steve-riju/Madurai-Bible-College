@@ -2,7 +2,7 @@ package com.maduraibiblecollege.entity.assignmnets;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.maduraibiblecollege.entity.Batch;
@@ -25,8 +25,8 @@ public class Assignment {
     @JoinColumn(name = "batch_id")
     private Batch batch;
 
-    private Instant startDate;
-    private Instant endDate;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
 
     private Integer maxMarks;
 

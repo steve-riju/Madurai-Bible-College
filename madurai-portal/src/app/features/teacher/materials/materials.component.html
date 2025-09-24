@@ -15,7 +15,7 @@
         id="course"
         required
       >
-        <option value="" disabled selected>Select a course</option>
+        <option value=null disabled selected>Select a course</option>
         <option *ngFor="let c of courses" [value]="c.id">
           {{ c.name }}
         </option>

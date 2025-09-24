@@ -1,6 +1,6 @@
 package com.maduraibiblecollege.service;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -55,7 +55,7 @@ public class AssignmentServiceImpl implements AssignmentService {
         assignment.setTitle(request.getTitle());
         assignment.setDescription(request.getDescription());
         // use provided startDate/endDate from request if present, else null
-        assignment.setStartDate(request.getStartDate() != null ? request.getStartDate() : Instant.now());
+        assignment.setStartDate(request.getStartDate() != null ? request.getStartDate() : LocalDateTime.now());
         assignment.setEndDate(request.getEndDate());
         assignment.setMaxMarks(request.getMaxMarks());
         assignment.setStatus(request.getStatus() != null ? request.getStatus() : AssignmentStatus.PUBLISHED);
@@ -168,7 +168,7 @@ public class AssignmentServiceImpl implements AssignmentService {
                 });
 
         submission.setTextAnswer(textAnswer);
-        submission.setSubmittedAt(Instant.now());
+        submission.setSubmittedAt(LocalDateTime.now());
         submission.setStatus(SubmissionStatus.SUBMITTED); 
 
 
