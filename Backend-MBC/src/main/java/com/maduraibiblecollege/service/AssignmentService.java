@@ -28,5 +28,7 @@ public interface AssignmentService {
     Resource downloadSubmissionAttachment(Long attachmentId); // for teacher download
     Resource bulkDownloadSubmissions(Long assignmentId);
     List<AssignmentDto> getAllAssignmentsByTeacher(Long teacherId);
+    void deleteAssignment(Long assignmentId, Long teacherId);
+
 }
 

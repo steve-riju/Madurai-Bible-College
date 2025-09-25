@@ -260,4 +260,18 @@ public class AssignmentServiceImpl implements AssignmentService {
         for (Assignment a : list) dtos.add(DtoMapper.toAssignmentDto(a));
         return dtos;
     }
+    
+    @Override
+    public void deleteAssignment(Long assignmentId, Long teacherId) {
+        Assignment a = assignmentRepo.findByIdAndTeacherId(assignmentId, teacherId)
+                .orElseThrow(() -> new IllegalArgumentException("Assignment not found or not owned by you"));
+
+        // delete all submissions and their attachments
+        List<AssignmentSubmission> subs = submissionRepo.findByAssignmentId(assignmentId);
+        submissionRepo.deleteAll(subs);
+
+        // delete assignment (attachments cascade if mapped with orphanRemoval = true)
+        assignmentRepo.delete(a);
+    }
+
 }

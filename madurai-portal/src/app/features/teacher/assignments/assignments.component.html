@@ -92,18 +92,36 @@
     </button>
   </form>
 
-  <h3 class="mt-6">Published Assignments</h3>
-  <mat-list>
-    <mat-list-item *ngFor="let a of assignments">
-      <div class="flex flex-col">
-        <strong>{{ a.title }}</strong>
-        <span>{{ a.batchName }}</span>
-        <span>🕒 Due: {{ a.deadline | date:'MMM d, y, h:mm a' }}</span>
-        <span>Status: {{ a.status }}</span>
+<h3 class="mt-6">Published Assignments</h3>
+<mat-list>
+  <mat-list-item *ngFor="let a of assignments">
+    <div class="assignment-info flex flex-col gap-1 w-full">
+      <div class="flex justify-between items-center">
+        <div>
+          <strong>{{ a.title }}</strong> — <span>{{ a.batchName }}</span>
+          <span class="ml-2">🕒 Due: {{ a.deadline | date:'MMM d, y, h:mm a' }}</span>
+          <span class="ml-2">Status: {{ a.status || 'PUBLISHED' }}</span>
+        </div>
+
+        <div class="actions flex gap-2">
+          <button mat-stroked-button color="accent" (click)="viewSubmissions(a.id)">View Submissions</button>
+
+          <!-- Delete inline confirmation -->
+          <ng-container *ngIf="confirmDeleteId !== a.id">
+            <button mat-icon-button color="warn" (click)="askDelete(a.id)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </ng-container>
+
+          <ng-container *ngIf="confirmDeleteId === a.id">
+            <span>Confirm?</span>
+            <button mat-button color="warn" (click)="confirmDelete(a.id)">Yes</button>
+            <button mat-button (click)="cancelDelete()">No</button>
+          </ng-container>
+        </div>
       </div>
-      <button mat-stroked-button color="accent" (click)="viewSubmissions(a.id)">
-        View Submissions
-      </button>
-    </mat-list-item>
-  </mat-list>
+    </div>
+  </mat-list-item>
+</mat-list>
+
 </div>

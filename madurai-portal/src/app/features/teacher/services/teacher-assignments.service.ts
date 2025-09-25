@@ -48,5 +48,10 @@ getAllAssignments() {
   return this.http.get<AssignmentDto[]>(`${this.apiUrl}/api/teacher/assignments`);
 }
 
+deleteAssignment(id: number) {
+  return this.http.delete(`${this.apiUrl}/api/teacher/assignments/${id}`);
+}
+
+
 
 }

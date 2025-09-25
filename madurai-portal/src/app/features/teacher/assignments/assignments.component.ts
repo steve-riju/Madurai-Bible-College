@@ -40,6 +40,8 @@ export interface SubmissionDto {
   rejectionReason?: string;
 }
 
+
+
 @Component({
   selector: 'app-assignments',
   templateUrl: './assignments.component.html',
@@ -113,7 +115,28 @@ export class AssignmentsComponent implements OnInit {
     });
   }
 
-  viewSubmissions(id: number) {
+selectedAssignmentId?: number;
+confirmDeleteId?: number; // track which assignment is being confirmed
+
+ viewSubmissions(id: number) {
     console.log('View submissions for assignment:', id);
   }
+
+askDelete(assignmentId: number) {
+  this.confirmDeleteId = assignmentId;
+}
+
+cancelDelete() {
+  this.confirmDeleteId = undefined;
+}
+
+confirmDelete(assignmentId: number) {
+  this.assignmentsService.deleteAssignment(assignmentId).subscribe(() => {
+    this.assignments = this.assignments.filter(a => a.id !== assignmentId);
+    this.confirmDeleteId = undefined;
+  });
+}
+
+
+  
 }

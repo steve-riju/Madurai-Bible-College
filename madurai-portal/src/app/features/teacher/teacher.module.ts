@@ -24,6 +24,9 @@ import { MaterialsComponent } from './materials/materials.component';
 import { AssignmentsComponent } from './assignments/assignments.component';
 import { ProfileComponent } from './profile/profile.component';
 import { TeacherLayoutComponent } from './teacher-layout/teacher-layout.component';
+import { MatIcon } from '@angular/material/icon';
+import { MatTableModule } from '@angular/material/table';
+import { SubmissionReviewComponent } from './submission-review/submission-review.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +34,8 @@ import { TeacherLayoutComponent } from './teacher-layout/teacher-layout.componen
     MaterialsComponent,
     AssignmentsComponent,
     ProfileComponent,
-    TeacherLayoutComponent
+    TeacherLayoutComponent,
+    SubmissionReviewComponent
   ],
   imports: [
     CommonModule,
@@ -48,7 +52,9 @@ import { TeacherLayoutComponent } from './teacher-layout/teacher-layout.componen
     MatButtonModule,
     MatListModule,
     MtxDatetimepickerModule,
-    MtxNativeDatetimeModule
+    MtxNativeDatetimeModule,
+    MatIcon,
+    MatTableModule
   ]
 })
 export class TeacherModule {}

@@ -6,6 +6,7 @@ import { AssignmentsComponent } from './assignments/assignments.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { MaterialsComponent } from './materials/materials.component';
 import { ProfileComponent } from './profile/profile.component';
+import { SubmissionReviewComponent } from './submission-review/submission-review.component';
 
 import { AuthGuard } from '../../shared/auth.guard';
 
@@ -20,6 +21,8 @@ const routes: Routes = [
       { path: 'materials', component: MaterialsComponent },
       { path: 'assignments', component: AssignmentsComponent },
       { path: 'profile', component: ProfileComponent },
+      { path: 'assignments/:id/submissions', component: SubmissionReviewComponent },
+
       { path: '**', redirectTo: 'dashboard' }
     ]
   }

@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -118,5 +119,15 @@ public class TeacherAssignmentController {
 
         return ResponseEntity.ok(assignmentService.getAllAssignmentsByTeacher(teacher.getId()));
     }
+    
+    @DeleteMapping("/{assignmentId}")
+    public ResponseEntity<Void> deleteAssignment(@PathVariable Long assignmentId, Principal principal) {
+        User teacher = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new UsernameNotFoundException("Teacher not found"));
+
+        assignmentService.deleteAssignment(assignmentId, teacher.getId());
+        return ResponseEntity.noContent().build();
+    }
+
 
 }
