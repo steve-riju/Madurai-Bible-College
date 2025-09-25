@@ -1,127 +1,112 @@
-<div class="card p-6">
-  <h2>Create Assignment</h2>
+<div class="assignment-page-container">
+  <div class="card">
+    <h2>Create Assignment</h2>
+    <form [formGroup]="assignmentForm" (ngSubmit)="onCreate()" class="assignment-form">
+      <mat-form-field appearance="outline">
+        <mat-label>Assignment Title</mat-label>
+        <input matInput formControlName="title" />
+        <mat-error *ngIf="assignmentForm.get('title')?.hasError('required')">Title is required</mat-error>
+      </mat-form-field>
 
-  <form [formGroup]="assignmentForm" (ngSubmit)="onCreate()" class="grid gap-4">
+      <mat-form-field appearance="outline">
+        <mat-label>Description</mat-label>
+        <textarea matInput rows="4" formControlName="description"></textarea>
+        <mat-error *ngIf="assignmentForm.get('description')?.hasError('required')">Description is required</mat-error>
+      </mat-form-field>
 
-    <!-- Title -->
-    <mat-form-field appearance="outline">
-      <mat-label>Assignment Title</mat-label>
-      <input matInput formControlName="title" />
-      <mat-error *ngIf="assignmentForm.get('title')?.hasError('required')">
-        Title is required
-      </mat-error>
-      <mat-error *ngIf="assignmentForm.get('title')?.hasError('maxlength')">
-        Max 100 characters allowed
-      </mat-error>
-    </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Select Batch</mat-label>
+        <mat-select formControlName="batchId">
+          <mat-option *ngFor="let b of batches" [value]="b.id">{{ b.name }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="assignmentForm.get('batchId')?.hasError('required')">Batch is required</mat-error>
+      </mat-form-field>
 
-    <!-- Description -->
-    <mat-form-field appearance="outline">
-      <mat-label>Description</mat-label>
-      <textarea matInput rows="5" formControlName="description"></textarea>
-      <mat-error *ngIf="assignmentForm.get('description')?.hasError('required')">
-        Description is required
-      </mat-error>
-      <mat-error *ngIf="assignmentForm.get('description')?.hasError('wordCount')">
-        Maximum 500 words allowed
-      </mat-error>
-    </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Start Date & Time</mat-label>
+        <input matInput [mtxDatetimepicker]="startPicker" formControlName="startDate" readonly>
+        <mtx-datetimepicker-toggle matSuffix [for]="startPicker"></mtx-datetimepicker-toggle>
+        <mtx-datetimepicker #startPicker type="datetime"></mtx-datetimepicker>
+        <mat-error *ngIf="assignmentForm.get('startDate')?.hasError('required')">Start date is required</mat-error>
+      </mat-form-field>
 
-    <!-- Batch -->
-    <mat-form-field appearance="outline">
-      <mat-label>Select Batch</mat-label>
-      <mat-select formControlName="batchId">
-        <mat-option *ngFor="let b of batches" [value]="b.id">{{ b.name }}</mat-option>
-      </mat-select>
-      <mat-error *ngIf="assignmentForm.get('batchId')?.hasError('required')">
-        Batch is required
-      </mat-error>
-    </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>End Date & Time</mat-label>
+        <input matInput [mtxDatetimepicker]="endPicker" formControlName="endDate" readonly>
+        <mtx-datetimepicker-toggle matSuffix [for]="endPicker"></mtx-datetimepicker-toggle>
+        <mtx-datetimepicker #endPicker type="datetime"></mtx-datetimepicker>
+        <mat-error *ngIf="assignmentForm.get('endDate')?.hasError('required')">End date is required</mat-error>
+        <mat-error *ngIf="assignmentForm.hasError('dateRange')">End date must be after start date</mat-error>
+      </mat-form-field>
 
-<!-- Start Date & Time -->
-<mat-form-field appearance="outline">
-  <mat-label>Start Date & Time</mat-label>
-  <input matInput
-         [mtxDatetimepicker]="startPicker"
-         formControlName="startDate"
-         placeholder="Choose start date & time">
-  <mtx-datetimepicker-toggle matSuffix [for]="startPicker"></mtx-datetimepicker-toggle>
-  <mtx-datetimepicker #startPicker type="datetime"></mtx-datetimepicker>
-  <mat-error *ngIf="assignmentForm.get('startDate')?.hasError('required')">
-    Start date is required
-  </mat-error>
-</mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Maximum Marks</mat-label>
+        <input matInput type="number" formControlName="maxMarks" />
+        <mat-error *ngIf="assignmentForm.get('maxMarks')?.hasError('required')">Max marks are required</mat-error>
+        <mat-error *ngIf="assignmentForm.get('maxMarks')?.hasError('min')">Must be at least 1</mat-error>
+      </mat-form-field>
 
-<!-- End Date & Time -->
-<mat-form-field appearance="outline">
-  <mat-label>End Date & Time</mat-label>
-  <input matInput
-         [mtxDatetimepicker]="endPicker"
-         formControlName="endDate"
-         placeholder="Choose end date & time">
-  <mtx-datetimepicker-toggle matSuffix [for]="endPicker"></mtx-datetimepicker-toggle>
-  <mtx-datetimepicker #endPicker type="datetime"></mtx-datetimepicker>
-  <mat-error *ngIf="assignmentForm.get('endDate')?.hasError('required')">
-    End date is required
-  </mat-error>
-  <mat-error *ngIf="assignmentForm.hasError('dateRange')">
-    End date must be after start date
-  </mat-error>
-</mat-form-field>
+      <div class="file-input-wrapper">
+        <label for="file-upload" class="file-upload-button">
+          <mat-icon>attach_file</mat-icon>
+          <span>Attach Files (Optional)</span>
+        </label>
+        <input id="file-upload" type="file" (change)="onFiles($event)" multiple class="file-input-hidden" />
+        <span *ngIf="files.length" class="file-name-display">{{ files.length }} file(s) selected</span>
+      </div>
 
+      <button mat-raised-button color="primary" type="submit" [disabled]="assignmentForm.invalid" class="publish-btn">
+        Publish Assignment
+      </button>
+    </form>
+  </div>
 
-    <!-- Max Marks -->
-    <mat-form-field appearance="outline">
-      <mat-label>Maximum Marks</mat-label>
-      <input matInput type="number" formControlName="maxMarks" />
-      <mat-error *ngIf="assignmentForm.get('maxMarks')?.hasError('required')">
-        Maximum marks are required
-      </mat-error>
-      <mat-error *ngIf="assignmentForm.get('maxMarks')?.hasError('min')">
-        Must be at least 1
-      </mat-error>
-    </mat-form-field>
+  <div class="card">
+    <h3>Published Assignments</h3>
 
-    <!-- File Upload (Optional) -->
-    <input type="file" (change)="onFiles($event)" multiple />
-    <p *ngIf="files.length">Selected {{ files.length }} file(s)</p>
+    <mat-list *ngIf="assignments && assignments.length > 0; else noAssignments" class="published-assignments-list">
+      <mat-list-item *ngFor="let a of assignments" class="assignment-item">
 
-    <!-- Submit -->
-    <button mat-raised-button color="primary" type="submit" [disabled]="assignmentForm.invalid">
-      Publish
-    </button>
-  </form>
-
-<h3 class="mt-6">Published Assignments</h3>
-<mat-list>
-  <mat-list-item *ngFor="let a of assignments">
-    <div class="assignment-info flex flex-col gap-1 w-full">
-      <div class="flex justify-between items-center">
-        <div>
-          <strong>{{ a.title }}</strong> — <span>{{ a.batchName }}</span>
-          <span class="ml-2">🕒 Due: {{ a.deadline | date:'MMM d, y, h:mm a' }}</span>
-          <span class="ml-2">Status: {{ a.status || 'PUBLISHED' }}</span>
+        <div class="assignment-details">
+          <strong class="assignment-title">{{ a.title }}</strong>
+          <div class="assignment-meta">
+            <span class="meta-item">
+              <mat-icon>group</mat-icon>
+              <span>{{ a.batchName }}</span>
+            </span>
+            <span class="meta-item">
+              <mat-icon>schedule</mat-icon>
+              <span>Due: {{ a.deadline | date:'MMM d, h:mm a' }}</span>
+            </span>
+            <span class="meta-item">
+              <mat-icon>task_alt</mat-icon>
+              <span>{{ a.status || 'Published' }}</span>
+            </span>
+          </div>
         </div>
 
-        <div class="actions flex gap-2">
-          <button mat-stroked-button color="accent" (click)="viewSubmissions(a.id)">View Submissions</button>
-
-          <!-- Delete inline confirmation -->
+        <div class="assignment-actions">
+          <button mat-flat-button color="accent" (click)="viewSubmissions(a.id)">View Submissions</button>
           <ng-container *ngIf="confirmDeleteId !== a.id">
-            <button mat-icon-button color="warn" (click)="askDelete(a.id)">
+            <button mat-icon-button color="warn" (click)="askDelete(a.id)" aria-label="Delete assignment">
               <mat-icon>delete</mat-icon>
             </button>
           </ng-container>
-
-          <ng-container *ngIf="confirmDeleteId === a.id">
-            <span>Confirm?</span>
-            <button mat-button color="warn" (click)="confirmDelete(a.id)">Yes</button>
-            <button mat-button (click)="cancelDelete()">No</button>
+          <ng-container *ngIf="confirmDeleteId === a.id" class="delete-confirm">
+            <button mat-button color="warn" (click)="confirmDelete(a.id)">Confirm</button>
+            <button mat-button (click)="cancelDelete()">Cancel</button>
           </ng-container>
         </div>
-      </div>
-    </div>
-  </mat-list-item>
-</mat-list>
 
+      </mat-list-item>
+    </mat-list>
+
+    <ng-template #noAssignments>
+      <div class="empty-state-message">
+        <mat-icon>info_outline</mat-icon>
+        <span>No assignments published yet.</span>
+      </div>
+    </ng-template>
+
+  </div>
 </div>

@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class TeacherSubmissionReviewService {
-  private baseUrl = 'http://localhost:8080/api/teacher/assignments'; // adjust if needed
+  private baseUrl = 'http://localhost:8080/api/teacher/assignments'; 
 
   constructor(private http: HttpClient) {}
 
@@ -14,14 +14,15 @@ export class TeacherSubmissionReviewService {
     return this.http.get<any[]>(`${this.baseUrl}/${assignmentId}/submissions`);
   }
 
-  gradeSubmission(submissionId: number, body: any): Observable<any> {
-    return this.http.put<any>(`${this.baseUrl}/submissions/${submissionId}/grade`, body);
-  }
+ gradeSubmission(submissionId: number, marks: number, remarks: string): Observable<any> {
+  const body = { marksObtained: marks, remarks: remarks };
+  return this.http.put<any>(`${this.baseUrl}/submissions/${submissionId}/grade`, body);
+}
 
-  rejectSubmission(submissionId: number, reason: string): Observable<any> {
-    const body = { remarks: reason, marksObtained: 0 }; // backend can decide logic
-    return this.http.put<any>(`${this.baseUrl}/submissions/${submissionId}/grade`, body);
-  }
+rejectSubmission(submissionId: number, reason: string): Observable<any> {
+  return this.http.put<any>(`${this.baseUrl}/submissions/${submissionId}/reject`, { reason });
+}
+
 
   extendDeadline(assignmentId: number, newDate: string): Observable<any> {
     return this.http.put<any>(`${this.baseUrl}/${assignmentId}/extend`, { newDeadline: newDate });

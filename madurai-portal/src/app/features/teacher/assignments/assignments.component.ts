@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { TeacherAssignmentsService } from '../services/teacher-assignments.service';
+import { Router } from '@angular/router';
 
 export interface BatchDto {
   id: number;
@@ -54,7 +55,7 @@ export class AssignmentsComponent implements OnInit {
   assignments: AssignmentDto[] = [];
   batches: BatchDto[] = [];
 
-  constructor(private fb: FormBuilder, private assignmentsService: TeacherAssignmentsService) {
+  constructor(private fb: FormBuilder, private assignmentsService: TeacherAssignmentsService, private router: Router) {
     this.assignmentForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
       description: ['', [Validators.required, this.wordCountValidator(500)]],
@@ -119,7 +120,7 @@ selectedAssignmentId?: number;
 confirmDeleteId?: number; // track which assignment is being confirmed
 
  viewSubmissions(id: number) {
-    console.log('View submissions for assignment:', id);
+  this.router.navigate(['/teacher/assignments', id, 'submissions']);
   }
 
 askDelete(assignmentId: number) {

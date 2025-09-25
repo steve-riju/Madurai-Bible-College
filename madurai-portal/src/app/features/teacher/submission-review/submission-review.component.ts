@@ -29,18 +29,18 @@ export class SubmissionReviewComponent implements OnInit {
     });
   }
 
-  grade(sub: any) {
-    const body = { marksObtained: 90, remarks: 'Good job' };
-    this.service.gradeSubmission(sub.id, body).subscribe(updated => {
-      sub.grade = updated.grade;
-      sub.remarks = updated.remarks;
-    });
-  }
+ saveGrade(sub: any) {
+  this.service.gradeSubmission(sub.id, sub.marksObtained, sub.teacherRemarks).subscribe(updated => {
+    Object.assign(sub, updated); // refresh row
+  });
+}
 
-  reject(sub: any) {
-    this.service.rejectSubmission(sub.id, 'Plagiarized').subscribe(updated => {
-      sub.rejected = true;
-      sub.remarks = updated.remarks;
-    });
-  }
+reject(sub: any) {
+  const reason = prompt("Enter reason for rejection:", "Incomplete work");
+  if (!reason) return;
+  this.service.rejectSubmission(sub.id, reason).subscribe(updated => {
+    Object.assign(sub, updated);
+  });
+}
+
 }
