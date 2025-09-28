@@ -16,9 +16,11 @@
         <option value="ADMIN">Admin</option>
       </select>
     </div>
-    <div class="form-group">
-      <input formControlName="password" placeholder="Password" type="password" />
-    </div>
+    <!-- remove password input -->
+<!-- <div class="form-group">
+  <input formControlName="password" placeholder="Password" type="password" />
+</div> -->
+
     <button type="submit" [disabled]="userForm.invalid" class="btn-primary">Add</button>
   </form>
 

@@ -68,6 +68,11 @@ export class MaterialsComponent implements OnInit {
     this.title = material.title;
     this.description = material.description;
     this.selectedCourseId = material.courseId;
+
+    const formElement = document.getElementById('form-group');
+  if (formElement) {
+    formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
   }
 
   saveEdit() {

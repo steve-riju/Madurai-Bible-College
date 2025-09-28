@@ -14,9 +14,9 @@ export class UsersComponent implements OnInit {
   userForm!: FormGroup;
 
   // filters
-  filterRole: string = ''; // ✅ renamed from selectedRole
+  filterRole: string = ''; 
   sortAsc: boolean = true;
-  searchTerm: string = ''; // ✅ renamed from searchQuery
+  searchTerm: string = ''; 
 
   // delete confirmation state
 confirmDeleteId: number | null | undefined = null;
@@ -34,8 +34,7 @@ confirmDeleteId: number | null | undefined = null;
     this.userForm = this.fb.group({
       username: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      role: ['STUDENT', Validators.required],
-      password: ['', Validators.required]
+      role: ['STUDENT', Validators.required]
     });
   }
 

@@ -1,5 +1,7 @@
 package com.maduraibiblecollege.controller.admin;
 
+import com.maduraibiblecollege.config.EmailService;
+import com.maduraibiblecollege.config.PasswordGenerator;
 import com.maduraibiblecollege.entity.Role;
 import com.maduraibiblecollege.entity.User;
 import com.maduraibiblecollege.repository.UserRepository;
@@ -17,6 +19,7 @@ public class AdminUserController {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
     // ✅ Get all users
     @GetMapping
@@ -41,9 +44,23 @@ public class AdminUserController {
         if (userRepository.existsByEmail(user.getEmail())) {
             return ResponseEntity.badRequest().build();
         }
-        user.setPassword(passwordEncoder.encode(user.getPassword())); // encode password
-        return ResponseEntity.ok(userRepository.save(user));
+
+        // 1️ Generate random password
+        String rawPassword = PasswordGenerator.generatePassword();
+
+        // 2️ Encode & save
+        user.setPassword(passwordEncoder.encode(rawPassword));
+        User savedUser = userRepository.save(user);
+
+        // 3️ Send email
+        emailService.sendPasswordEmail(user.getEmail(),user.getUsername(), rawPassword, user.getRole());
+        
+        // For testing 
+        System.out.println("Password for "+user.getUsername()+" is: "+ rawPassword);
+
+        return ResponseEntity.ok(savedUser);
     }
+
 
     // ✅ Update user (role, email, etc.)
     @PutMapping("/{id}")
