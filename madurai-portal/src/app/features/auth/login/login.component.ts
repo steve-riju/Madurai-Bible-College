@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { trigger, style, animate, transition } from '@angular/animations';
 import { AuthService } from '../../../shared/auth.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -27,12 +27,16 @@ export class LoginComponent {
   errorMessage: string = '';
   passwordVisible: boolean = false;
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private route: ActivatedRoute) {
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {
     this.loginForm = this.fb.group({
       username: ['', Validators.required],
       password: ['', Validators.required]
     });
-    
   }
 
   selectRole(role: string) {
@@ -55,29 +59,36 @@ export class LoginComponent {
     }, 400);
   }
 
-  onSubmit() {
-  if (this.loginForm.invalid) {
-    this.errorMessage = 'Please fill in all fields.';
-    return;
+  goToForgotPassword() {
+    this.showLoginForm = false; // optional fade-out
+    setTimeout(() => {
+      this.router.navigate(['/auth/forgot-password']);
+    }, 400);
   }
 
-  const { username, password } = this.loginForm.value;
-
-  this.authService.login(username, password).subscribe({
-    next: () => {
-      // redirect handled in service
-    },
-    error: () => {
-      this.errorMessage = 'Invalid credentials. Please try again.';
+  onSubmit() {
+    if (this.loginForm.invalid) {
+      this.errorMessage = 'Please fill in all fields.';
+      return;
     }
-  });
-}
-ngOnInit(): void {
-  this.route.queryParams.subscribe(params => {
-    if (params['sessionExpired']) {
-      this.errorMessage = "Your session has expired. Please log in again.";
-    }
-  });
-}
 
+    const { username, password } = this.loginForm.value;
+
+    this.authService.login(username, password).subscribe({
+      next: () => {
+        // redirect handled in service
+      },
+      error: () => {
+        this.errorMessage = 'Invalid credentials. Please try again.';
+      }
+    });
+  }
+
+  ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      if (params['sessionExpired']) {
+        this.errorMessage = "Your session has expired. Please log in again.";
+      }
+    });
+  }
 }

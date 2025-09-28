@@ -141,6 +141,27 @@
     text-decoration: underline;
   }
 }
+/* Forgot password link inside login form */
+.extra-actions {
+  margin-top: 1rem;
+  text-align: right;
+
+  .forgot-link {
+    background: none;
+    border: none;
+    color: $secondary-color;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: color 0.2s ease;
+
+    &:hover {
+      text-decoration: underline;
+      color: darken($secondary-color, 10%);
+    }
+  }
+}
+
+
 
 /* Tablet */
 @media (min-width: 600px) {
