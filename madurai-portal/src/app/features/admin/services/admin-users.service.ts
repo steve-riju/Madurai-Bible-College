@@ -10,6 +10,12 @@ export interface User {
   role: 'STUDENT' | 'TEACHER' | 'ADMIN';
 }
 
+export interface ApiResponse {
+  message: string;
+  success: boolean;
+}
+
+
 @Injectable({
   providedIn: 'root'
 })
@@ -27,19 +33,20 @@ export class AdminUsersService {
     return this.http.get<User>(`${this.apiUrl}/${id}`);
   }
 
-  createUser(user: User): Observable<User> {
-    return this.http.post<User>(this.apiUrl, user);
+  createUser(user: User): Observable<ApiResponse> {
+    return this.http.post<ApiResponse>(this.apiUrl, user);
   }
+
+  deleteUser(id: number): Observable<ApiResponse> {
+    return this.http.delete<ApiResponse>(`${this.apiUrl}/${id}`);
+  }
+
 
   updateUser(id: number, user: User): Observable<User> {
     return this.http.put<User>(`${this.apiUrl}/${id}`, user);
   }
 
-  deleteUser(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
-  }
-
-  getStudents(): Observable<User[]> {
+    getStudents(): Observable<User[]> {
   return this.http.get<User[]>(`${this.apiUrl}/students`);
 }
 

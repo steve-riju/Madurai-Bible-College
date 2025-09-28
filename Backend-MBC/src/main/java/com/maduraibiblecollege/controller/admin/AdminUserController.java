@@ -2,10 +2,13 @@ package com.maduraibiblecollege.controller.admin;
 
 import com.maduraibiblecollege.config.EmailService;
 import com.maduraibiblecollege.config.PasswordGenerator;
+import com.maduraibiblecollege.dto.ApiResponse;
 import com.maduraibiblecollege.entity.Role;
 import com.maduraibiblecollege.entity.User;
 import com.maduraibiblecollege.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -37,29 +40,29 @@ public class AdminUserController {
 
     // ✅ Create new user (Admin can add Student/Teacher/Admin)
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
+    public ResponseEntity<?> createUser(@RequestBody User user) {
         if (userRepository.existsByUsername(user.getUsername())) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity
+                    .badRequest()
+                    .body(new ApiResponse("❌ Username already exists!", false));
         }
         if (userRepository.existsByEmail(user.getEmail())) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity
+                    .badRequest()
+                    .body(new ApiResponse("❌ Email already exists!", false));
         }
 
-        // 1️ Generate random password
+        // Generate password
         String rawPassword = PasswordGenerator.generatePassword();
-
-        // 2️ Encode & save
         user.setPassword(passwordEncoder.encode(rawPassword));
         User savedUser = userRepository.save(user);
 
-        // 3️ Send email
-        emailService.sendPasswordEmail(user.getEmail(),user.getUsername(), rawPassword, user.getRole());
-        
-        // For testing 
-        System.out.println("Password for "+user.getUsername()+" is: "+ rawPassword);
+        // Send mail
+        emailService.sendPasswordEmail(user.getEmail(), user.getUsername(), rawPassword, user.getRole());
 
-        return ResponseEntity.ok(savedUser);
+        return ResponseEntity.ok(new ApiResponse("✅ User created successfully!", true));
     }
+
 
 
     // ✅ Update user (role, email, etc.)
@@ -79,13 +82,16 @@ public class AdminUserController {
 
     // ✅ Delete user
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse> deleteUser(@PathVariable Long id) {
         if (!userRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new ApiResponse("❌ User not found!", false));
         }
         userRepository.deleteById(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(new ApiResponse("✅ User deleted successfully!", true));
     }
+
     
  // ✅ Get only Teachers
     @GetMapping("/teachers")

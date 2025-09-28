@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AdminUsersService, User } from '../services/admin-users.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-users',
@@ -26,7 +27,7 @@ confirmDeleteId: number | null | undefined = null;
   pageSize: number = 25; // ✅ show 25 per page
   totalPages: number = 1;
 
-  constructor(private fb: FormBuilder, private adminUsersService: AdminUsersService) {}
+  constructor(private fb: FormBuilder, private adminUsersService: AdminUsersService, private snackBar: MatSnackBar) {}
 
   ngOnInit(): void {
     this.loadUsers();
@@ -46,14 +47,39 @@ confirmDeleteId: number | null | undefined = null;
   }
 
   addUser(): void {
-    if (this.userForm.invalid) return;
-    const newUser: User = this.userForm.value;
+  if (this.userForm.invalid) return;
+  const newUser: User = this.userForm.value;
 
-    this.adminUsersService.createUser(newUser).subscribe(() => {
-      this.loadUsers();
-      this.userForm.reset({ role: 'STUDENT' });
-    });
-  }
+  this.adminUsersService.createUser(newUser).subscribe({
+    next: (res) => {
+      this.snackBar.open(res.message, 'Close', { duration: 3000 });
+      if (res.success) {
+        this.loadUsers();
+        this.userForm.reset({ role: 'STUDENT' });
+      }
+    },
+    error: (err) => {
+      this.snackBar.open(err.error.message || 'Error occurred', 'Close', { duration: 3000 });
+    }
+  });
+}
+
+deleteUser(id?: number): void {
+  if (!id) return;
+  this.adminUsersService.deleteUser(id).subscribe({
+    next: (res) => {
+      this.snackBar.open(res.message, 'Close', { duration: 3000 });
+      if (res.success) {
+        this.loadUsers();
+        this.confirmDeleteId = null;
+      }
+    },
+    error: (err) => {
+      this.snackBar.open(err.error.message || 'Error occurred', 'Close', { duration: 3000 });
+    }
+  });
+}
+
 
   // ✅ Inline delete confirm
   askDeleteUser(id: number): void {
@@ -64,16 +90,7 @@ confirmDeleteId: number | null | undefined = null;
     this.confirmDeleteId = null;
   }
 
-  deleteUser(id?: number): void {
-  if (!id) return; // ✅ prevent undefined issue
-  this.adminUsersService.deleteUser(id).subscribe(() => {
-    this.loadUsers();
-    this.confirmDeleteId = null;
-  });
-}
-
-
-  // ✅ Filter + Sort + Search + Pagination
+    // ✅ Filter + Sort + Search + Pagination
   applyFilters(): void {
     this.filteredUsers = [...this.users];
 
