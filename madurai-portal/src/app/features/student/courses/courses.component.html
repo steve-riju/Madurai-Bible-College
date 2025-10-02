@@ -1,1 +1,38 @@
-<p>courses works!</p>
+<div class="courses-container">
+
+  <!-- Courses View -->
+  <div *ngIf="!selectedCourse">
+    <h2>📚 My Courses</h2>
+    <div class="grid">
+      <mat-card *ngFor="let c of courses">
+        <mat-card-header>
+          <mat-card-title>{{ c.code }} - {{ c.name }}</mat-card-title>
+          <mat-card-subtitle>Semester: {{ c.semester }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p><strong>Teacher:</strong> {{ c.teacherName }}</p>
+          <p><strong>Batch:</strong> {{ c.batchName }}</p>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-stroked-button color="primary" (click)="viewMaterials(c)">
+            View Materials
+          </button>
+          <button mat-stroked-button color="accent" [routerLink]="['/student/courses', c.id, 'assignments']">
+            Assignments
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Materials View -->
+  <div *ngIf="selectedCourse">
+    <h2>📂 Materials for {{ selectedCourse.name }}</h2>
+    <button mat-button color="warn" (click)="backToCourses()" *ngIf="selectedCourse">
+      ← Back to Courses
+    </button><br>
+  <app-course-materials [courseId]="selectedCourse.id"></app-course-materials>
+</div>
+
+
+</div>

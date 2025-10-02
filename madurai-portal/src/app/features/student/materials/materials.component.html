@@ -1,0 +1,39 @@
+<div class="materials-grid">
+  <mat-card *ngFor="let m of materials" class="material-card">
+    <mat-card-header>
+      <mat-card-title>{{ m.title }}</mat-card-title>
+          </mat-card-header>
+
+    <mat-card-content>
+      <p>{{ m.description }}</p>
+
+      <!-- File Preview -->
+      <div class="preview-container" *ngIf="m.fileUrl">
+        <!-- PDF Preview -->
+        <iframe *ngIf="getFileType(m.fileUrl) === 'pdf'"
+                [src]="getSafeUrl(m.fileUrl)"
+                width="100%" height="300px"></iframe>
+
+        <!-- Image Preview -->
+        <img *ngIf="getFileType(m.fileUrl) === 'image'"
+             [src]="m.fileUrl"
+             class="preview-img"/>
+
+        <!-- Text Preview -->
+        <iframe *ngIf="getFileType(m.fileUrl) === 'text'"
+                [src]="getSafeUrl(m.fileUrl)"
+                width="100%" height="200px"></iframe>
+
+        <!-- Other Files (show icon only) -->
+        <div *ngIf="getFileType(m.fileUrl) === 'other'" class="file-icon">
+          📂 Preview not available
+        </div>
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <a mat-button color="primary" [href]="m.fileUrl" target="_blank">Open</a>
+      <a mat-button color="accent" [href]="m.fileUrl" download>Download</a>
+    </mat-card-actions>
+  </mat-card>
+</div>

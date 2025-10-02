@@ -1,0 +1,118 @@
+@import 'variables';
+@import 'mixins';
+
+.courses-container {
+  padding: 1rem;
+  background-color: $page-bg;
+  min-height: 100vh;
+  margin-bottom: 2rem;
+
+  h2 {
+    color: $primary-color;
+    @include responsive-font(1.1rem, 1.6rem);
+    margin-bottom: 1rem;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  mat-progress-spinner {
+    @include flex-center;
+    margin: 2rem auto;
+    display: block;
+  }
+
+  .error {
+    color: red;
+    font-weight: 500;
+    margin: 1rem 0;
+    text-align: center;
+  }
+
+  .empty {
+    color: $light-text-color;
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 0.95rem;
+  }
+
+  /* GRID — mobile first (stacked), expands on larger screens */
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr; /* Mobile → full width */
+    gap: 1rem;
+    margin-top: 1rem;
+
+    @media (min-width: 768px) {
+      grid-template-columns: repeat(2, 1fr); /* Tablet */
+    }
+
+    @media (min-width: 1024px) {
+      grid-template-columns: repeat(3, 1fr); /* Desktop */
+    }
+  }
+
+  mat-card {
+    background-color: $card-bg;
+    border-radius: 0.75rem;
+    box-shadow: $shadow;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    @include hover-effect(#000);
+
+    mat-card-header {
+      padding: 0.75rem 1rem;
+
+      mat-card-title {
+        font-weight: 600;
+        color: $text-color;
+        margin-bottom: 0.25rem;
+        font-size: 1rem;
+      }
+
+      mat-card-subtitle {
+        font-size: 0.85rem;
+        color: $light-text-color;
+      }
+    }
+
+    mat-card-content {
+      padding: 0.5rem 1rem;
+
+      p {
+        margin: 0.25rem 0;
+        font-size: 0.9rem;
+        color: $text-color;
+
+        strong {
+          color: $primary-color;
+        }
+      }
+    }
+
+    mat-card-actions {
+      padding: 0.75rem 1rem 1rem;
+      margin-top: auto; /* Pushes actions to bottom of tile */
+      display: flex;
+      flex-direction: column; /* Mobile → stacked buttons */
+      gap: 0.5rem;
+
+      button {
+        width: 100%; /* Full-width buttons on mobile */
+        border-radius: 6px;
+        font-size: 0.9rem;
+        padding: 0.6rem;
+        font-weight: 600;
+
+        @include hover-effect(#000);
+
+        @media (min-width: 768px) {
+          width: auto; /* Tablet/Desktop → inline buttons */
+        }
+      }
+    }
+  }
+}
+    
