@@ -25,7 +25,8 @@ public class Material {
 
     private String title;
     private String description;
-    private String fileUrl; // or content link
+    private String fileUrl; // full URL for frontend
+    private String fileKey; // 🔹 actual key for deletion
     private LocalDateTime uploadedAt;
 
     @ManyToOne
@@ -36,4 +37,3 @@ public class Material {
     @JoinColumn(name = "teacher_id")
     private User teacher;
 }
-

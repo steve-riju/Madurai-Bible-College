@@ -18,8 +18,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.maduraibiblecollege.dto.CourseDto;
 import com.maduraibiblecollege.dto.MaterialDto;
+import com.maduraibiblecollege.entity.Material;
+import com.maduraibiblecollege.repository.MaterialRepository;
 import com.maduraibiblecollege.service.CourseService;
 import com.maduraibiblecollege.service.TeacherMaterialService;
+import com.maduraibiblecollege.service.cloud.CloudStorageService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,6 +33,8 @@ public class TeacherMaterialController {
 
     private final TeacherMaterialService materialService;
     private final CourseService courseService;
+    private final MaterialRepository materialRepository;
+    private final CloudStorageService cloudStorageService; 
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<MaterialDto> uploadMaterial(
@@ -70,6 +75,5 @@ public class TeacherMaterialController {
         return ResponseEntity.noContent().build();
     }
     
-//    ON DELETION FILE SHOULD ALSO BE DELETED FROM THE CLOUD STORAGE WHICH IS NOT HAPPENING NOW BUILD THAT ONCE REGISTED WITH COULD STORAGE
 }
 
