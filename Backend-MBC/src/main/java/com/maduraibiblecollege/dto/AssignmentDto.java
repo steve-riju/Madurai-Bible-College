@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -28,4 +29,7 @@ public class AssignmentDto {
     private Integer maxMarks;
 
     private List<String> attachmentUrls; // teacher resources
+
+    private boolean submitted; // whether student has submitted
+    private AssignmentSubmissionDto submission; // details if submitted
 }

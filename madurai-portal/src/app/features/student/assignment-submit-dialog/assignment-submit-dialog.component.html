@@ -1,0 +1,35 @@
+<h2 mat-dialog-title>{{ assignment.title }}</h2>
+
+<mat-dialog-content>
+  <p class="desc">{{ assignment.description }}</p>
+
+  <form [formGroup]="submissionForm" class="submit-form">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Your Answer / Notes</mat-label>
+      <textarea matInput formControlName="textAnswer" rows="5"></textarea>
+    </mat-form-field>
+
+    <div class="file-uploader">
+      <label class="file-label">Attach files (optional)</label>
+      <input type="file" (change)="onFileSelected($event)" multiple />
+      <div *ngIf="previewFiles.length" class="file-list">
+        <div *ngFor="let f of previewFiles; let i = index" class="file-item">
+          <span>{{ f.name }}</span>
+          <button mat-icon-button color="warn" (click)="removeFile(i)">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="error" class="error">{{ error }}</div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-stroked-button (click)="close()" [disabled]="uploading">Cancel</button>
+  <button mat-raised-button color="primary" (click)="submitAssignment()" [disabled]="uploading">
+    <mat-progress-spinner *ngIf="uploading" mode="indeterminate" diameter="18"></mat-progress-spinner>
+    <span *ngIf="!uploading">Submit</span>
+  </button>
+</mat-dialog-actions>

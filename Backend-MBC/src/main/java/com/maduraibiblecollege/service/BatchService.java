@@ -18,6 +18,7 @@ public interface BatchService {
 	BatchDto createBatchWithEnrollments(CreateBatchWithEnrollmentsRequest request);
 	void deleteBatch(Long id);
 	List<BatchDto> getBatchesForTeacher(Long teacherId);
+	List<BatchDto> getBatchesForStudent(Long studentId);
 
 
 }

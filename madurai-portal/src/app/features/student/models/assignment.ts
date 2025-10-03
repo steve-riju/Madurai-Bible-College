@@ -1,0 +1,41 @@
+// features/student/models/assignment.model.ts
+export interface AssignmentDto {
+  id: number;
+  title: string;
+  description?: string;
+  startDate?: string;    // ISO
+  deadline?: string;     // ISO
+  maxMarks?: number;
+  status?: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
+  batchId?: number;
+  attachments?: AssignmentAttachmentDto[];
+  teacherName?: string;
+}
+
+
+export interface AssignmentAttachmentDto {
+  id?: number;
+  fileUrl?: string;
+  fileName?: string;
+  contentType?: string;
+}
+
+export interface AssignmentSubmissionDto {
+  id?: number;
+  assignmentId: number;
+  studentId?: number;
+  textAnswer?: string;
+  submittedAt?: string;
+  status?: 'DRAFT'|'SUBMITTED'|'REJECTED'|'GRADED';
+  marksObtained?: number;
+  teacherRemarks?: string;
+  attachments?: SubmissionAttachmentDto[];
+  attemptNumber?: number;
+}
+
+export interface SubmissionAttachmentDto {
+  id?: number;
+  fileUrl?: string;
+  fileName?: string;
+  contentType?: string;
+}

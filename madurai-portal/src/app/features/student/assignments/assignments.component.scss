@@ -1,0 +1,69 @@
+@import 'variables';
+@import 'mixins';
+
+.assignments-root {
+  padding: 1rem;
+  background: $page-bg;
+  min-height: 100vh;
+
+  .page-title {
+    @include responsive-font(1.1rem, 1.4rem);
+    color: $primary-color;
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .error { color: #c62828; text-align: center; margin: 0.5rem 0; }
+  .empty { color: $light-text-color; text-align: center; margin-top: 1.5rem; }
+
+  .assignments-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.9rem;
+
+    @media (min-width: 760px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    @media (min-width: 1100px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .assignment-card {
+    background: $card-bg;
+    border-radius: 12px;
+    box-shadow: $shadow;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
+    mat-card-header {
+      padding: 0.9rem;
+      mat-card-title { font-weight: 700; color: $text-color; }
+      mat-card-subtitle { display: flex; gap: 0.6rem; align-items: center; color: $light-text-color; font-size: 0.85rem; }
+    }
+
+    mat-card-content {
+      padding: 0.75rem;
+      .desc { color: $text-color; margin-bottom: 0.5rem; font-size: 0.95rem; }
+      .attach-list { display:flex; flex-wrap:wrap; gap:0.5rem; a { font-size:0.85rem; color: $primary-color; } }
+    }
+
+    mat-card-actions {
+      padding: 0.75rem;
+      display:flex;
+      justify-content:flex-start;
+    }
+
+    .status {
+      margin-left: 8px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.75rem;
+      &.active { background: #e8f5e9; color: #2e7d32; }
+      &.due-soon { background: #fff3cd; color: #856404; }
+      &.overdue { background: #ffebee; color: #c62828; }
+    }
+  }
+}

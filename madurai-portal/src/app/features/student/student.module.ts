@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
 import { MatCardModule } from '@angular/material/card';
@@ -15,8 +15,15 @@ import { EventsComponent } from './events/events.component';
 import { ProfileComponent } from './profile/profile.component';
 import { SharedModule } from '../../shared/shared.module';
 import { StudentLayoutComponent } from './student-layout/student-layout.component';
-import { MatIcon } from '@angular/material/icon';
+import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { MaterialsComponent } from './materials/materials.component';
+import { AssignmentSubmitDialogComponent } from './assignment-submit-dialog/assignment-submit-dialog.component';
+import { MySubmissionsComponent } from './my-submissions/my-submissions.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatOption } from '@angular/material/core';
+import { MatSelect } from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -26,7 +33,9 @@ import { MaterialsComponent } from './materials/materials.component';
     EventsComponent,
     ProfileComponent,
     StudentLayoutComponent,
-    MaterialsComponent
+    MaterialsComponent,
+    AssignmentSubmitDialogComponent,
+    MySubmissionsComponent
   ],
   imports: [
     CommonModule,
@@ -37,7 +46,14 @@ import { MaterialsComponent } from './materials/materials.component';
     MatCardModule,
     MatButtonModule,
     MatProgressSpinnerModule,
-    MatIcon
+    MatIcon,
+    ReactiveFormsModule,
+    MatDialogModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatOption,
+    MatSelect
   ]
 })
 export class StudentModule { }

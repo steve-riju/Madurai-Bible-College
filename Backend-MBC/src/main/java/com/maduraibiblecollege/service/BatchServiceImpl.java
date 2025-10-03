@@ -236,6 +236,20 @@ public class BatchServiceImpl implements BatchService {
 	            .map(this::toDto)
 	            .collect(Collectors.toList());
 	}
+	
+	@Override
+	public List<BatchDto> getBatchesForStudent(Long studentId) {
+	    User student = userRepository.findById(studentId)
+	            .orElseThrow(() -> new RuntimeException("Student not found"));
+
+	    // Batches where student is enrolled
+	    List<Batch> batches = batchRepository.findByStudents_Id(student.getId());
+
+	    return batches.stream()
+	            .map(this::toDto)
+	            .collect(Collectors.toList());
+	}
+
 
 
 

@@ -273,5 +273,20 @@ public class AssignmentServiceImpl implements AssignmentService {
         // delete assignment (attachments cascade if mapped with orphanRemoval = true)
         assignmentRepo.delete(a);
     }
+    
+    @Override
+    public List<AssignmentSubmissionDto> listSubmissionsByStudent(Long studentId) {
+        List<AssignmentSubmission> list = submissionRepo.findByStudentId(studentId);
+        return list.stream().map(DtoMapper::toSubmissionDto).toList();
+    }
+    
+    @Override
+    public AssignmentSubmissionDto getSubmissionForStudent(Long assignmentId, Long studentId) {
+        return submissionRepo.findByAssignmentIdAndStudentId(assignmentId, studentId)
+                .map(DtoMapper::toSubmissionDto)
+                .orElseThrow(() -> new IllegalArgumentException("No submission found for this assignment"));
+    }
+
+
 
 }

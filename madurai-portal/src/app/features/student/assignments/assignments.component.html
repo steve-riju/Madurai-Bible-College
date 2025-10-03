@@ -1,1 +1,51 @@
-<p>assignments works!</p>
+<div class="assignments-root">
+  <h2 class="page-title">📝 Assignments</h2>
+
+  <!-- Batch selector -->
+  <div class="batch-selector" *ngIf="batches.length > 1">
+    <mat-form-field appearance="outline">
+      <mat-label>Select Batch</mat-label>
+      <mat-select [value]="batchId" (selectionChange)="onBatchChange($event.value)">
+        <mat-option *ngFor="let b of batches" [value]="b.id">{{ b.name }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <mat-progress-spinner *ngIf="loading" mode="indeterminate"></mat-progress-spinner>
+
+  <div *ngIf="error" class="error">{{ error }}</div>
+  <div *ngIf="!loading && assignments.length === 0" class="empty">No assignments available.</div>
+
+  <div class="assignments-grid">
+    <mat-card *ngFor="let a of assignments" class="assignment-card">
+      <mat-card-header>
+        <mat-card-title>{{ a.title }}</mat-card-title>
+        <mat-card-subtitle>
+          <span>Deadline: {{ a.deadline ? (a.deadline | date:'short') : '—' }}</span>
+<span class="status" [ngClass]="getDeadlineStatus(a.deadline)">
+  {{ getDeadlineStatus(a.deadline) | uppercase }}
+</span>
+
+        </mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <p class="desc">{{ a.description }}</p>
+        <div *ngIf="a.attachments?.length">
+          <small>Attachments:</small>
+          <div class="attach-list">
+            <a *ngFor="let at of a.attachments" [href]="at.fileUrl" target="_blank">
+              {{ at.fileName }}
+            </a>
+          </div>
+        </div>
+      </mat-card-content>
+
+      <mat-card-actions>
+        <button mat-raised-button color="primary" (click)="openAssignment(a)">
+          View / Submit
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>

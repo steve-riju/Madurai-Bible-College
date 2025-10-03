@@ -1,0 +1,23 @@
+@import 'variables';
+@import 'mixins';
+
+.my-sub-root {
+  padding: 1rem;
+  background: $page-bg;
+  min-height: 100vh;
+
+  .page-title { color: $primary-color; text-align:center; margin-bottom: 0.5rem; }
+
+  .submission-list { display: grid; gap: 0.8rem; grid-template-columns: 1fr; }
+
+  .submission-card {
+    background: $card-bg;
+    box-shadow: $shadow;
+    border-radius: 12px;
+    mat-card-header { padding: 0.8rem; }
+    mat-card-content { padding: 0.7rem; }
+    .attach-list { a { color: $primary-color; margin-right: 0.6rem; } }
+  }
+
+  .error { color: #c62828; text-align:center; }
+}

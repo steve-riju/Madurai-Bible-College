@@ -1,0 +1,30 @@
+@import 'variables';
+@import 'mixins';
+
+.desc { color: $text-color; margin-bottom: 0.75rem; }
+
+.submit-form {
+  .full-width { width: 100%; }
+
+  .file-uploader {
+    margin-top: 0.75rem;
+    .file-label { font-weight: 600; color: $light-text-color; display:block; margin-bottom: 0.25rem; }
+    input[type="file"] { display: block; }
+
+    .file-list {
+      margin-top: 0.5rem;
+      .file-item {
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        background: lighten($page-bg, 2%);
+        padding: 0.4rem 0.6rem;
+        border-radius: 6px;
+        margin-bottom: 0.4rem;
+        span { font-size: 0.9rem; color: $text-color; }
+      }
+    }
+  }
+
+  .error { color: #c62828; margin-top: 0.5rem; }
+}

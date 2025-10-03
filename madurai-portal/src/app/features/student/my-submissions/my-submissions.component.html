@@ -1,0 +1,28 @@
+<div class="my-sub-root">
+  <h2 class="page-title">📤 My Submissions</h2>
+
+  <mat-progress-spinner *ngIf="loading" mode="indeterminate"></mat-progress-spinner>
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <div class="submission-list" *ngIf="!loading">
+    <mat-card *ngFor="let s of submissions" class="submission-card">
+      <mat-card-header>
+        <mat-card-title>Assignment #{{ s.assignmentId }}</mat-card-title>
+        <mat-card-subtitle>{{ s.submittedAt | date:'medium' }}</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <p>Status: <strong>{{ s.status }}</strong></p>
+        <p *ngIf="s.status === 'GRADED'">Marks: <strong>{{ s.marksObtained }}</strong></p>
+        <p *ngIf="s.teacherRemarks">Teacher: {{ s.teacherRemarks }}</p>
+
+        <div *ngIf="s.attachments?.length">
+          <small>Files:</small>
+          <div class="attach-list">
+            <a *ngFor="let a of s.attachments" href="{{ a.fileUrl }}" target="_blank">{{ a.fileName }}</a>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
