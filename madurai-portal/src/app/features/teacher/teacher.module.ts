@@ -9,6 +9,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
+import { MatTableModule } from '@angular/material/table';
+import { MatIconModule } from '@angular/material/icon'; // ✅ CORRECTED: Import the module, not the component
+import { MatDialogModule } from '@angular/material/dialog'; // ✅ CORRECTED: Import the main dialog module
+import { MatProgressBarModule } from '@angular/material/progress-bar'; // ✅ ADD THIS: For mat-progress-bar
 import { MtxDatetimepickerModule } from '@ng-matero/extensions/datetimepicker';
 import { MtxNativeDatetimeModule } from '@ng-matero/extensions/core'; 
 
@@ -24,9 +28,9 @@ import { MaterialsComponent } from './materials/materials.component';
 import { AssignmentsComponent } from './assignments/assignments.component';
 import { ProfileComponent } from './profile/profile.component';
 import { TeacherLayoutComponent } from './teacher-layout/teacher-layout.component';
-import { MatIcon } from '@angular/material/icon';
-import { MatTableModule } from '@angular/material/table';
 import { SubmissionReviewComponent } from './submission-review/submission-review.component';
+import { RejectDialogComponent } from './reject-dialog/reject-dialog.component';
+
 
 @NgModule({
   declarations: [
@@ -35,14 +39,15 @@ import { SubmissionReviewComponent } from './submission-review/submission-review
     AssignmentsComponent,
     ProfileComponent,
     TeacherLayoutComponent,
-    SubmissionReviewComponent
+    SubmissionReviewComponent,
+    RejectDialogComponent
   ],
   imports: [
     CommonModule,
-    RouterModule,         // ✅ for <router-outlet>
+    RouterModule,
     TeacherRoutingModule,
-    SharedModule,         // ✅ should export NavbarComponent
-    FormsModule,          // ✅ for [(ngModel)]
+    SharedModule,
+    FormsModule,
     ReactiveFormsModule,
 
     // Angular Material
@@ -53,8 +58,10 @@ import { SubmissionReviewComponent } from './submission-review/submission-review
     MatListModule,
     MtxDatetimepickerModule,
     MtxNativeDatetimeModule,
-    MatIcon,
-    MatTableModule
+    MatTableModule,
+    MatIconModule,         // ✅ CORRECTED
+    MatDialogModule,       // ✅ CORRECTED
+    MatProgressBarModule   // ✅ ADD THIS
   ]
 })
 export class TeacherModule {}

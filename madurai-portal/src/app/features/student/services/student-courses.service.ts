@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { AssignmentSubmissionDto } from '../models/assignment';
 
 export interface StudentCourse {
   id: number;
@@ -27,5 +28,12 @@ export class StudentCoursesService {
   getCourseMaterials(courseId: number): Observable<any[]> {
   return this.http.get<any[]>(`${this.apiUrl}/api/student/courses/${courseId}/materials`);
 }
+
+getMySubmissionForAssignment(assignmentId: number) {
+  return this.http.get<AssignmentSubmissionDto>(
+    `${this.apiUrl}/api/student/assignments/${assignmentId}/my-submission`
+  );
+}
+
 
 }

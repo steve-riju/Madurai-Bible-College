@@ -5,6 +5,7 @@
   padding: 1rem;
   background: $page-bg;
   min-height: 100vh;
+  margin-bottom: 2rem;
 
   .page-title {
     @include responsive-font(1.1rem, 1.4rem);

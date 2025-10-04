@@ -14,7 +14,9 @@
   <mat-progress-spinner *ngIf="loading" mode="indeterminate"></mat-progress-spinner>
 
   <div *ngIf="error" class="error">{{ error }}</div>
-  <div *ngIf="!loading && assignments.length === 0" class="empty">No assignments available.</div>
+  <div *ngIf="!loading && assignments.length === 0" class="empty">
+    No assignments available.
+  </div>
 
   <div class="assignments-grid">
     <mat-card *ngFor="let a of assignments" class="assignment-card">
@@ -22,10 +24,9 @@
         <mat-card-title>{{ a.title }}</mat-card-title>
         <mat-card-subtitle>
           <span>Deadline: {{ a.deadline ? (a.deadline | date:'short') : '—' }}</span>
-<span class="status" [ngClass]="getDeadlineStatus(a.deadline)">
-  {{ getDeadlineStatus(a.deadline) | uppercase }}
-</span>
-
+          <span class="status" [ngClass]="getDeadlineStatus(a.deadline)">
+            {{ getDeadlineStatus(a.deadline) | uppercase }}
+          </span>
         </mat-card-subtitle>
       </mat-card-header>
 
@@ -42,8 +43,23 @@
       </mat-card-content>
 
       <mat-card-actions>
-        <button mat-raised-button color="primary" (click)="openAssignment(a)">
-          View / Submit
+        <!-- ✅ Conditional buttons -->
+        <button mat-raised-button color="primary"
+                *ngIf="!a.submission && getDeadlineStatus(a.deadline) !== 'overdue'"
+                (click)="openAssignment(a)">
+          Submit
+        </button>
+
+        <button mat-stroked-button color="accent"
+                *ngIf="a.submission"
+                (click)="openViewSubmission(a)">
+          View Submission
+        </button>
+
+        <button mat-raised-button color="warn"
+                *ngIf="!a.submission && getDeadlineStatus(a.deadline) === 'overdue'"
+                disabled>
+          Submission Closed
         </button>
       </mat-card-actions>
     </mat-card>

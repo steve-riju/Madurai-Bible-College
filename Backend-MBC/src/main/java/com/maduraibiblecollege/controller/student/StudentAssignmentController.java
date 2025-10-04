@@ -34,12 +34,15 @@ public class StudentAssignmentController {
     @GetMapping("/batch/{batchId}")
     public ResponseEntity<List<AssignmentDto>> getAssignmentsForBatch(
             @PathVariable Long batchId, Principal principal) {
+
         User student = userRepository.findByUsername(principal.getName())
                 .orElseThrow(() -> new UsernameNotFoundException("Student not found"));
 
-        // ensure student belongs to this batch, then fetch assignments
-        return ResponseEntity.ok(assignmentService.getAssignmentsForBatch(batchId));
+        return ResponseEntity.ok(
+            assignmentService.getAssignmentsForBatch(batchId, student.getId())
+        );
     }
+
 
 
     @GetMapping("/{assignmentId}")

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.maduraibiblecollege.RejectRequest;
 import com.maduraibiblecollege.dto.AssignmentDto;
 import com.maduraibiblecollege.dto.AssignmentRequest;
 import com.maduraibiblecollege.dto.AssignmentSubmissionDto;
@@ -128,6 +129,20 @@ public class TeacherAssignmentController {
         assignmentService.deleteAssignment(assignmentId, teacher.getId());
         return ResponseEntity.noContent().build();
     }
+    
+    @PutMapping("/submissions/{submissionId}/reject")
+    public ResponseEntity<AssignmentSubmissionDto> rejectSubmission(
+            @PathVariable Long submissionId,
+            @RequestBody RejectRequest req,
+            Principal principal) {
+
+        User teacher = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new UsernameNotFoundException("Teacher not found"));
+
+        req.setSubmissionId(submissionId);
+        return ResponseEntity.ok(assignmentService.rejectSubmission(req, teacher.getId()));
+    }
+
 
 
 }

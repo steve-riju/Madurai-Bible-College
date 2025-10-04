@@ -1,0 +1,58 @@
+<mat-dialog-content class="p-4">
+  <h2 class="text-xl font-semibold mb-3">
+    📄 Submission for "{{ data.assignment.title }}"
+  </h2>
+
+  <ng-container *ngIf="loading">
+    <div class="flex justify-center p-4">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="!loading && submission">
+    <div class="mb-3">
+      <p><strong>Status:</strong> {{ submission.status }}</p>
+      <p><strong>Submitted At:</strong> {{ submission.submittedAt | date:'medium' }}</p>
+      <p><strong>Attempt #:</strong> {{ submission.attemptNumber || 1 }}</p>
+    </div>
+
+    <div *ngIf="submission.textAnswer" class="mb-3">
+      <h3 class="font-medium">📝 Text Answer</h3>
+      <p class="bg-gray-50 border rounded p-2">{{ submission.textAnswer }}</p>
+    </div>
+
+    <div *ngIf="submission.attachments?.length" class="mb-3">
+      <h3 class="font-medium">📎 Attachments</h3>
+      <div class="grid gap-3">
+        <div *ngFor="let att of submission.attachments" class="border rounded p-2">
+          <p class="text-sm font-semibold">{{ att.fileName }}</p>
+          <a [href]="att.fileUrl" target="_blank" class="text-blue-600 underline">Download</a>
+
+          <!-- Preview for images -->
+          <img *ngIf="att.contentType?.startsWith('image/')"
+               [src]="att.fileUrl"
+               class="mt-2 max-h-64 rounded border" />
+
+          <!-- Preview for PDF -->
+          <iframe *ngIf="att.contentType === 'application/pdf'"
+                  [src]="att.fileUrl"
+                  class="w-full h-64 mt-2 rounded border"></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="submission.status === 'GRADED'" class="mb-3">
+      <h3 class="font-medium">🏆 Evaluation</h3>
+      <p><strong>Marks Obtained:</strong> {{ submission.marksObtained }}/{{ data.assignment.maxMarks }}</p>
+      <p><strong>Teacher Remarks:</strong> {{ submission.teacherRemarks || '—' }}</p>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="!loading && error">
+    <p class="text-red-600">{{ error }}</p>
+  </ng-container>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()">Close</button>
+</mat-dialog-actions>

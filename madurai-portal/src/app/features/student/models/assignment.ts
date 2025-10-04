@@ -3,14 +3,18 @@ export interface AssignmentDto {
   id: number;
   title: string;
   description?: string;
-  startDate?: string;    // ISO
-  deadline?: string;     // ISO
+  deadline?: string;  // ISO
   maxMarks?: number;
   status?: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
   batchId?: number;
   attachments?: AssignmentAttachmentDto[];
   teacherName?: string;
+
+  // NEW
+  submitted?: boolean;
+  submission?: AssignmentSubmissionDto;
 }
+
 
 
 export interface AssignmentAttachmentDto {

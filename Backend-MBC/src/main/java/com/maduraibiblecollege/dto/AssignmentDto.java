@@ -28,8 +28,9 @@ public class AssignmentDto {
 
     private Integer maxMarks;
 
-    private List<String> attachmentUrls; // teacher resources
+    private List<String> attachmentUrls;
 
-    private boolean submitted; // whether student has submitted
-    private AssignmentSubmissionDto submission; // details if submitted
+    // NEW
+    private boolean submitted;
+    private AssignmentSubmissionDto submission;
 }

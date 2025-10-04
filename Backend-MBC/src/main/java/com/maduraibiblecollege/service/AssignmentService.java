@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.maduraibiblecollege.RejectRequest;
 import com.maduraibiblecollege.dto.AssignmentDto;
 import com.maduraibiblecollege.dto.AssignmentRequest;
 import com.maduraibiblecollege.dto.AssignmentSubmissionDto;
@@ -31,6 +32,8 @@ public interface AssignmentService {
     void deleteAssignment(Long assignmentId, Long teacherId);
 	List<AssignmentSubmissionDto> listSubmissionsByStudent(Long studentId);
 	AssignmentSubmissionDto getSubmissionForStudent(Long assignmentId, Long studentId);
+	List<AssignmentDto> getAssignmentsForBatch(Long batchId, Long studentId);
+	AssignmentSubmissionDto rejectSubmission(RejectRequest req, Long teacherId);
 
 }
 

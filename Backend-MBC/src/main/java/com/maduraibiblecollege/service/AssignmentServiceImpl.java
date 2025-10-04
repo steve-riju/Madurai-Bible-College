@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.maduraibiblecollege.RejectRequest;
 import com.maduraibiblecollege.dto.AssignmentDto;
 import com.maduraibiblecollege.dto.AssignmentSubmissionDto;
 import com.maduraibiblecollege.dto.DtoMapper;
@@ -145,6 +146,27 @@ public class AssignmentServiceImpl implements AssignmentService {
         for (Assignment a : list) dtos.add(DtoMapper.toAssignmentDto(a));
         return dtos;
     }
+    
+    @Override
+    public List<AssignmentDto> getAssignmentsForBatch(Long batchId, Long studentId) {
+        List<Assignment> list = assignmentRepo.findByBatchId(batchId);
+        List<AssignmentDto> dtos = new ArrayList<>();
+
+        for (Assignment a : list) {
+            AssignmentDto dto = DtoMapper.toAssignmentDto(a);
+
+            // check if this student already submitted
+            submissionRepo.findByAssignmentIdAndStudentId(a.getId(), studentId)
+                .ifPresent(sub -> {
+                    dto.setSubmitted(true);
+                    dto.setSubmission(DtoMapper.toSubmissionDto(sub));
+                });
+
+            dtos.add(dto);
+        }
+        return dtos;
+    }
+
 
     @Override
     public AssignmentDto publishAssignment(Long id) {
@@ -152,11 +174,14 @@ public class AssignmentServiceImpl implements AssignmentService {
         a.setStatus(AssignmentStatus.PUBLISHED);
         return DtoMapper.toAssignmentDto(assignmentRepo.save(a));
     }
-
+    
     @Override
     public AssignmentSubmissionDto submitAssignment(Long assignmentId, Long studentId, String textAnswer, List<MultipartFile> files) {
         Assignment assignment = assignmentRepo.findById(assignmentId)
                 .orElseThrow(() -> new IllegalArgumentException("Assignment not found"));
+        if (assignment.getEndDate() != null && assignment.getEndDate().isBefore(LocalDateTime.now())) {
+            throw new IllegalStateException("Deadline has passed. You cannot submit.");
+        }
         User student = userRepo.findById(studentId).orElseThrow(() -> new IllegalArgumentException("Student not found"));
 
         AssignmentSubmission submission = submissionRepo.findByAssignmentIdAndStudentId(assignmentId, studentId)
@@ -286,6 +311,24 @@ public class AssignmentServiceImpl implements AssignmentService {
                 .map(DtoMapper::toSubmissionDto)
                 .orElseThrow(() -> new IllegalArgumentException("No submission found for this assignment"));
     }
+    
+    @Override
+    public AssignmentSubmissionDto rejectSubmission(RejectRequest req, Long teacherId) {
+        AssignmentSubmission sub = submissionRepo.findById(req.getSubmissionId())
+                .orElseThrow(() -> new IllegalArgumentException("Submission not found"));
+
+        if (!teacherId.equals(sub.getAssignment().getTeacher().getId())) {
+            throw new SecurityException("Not authorized to reject this submission");
+        }
+
+        sub.setStatus(SubmissionStatus.REJECTED);
+        sub.setTeacherRemarks(req.getReason());
+
+        AssignmentSubmission saved = submissionRepo.save(sub);
+        return DtoMapper.toSubmissionDto(saved);
+    }
+
+    
 
 
 

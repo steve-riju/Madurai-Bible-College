@@ -6,6 +6,7 @@ import { AssignmentDto } from '../models/assignment';
 import { AssignmentSubmitDialogComponent } from '../assignment-submit-dialog/assignment-submit-dialog.component';
 import { ActivatedRoute } from '@angular/router';
 import { BatchDto } from '../../teacher/assignments/assignments.component';
+import { ViewSubmissionDialogComponent } from '../view-submission-dialog/view-submission-dialog.component';
 @Component({
   selector: 'app-assignments',
   templateUrl: './assignments.component.html',
@@ -74,7 +75,6 @@ export class AssignmentsComponent implements OnInit {
 
 
   getDeadlineStatus(deadline?: string): string {
-  console.log("Deadline:", deadline);
   if (!deadline) return 'upcoming';
   const now = new Date();
   const d = new Date(deadline);
@@ -87,6 +87,13 @@ export class AssignmentsComponent implements OnInit {
 
 
   openAssignment(a: AssignmentDto) {
+  if (a.submitted && a.submission) {
+    this.dialog.open(ViewSubmissionDialogComponent, {
+      width: '92%',
+      maxWidth: '900px',
+      data: { assignment: a }
+    });
+  } else {
     const ref = this.dialog.open(AssignmentSubmitDialogComponent, {
       width: '92%',
       maxWidth: '900px',
@@ -94,10 +101,20 @@ export class AssignmentsComponent implements OnInit {
     });
 
     ref.afterClosed().subscribe(result => {
-      if (result === 'submitted') {
-        // reload to show updated status if needed
-        if (this.batchId) this.loadAssignments(this.batchId);
+      if (result === 'submitted' && this.batchId) {
+        this.loadAssignments(this.batchId);
       }
     });
   }
+}
+
+
+  openViewSubmission(a: AssignmentDto) {
+  this.dialog.open(ViewSubmissionDialogComponent, {
+    width: '90%',
+    maxWidth: '800px',
+    data: { assignment: a }
+  });
+}
+
 }
