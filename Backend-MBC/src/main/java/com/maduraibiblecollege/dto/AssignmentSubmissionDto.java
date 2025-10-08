@@ -11,23 +11,22 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class AssignmentSubmissionDto {
     private Long id;
     private Long assignmentId;
+    private String assignmentTitle; 
+    private Long batchId;           
+    private String batchName;       
     private Long studentId;
     private String studentName;
-
     private String textAnswer;
     private LocalDateTime submittedAt;
     private SubmissionStatus status;
-
     private Integer marksObtained;
     private String teacherRemarks;
-
     private Integer attemptNumber;
-
     private List<String> attachmentUrls;
 }

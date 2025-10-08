@@ -1,60 +1,29 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { AssignmentDto, AssignmentSubmissionDto }  from '../models/assignment';
-import { StudentAssignmentsService } from '../services/student-assignments.service';
-
-export interface ViewSubmissionDialogData {
-  assignment: AssignmentDto;
-}
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { AssignmentSubmissionDto } from '../models/assignment';
 
 @Component({
   selector: 'app-view-submission-dialog',
   templateUrl: './view-submission-dialog.component.html',
   styleUrls: ['./view-submission-dialog.component.scss']
 })
-export class ViewSubmissionDialogComponent implements OnInit {
-  submission?: AssignmentSubmissionDto;
-  loading = false;
-  error?: string;
+export class ViewSubmissionDialogComponent {
+  submission: AssignmentSubmissionDto;
 
-  constructor(
-    private service: StudentAssignmentsService,
-    private sanitizer: DomSanitizer,
-    private dialogRef: MatDialogRef<ViewSubmissionDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: ViewSubmissionDialogData
-  ) {}
-
-  ngOnInit(): void {
-    this.fetchSubmission();
+  constructor(@Inject(MAT_DIALOG_DATA) public data: { submission: AssignmentSubmissionDto }) {
+    this.submission = data.submission;
   }
 
-  fetchSubmission() {
-    this.loading = true;
-    this.service.getMySubmissionForAssignment(this.data.assignment.id).subscribe({
-      next: (res) => {
-        this.submission = res;
-        this.loading = false;
-      },
-      error: (err) => {
-        this.error = "No submission found or failed to load.";
-        this.loading = false;
-      }
-    });
+  extractFileName(url: string): string {
+    if (!url) return 'File';
+    return url.split('/').pop() || url;
   }
 
-  getAttachmentPreview(url: string, contentType?: string): SafeResourceUrl | null {
-    if (!url) return null;
-    if (contentType?.startsWith('image/')) {
-      return this.sanitizer.bypassSecurityTrustResourceUrl(url);
-    }
-    if (contentType === 'application/pdf') {
-      return this.sanitizer.bypassSecurityTrustResourceUrl(url);
-    }
-    return null;
-  }
-
-  close() {
-    this.dialogRef.close();
+  getFileType(url: string): 'pdf' | 'image' | 'other' {
+    const ext = url.split('.').pop()?.toLowerCase();
+    if (!ext) return 'other';
+    if (ext === 'pdf') return 'pdf';
+    if (['png', 'jpg', 'jpeg', 'gif', 'webp'].includes(ext)) return 'image';
+    return 'other';
   }
 }

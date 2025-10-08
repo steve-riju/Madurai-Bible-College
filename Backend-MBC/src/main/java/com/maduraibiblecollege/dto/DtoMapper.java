@@ -1,23 +1,26 @@
 package com.maduraibiblecollege.dto;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+
+import org.springframework.stereotype.Component;
 
 import com.maduraibiblecollege.entity.assignmnets.Assignment;
 import com.maduraibiblecollege.entity.assignmnets.AssignmentAttachment;
 import com.maduraibiblecollege.entity.assignmnets.AssignmentSubmission;
+import com.maduraibiblecollege.service.cloud.CloudStorageService;
 
 
-public final class DtoMapper {
+@Component
+public class DtoMapper {
 
-    private DtoMapper() {}
+    private final CloudStorageService storageService;
 
+    public DtoMapper(CloudStorageService storageService) {
+        this.storageService = storageService;
+    }
 
-    public static AssignmentDto toAssignmentDto(Assignment a) {
+    public AssignmentDto toAssignmentDto(Assignment a) {
         if (a == null) return null;
 
         AssignmentDto dto = new AssignmentDto();
@@ -25,8 +28,8 @@ public final class DtoMapper {
         dto.setTitle(a.getTitle());
         dto.setDescription(a.getDescription());
 
-        dto.setCreatedAt(a.getStartDate());   // ✅ proper type
-        dto.setDeadline(a.getEndDate());      // ✅ proper type
+        dto.setCreatedAt(a.getStartDate());
+        dto.setDeadline(a.getEndDate());
 
         dto.setPublished(a.getStatus() != null && a.getStatus().name().equalsIgnoreCase("PUBLISHED"));
         dto.setBatchId(a.getBatch() != null ? a.getBatch().getId() : null);
@@ -34,31 +37,48 @@ public final class DtoMapper {
         dto.setTeacherId(a.getTeacher() != null ? a.getTeacher().getId() : null);
         dto.setTeacherName(a.getTeacher() != null ? a.getTeacher().getUsername() : null);
 
-        List<String> urls = new ArrayList<>();
+        List<String> signedUrls = new ArrayList<>();
         if (a.getAttachments() != null) {
             for (AssignmentAttachment att : a.getAttachments()) {
                 try {
                     Object v = att.getClass().getMethod("getUrl").invoke(att);
-                    if (v != null) urls.add(v.toString());
+                    if (v != null) signedUrls.add(storageService.generateSignedUrl(v.toString()));
                 } catch (Exception e) {
                     try {
                         Object v = att.getClass().getMethod("getFileUrl").invoke(att);
-                        if (v != null) urls.add(v.toString());
+                        if (v != null) signedUrls.add(storageService.generateSignedUrl(v.toString()));
                     } catch (Exception ignored) {}
                 }
             }
         }
-        dto.setAttachmentUrls(urls);
+        dto.setAttachmentUrls(signedUrls);
+
         return dto;
     }
 
-
-    public static AssignmentSubmissionDto toSubmissionDto(AssignmentSubmission s) {
+    public AssignmentSubmissionDto toSubmissionDto(AssignmentSubmission s) {
         if (s == null) return null;
+
+        List<String> signedUrls = new ArrayList<>();
+        if (s.getAttachments() != null) {
+            for (var att : s.getAttachments()) {
+                try {
+                    Object v = att.getClass().getMethod("getFileUrl").invoke(att);
+                    if (v != null) signedUrls.add(storageService.generateSignedUrl(v.toString()));
+                } catch (Exception ignored) {}
+            }
+        }
 
         return AssignmentSubmissionDto.builder()
                 .id(s.getId())
                 .assignmentId(s.getAssignment() != null ? s.getAssignment().getId() : null)
+                .assignmentTitle(s.getAssignment() != null ? s.getAssignment().getTitle() : null)
+                .batchId(s.getAssignment() != null && s.getAssignment().getBatch() != null
+                        ? s.getAssignment().getBatch().getId()
+                        : null)
+                .batchName(s.getAssignment() != null && s.getAssignment().getBatch() != null
+                        ? s.getAssignment().getBatch().getName()
+                        : null)
                 .studentId(s.getStudent() != null ? s.getStudent().getId() : null)
                 .studentName(s.getStudent() != null ? s.getStudent().getUsername() : null)
                 .textAnswer(s.getTextAnswer())
@@ -67,21 +87,7 @@ public final class DtoMapper {
                 .marksObtained(s.getMarksObtained())
                 .teacherRemarks(s.getTeacherRemarks())
                 .attemptNumber(s.getAttemptNumber())
-                .attachmentUrls(
-                    s.getAttachments() != null
-                            ? s.getAttachments().stream()
-                                  .map(att -> {
-                                      try {
-                                          if (att.getClass().getMethod("getFileUrl") != null)
-                                              return (String) att.getClass().getMethod("getFileUrl").invoke(att);
-                                      } catch (Exception ignored) {}
-                                      return null;
-                                  })
-                                  .filter(Objects::nonNull)
-                                  .toList()
-                            : new ArrayList<>()
-                )
+                .attachmentUrls(signedUrls)
                 .build();
     }
-
 }

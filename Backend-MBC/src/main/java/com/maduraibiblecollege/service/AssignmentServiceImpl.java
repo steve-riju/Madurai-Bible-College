@@ -46,6 +46,7 @@ public class AssignmentServiceImpl implements AssignmentService {
     private final BatchRepository batchRepo;
     private final UserRepository userRepo;
     private final CloudStorageService storageService;
+    private final DtoMapper dtoMapper;
 
     @Override
     public AssignmentDto createAssignment(AssignmentRequest request, List<MultipartFile> attachments, User teacher) {
@@ -92,7 +93,7 @@ public class AssignmentServiceImpl implements AssignmentService {
             saved = assignmentRepo.save(saved);
         }
 
-        return DtoMapper.toAssignmentDto(saved);
+        return dtoMapper.toAssignmentDto(saved);
     }
 
     @Override
@@ -126,7 +127,7 @@ public class AssignmentServiceImpl implements AssignmentService {
         }
 
         Assignment updated = assignmentRepo.save(assignment);
-        return DtoMapper.toAssignmentDto(updated);
+        return dtoMapper.toAssignmentDto(updated);
     }
 
     @Override
@@ -134,7 +135,7 @@ public class AssignmentServiceImpl implements AssignmentService {
         // Using repository to fetch all assignments for teacher and map to DTOs and create a Page
         List<Assignment> list = assignmentRepo.findByTeacherId(teacherId);
         List<AssignmentDto> dtos = new ArrayList<>();
-        for (Assignment a : list) dtos.add(DtoMapper.toAssignmentDto(a));
+        for (Assignment a : list) dtos.add(dtoMapper.toAssignmentDto(a));
 
         return new PageImpl<>(dtos, p, dtos.size());
     }
@@ -143,7 +144,7 @@ public class AssignmentServiceImpl implements AssignmentService {
     public List<AssignmentDto> getAssignmentsForBatch(Long batchId) {
         List<Assignment> list = assignmentRepo.findByBatchId(batchId);
         List<AssignmentDto> dtos = new ArrayList<>();
-        for (Assignment a : list) dtos.add(DtoMapper.toAssignmentDto(a));
+        for (Assignment a : list) dtos.add(dtoMapper.toAssignmentDto(a));
         return dtos;
     }
     
@@ -153,13 +154,13 @@ public class AssignmentServiceImpl implements AssignmentService {
         List<AssignmentDto> dtos = new ArrayList<>();
 
         for (Assignment a : list) {
-            AssignmentDto dto = DtoMapper.toAssignmentDto(a);
+            AssignmentDto dto = dtoMapper.toAssignmentDto(a);
 
             // check if this student already submitted
             submissionRepo.findByAssignmentIdAndStudentId(a.getId(), studentId)
                 .ifPresent(sub -> {
                     dto.setSubmitted(true);
-                    dto.setSubmission(DtoMapper.toSubmissionDto(sub));
+                    dto.setSubmission(dtoMapper.toSubmissionDto(sub));
                 });
 
             dtos.add(dto);
@@ -172,7 +173,7 @@ public class AssignmentServiceImpl implements AssignmentService {
     public AssignmentDto publishAssignment(Long id) {
         Assignment a = assignmentRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Assignment not found"));
         a.setStatus(AssignmentStatus.PUBLISHED);
-        return DtoMapper.toAssignmentDto(assignmentRepo.save(a));
+        return dtoMapper.toAssignmentDto(assignmentRepo.save(a));
     }
     
     @Override
@@ -215,14 +216,14 @@ public class AssignmentServiceImpl implements AssignmentService {
         }
 
         AssignmentSubmission saved = submissionRepo.save(submission);
-        return DtoMapper.toSubmissionDto(saved);
+        return dtoMapper.toSubmissionDto(saved);
     }
 
     @Override
     public List<AssignmentSubmissionDto> listSubmissions(Long assignmentId) {
         List<AssignmentSubmission> list = submissionRepo.findByAssignmentId(assignmentId);
         List<AssignmentSubmissionDto> dtos = new ArrayList<>();
-        for (AssignmentSubmission s : list) dtos.add(DtoMapper.toSubmissionDto(s));
+        for (AssignmentSubmission s : list) dtos.add(dtoMapper.toSubmissionDto(s));
         return dtos;
     }
 
@@ -241,7 +242,7 @@ public class AssignmentServiceImpl implements AssignmentService {
         sub.setStatus(SubmissionStatus.GRADED);
 
         AssignmentSubmission saved = submissionRepo.save(sub);
-        return DtoMapper.toSubmissionDto(saved);
+        return dtoMapper.toSubmissionDto(saved);
     }
 
     @Override
@@ -252,7 +253,7 @@ public class AssignmentServiceImpl implements AssignmentService {
         sub.setStatus(SubmissionStatus.REJECTED);
         sub.setTeacherRemarks(reason);
         AssignmentSubmission saved = submissionRepo.save(sub);
-        return DtoMapper.toSubmissionDto(saved);
+        return dtoMapper.toSubmissionDto(saved);
     }
 
     @Override
@@ -282,7 +283,7 @@ public class AssignmentServiceImpl implements AssignmentService {
     public List<AssignmentDto> getAllAssignmentsByTeacher(Long teacherId) {
         List<Assignment> list = assignmentRepo.findByTeacherId(teacherId);
         List<AssignmentDto> dtos = new ArrayList<>();
-        for (Assignment a : list) dtos.add(DtoMapper.toAssignmentDto(a));
+        for (Assignment a : list) dtos.add(dtoMapper.toAssignmentDto(a));
         return dtos;
     }
     
@@ -302,13 +303,13 @@ public class AssignmentServiceImpl implements AssignmentService {
     @Override
     public List<AssignmentSubmissionDto> listSubmissionsByStudent(Long studentId) {
         List<AssignmentSubmission> list = submissionRepo.findByStudentId(studentId);
-        return list.stream().map(DtoMapper::toSubmissionDto).toList();
+        return list.stream().map(dtoMapper::toSubmissionDto).toList();
     }
     
     @Override
     public AssignmentSubmissionDto getSubmissionForStudent(Long assignmentId, Long studentId) {
         return submissionRepo.findByAssignmentIdAndStudentId(assignmentId, studentId)
-                .map(DtoMapper::toSubmissionDto)
+                .map(dtoMapper::toSubmissionDto)
                 .orElseThrow(() -> new IllegalArgumentException("No submission found for this assignment"));
     }
     
@@ -325,11 +326,7 @@ public class AssignmentServiceImpl implements AssignmentService {
         sub.setTeacherRemarks(req.getReason());
 
         AssignmentSubmission saved = submissionRepo.save(sub);
-        return DtoMapper.toSubmissionDto(saved);
+        return dtoMapper.toSubmissionDto(saved);
     }
-
     
-
-
-
 }

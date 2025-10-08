@@ -1,25 +1,57 @@
 <div class="my-sub-root">
   <h2 class="page-title">📤 My Submissions</h2>
 
+  <div class="back-btn">
+    <button mat-stroked-button color="primary" routerLink="/student/assignments">
+      <mat-icon>arrow_back</mat-icon>
+      Back to Assignments
+    </button>
+  </div>
+
   <mat-progress-spinner *ngIf="loading" mode="indeterminate"></mat-progress-spinner>
   <div *ngIf="error" class="error">{{ error }}</div>
 
-  <div class="submission-list" *ngIf="!loading">
-    <mat-card *ngFor="let s of submissions" class="submission-card">
+  <div *ngIf="!loading && submissions.length === 0" class="empty">
+    You haven’t submitted any assignments yet.
+  </div>
+
+  <div class="submission-list" *ngIf="!loading && submissions.length">
+    <mat-card *ngFor="let s of submissions" class="submission-card" (click)="openSubmission(s)">
       <mat-card-header>
-        <mat-card-title>Assignment #{{ s.assignmentId }}</mat-card-title>
-        <mat-card-subtitle>{{ s.submittedAt | date:'medium' }}</mat-card-subtitle>
+        <mat-card-title>
+          {{ s.assignmentTitle || ('Assignment #' + s.assignmentId) }}
+        </mat-card-title>
+
+        <mat-card-subtitle *ngIf="s.batchName">
+          <span>Batch: {{ s.batchName }}</span>
+        </mat-card-subtitle>
+
+        <mat-card-subtitle>
+          <span>Submitted: {{ s.submittedAt | date:'medium' }}</span>
+        </mat-card-subtitle>
       </mat-card-header>
 
       <mat-card-content>
-        <p>Status: <strong>{{ s.status }}</strong></p>
-        <p *ngIf="s.status === 'GRADED'">Marks: <strong>{{ s.marksObtained }}</strong></p>
-        <p *ngIf="s.teacherRemarks">Teacher: {{ s.teacherRemarks }}</p>
+        <p>Status:
+          <mat-chip color="{{ getStatusColor(s.status) }}" selected>
+            {{ s.status }}
+          </mat-chip>
+        </p>
 
-        <div *ngIf="s.attachments?.length">
-          <small>Files:</small>
-          <div class="attach-list">
-            <a *ngFor="let a of s.attachments" href="{{ a.fileUrl }}" target="_blank">{{ a.fileName }}</a>
+        <p *ngIf="s.status === 'GRADED'">
+          Marks: <strong>{{ s.marksObtained }}</strong>
+        </p>
+
+        <p *ngIf="s.teacherRemarks">
+          Remarks: "{{ s.teacherRemarks }}"
+        </p>
+
+        <div *ngIf="s.attachmentUrls?.length" class="attachment-list">
+          <div *ngFor="let url of s.attachmentUrls" class="attachment-item">
+            <a [href]="url" target="_blank">
+              <mat-icon inline>attach_file</mat-icon>
+              {{ extractFileName(url) }}
+            </a>
           </div>
         </div>
       </mat-card-content>

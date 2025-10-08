@@ -9,8 +9,6 @@ export interface AssignmentDto {
   batchId?: number;
   attachments?: AssignmentAttachmentDto[];
   teacherName?: string;
-
-  // NEW
   submitted?: boolean;
   submission?: AssignmentSubmissionDto;
 }
@@ -27,14 +25,18 @@ export interface AssignmentAttachmentDto {
 export interface AssignmentSubmissionDto {
   id?: number;
   assignmentId: number;
+  assignmentTitle?: string; 
+  batchId?: number;         
+  batchName?: string;       
   studentId?: number;
+  studentName?: string;
   textAnswer?: string;
   submittedAt?: string;
-  status?: 'DRAFT'|'SUBMITTED'|'REJECTED'|'GRADED';
+  status?: 'DRAFT' | 'SUBMITTED' | 'REJECTED' | 'GRADED';
   marksObtained?: number;
   teacherRemarks?: string;
-  attachments?: SubmissionAttachmentDto[];
   attemptNumber?: number;
+  attachmentUrls?: string[];
 }
 
 export interface SubmissionAttachmentDto {

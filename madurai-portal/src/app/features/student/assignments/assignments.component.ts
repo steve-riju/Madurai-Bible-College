@@ -16,7 +16,7 @@ import { ViewSubmissionDialogComponent } from '../view-submission-dialog/view-su
 
 export class AssignmentsComponent implements OnInit {
   assignments: AssignmentDto[] = [];
-  batches: BatchDto[] = [];   // 👈 store all student batches
+  batches: BatchDto[] = [];   
   loading = false;
   error: string | null = null;
   batchId?: number;
@@ -110,11 +110,25 @@ export class AssignmentsComponent implements OnInit {
 
 
   openViewSubmission(a: AssignmentDto) {
-  this.dialog.open(ViewSubmissionDialogComponent, {
-    width: '90%',
-    maxWidth: '800px',
-    data: { assignment: a }
-  });
-}
+    if (!a.submission) return; // safety check
+
+    // The backend only returns filenames like “uuid_filename.docx”
+    // So we’ll prefix with your backend’s base file URL
+    const baseUrl = 'http://localhost:8080/api/files/'; // change to your BE file endpoint
+
+    // Normalize submission attachment URLs
+    const submission = {
+      ...a.submission,
+      attachmentUrls: a.submission.attachmentUrls?.map(f =>
+        f.startsWith('http') ? f : baseUrl + f
+      ),
+    };
+
+    this.dialog.open(ViewSubmissionDialogComponent, {
+      width: '90%',
+      maxWidth: '800px',
+      data: { submission }
+    });
+  }
 
 }

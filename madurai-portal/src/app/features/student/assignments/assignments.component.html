@@ -1,6 +1,13 @@
 <div class="assignments-root">
   <h2 class="page-title">📝 Assignments</h2>
 
+  <!-- 🔗 Button to My Submissions -->
+  <div class="top-actions">
+    <button mat-flat-button color="accent" routerLink="/student/my-submissions">
+      📤 View All Submissions
+    </button>
+  </div>
+
   <!-- Batch selector -->
   <div class="batch-selector" *ngIf="batches.length > 1">
     <mat-form-field appearance="outline">
