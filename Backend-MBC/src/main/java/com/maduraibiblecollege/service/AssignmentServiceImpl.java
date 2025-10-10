@@ -1,10 +1,15 @@
 package com.maduraibiblecollege.service;
 
+import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -275,9 +280,65 @@ public class AssignmentServiceImpl implements AssignmentService {
 
     @Override
     public Resource bulkDownloadSubmissions(Long assignmentId) {
-        // Not implemented here. Could be implemented by streaming attachments from R2 into a zip and returning as Resource.
-        throw new UnsupportedOperationException("bulkDownloadSubmissions not implemented");
+        List<AssignmentSubmission> submissions = submissionRepo.findByAssignmentId(assignmentId);
+
+        if (submissions.isEmpty()) {
+            throw new RuntimeException("No submissions found for assignment ID: " + assignmentId);
+        }
+
+        String assignmentName = submissions.get(0).getAssignment().getTitle()
+                .replaceAll("[^a-zA-Z0-9-_]", "_"); // safe ZIP name
+
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
+             ZipOutputStream zipOut = new ZipOutputStream(baos)) {
+
+            for (AssignmentSubmission sub : submissions) {
+                String studentName = sub.getStudent().getUsername().replaceAll("[^a-zA-Z0-9-_]", "_");
+
+                // handle text answers
+                if (sub.getTextAnswer() != null && !sub.getTextAnswer().isBlank()) {
+                    String textFileName = studentName + "_Answer.txt";
+                    ZipEntry textEntry = new ZipEntry(textFileName);
+                    zipOut.putNextEntry(textEntry);
+                    zipOut.write(sub.getTextAnswer().getBytes(StandardCharsets.UTF_8));
+                    zipOut.closeEntry();
+                }
+
+                // handle attachments
+                if (sub.getAttachments() != null) {
+                    for (SubmissionAttachment att : sub.getAttachments()) {
+                        String key = att.getFileUrl();
+                        if (key == null || key.isBlank()) continue;
+
+                        byte[] fileBytes = storageService.downloadFileAsBytes(key);
+                        String safeFileName = studentName + "_" + att.getFileName()
+                                .replaceAll("[^a-zA-Z0-9._-]", "_");
+
+                        ZipEntry entry = new ZipEntry(safeFileName);
+                        zipOut.putNextEntry(entry);
+                        zipOut.write(fileBytes);
+                        zipOut.closeEntry();
+                    }
+                }
+            }
+
+            zipOut.finish();
+
+            // ✅ return ZIP with assignment name
+            ByteArrayResource resource = new ByteArrayResource(baos.toByteArray()) {
+                @Override
+                public String getFilename() {
+                    return assignmentName + "_Submissions.zip";
+                }
+            };
+
+            return resource;
+
+        } catch (Exception e) {
+            throw new RuntimeException("Error creating bulk submission ZIP: " + e.getMessage(), e);
+        }
     }
+
 
     @Override
     public List<AssignmentDto> getAllAssignmentsByTeacher(Long teacherId) {
@@ -335,5 +396,4 @@ public class AssignmentServiceImpl implements AssignmentService {
             .orElseThrow(() -> new IllegalArgumentException("Assignment not found"));
         return dtoMapper.toAssignmentDto(a);
     }
-
 }

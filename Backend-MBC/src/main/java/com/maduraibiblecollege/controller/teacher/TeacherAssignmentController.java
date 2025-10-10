@@ -98,12 +98,15 @@ public class TeacherAssignmentController {
 
     @GetMapping("/{assignmentId}/download-all")
     public ResponseEntity<Resource> bulkDownload(@PathVariable Long assignmentId) {
-        Resource zip = assignmentService.bulkDownloadSubmissions(assignmentId);
+        Resource zipFile = assignmentService.bulkDownloadSubmissions(assignmentId);
+
         return ResponseEntity.ok()
-            .contentType(MediaType.APPLICATION_OCTET_STREAM)
-            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"submissions_"+assignmentId+".zip\"")
-            .body(zip);
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .header(HttpHeaders.CONTENT_DISPOSITION, 
+                        "attachment; filename=\"" + zipFile.getFilename() + "\"")
+                .body(zipFile);
     }
+
     
     @GetMapping("/batches")
     public ResponseEntity<List<BatchDto>> getTeacherBatches(Principal principal) {

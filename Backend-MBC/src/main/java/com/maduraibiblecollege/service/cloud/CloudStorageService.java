@@ -8,4 +8,6 @@ public interface CloudStorageService {
 	void deleteFile(String key);
 
 	String generateSignedUrl(String key);
+
+	byte[] downloadFileAsBytes(String key);
 }

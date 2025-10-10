@@ -9,10 +9,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
+import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
@@ -74,5 +76,20 @@ public class R2CloudStorageService implements CloudStorageService {
 
         return presigner.presignGetObject(presignReq).url().toString();
     }
+    
+    @Override
+    public byte[] downloadFileAsBytes(String key) {
+        GetObjectRequest getReq = GetObjectRequest.builder()
+                .bucket(bucket)
+                .key(key)
+                .build();
+
+        try (ResponseInputStream<GetObjectResponse> input = r2Client.getObject(getReq)) {
+            return input.readAllBytes();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to download file: " + key, e);
+        }
+    }
+
 
 }
