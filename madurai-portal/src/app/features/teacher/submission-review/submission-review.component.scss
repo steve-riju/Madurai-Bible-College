@@ -1,9 +1,158 @@
-.rejected-row {
-  background-color: #ffebee; // light red
-}
-.graded-row {
-  background-color: #e8f5e9; // light green
-}
-.resubmitted-row {
-  background-color: #fffde7; // light yellow
+@use 'variables' as *;
+@use 'mixins' as *;
+
+.review-root {
+  background: $card-bg;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 4rem;
+
+  .toolbar {
+    flex-wrap: wrap;
+    gap: 8px;
+    border-radius: 12px 12px 0 0;
+    padding: 8px 12px;
+
+    .title {
+      font-weight: 600;
+      @include responsive-font(16px, 20px);
+    }
+
+    .spacer {
+      flex: 1 1 auto;
+    }
+
+    .search-field {
+      width: 100%;
+      max-width: 260px;
+    }
+
+    .status-filter {
+      width: 140px;
+    }
+
+    .toolbar-buttons {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+
+      button[mat-flat-button] {
+        font-weight: 500;
+        @include hover-effect($secondary-color);
+      }
+    }
+  }
+
+  .table-wrap {
+    padding: 8px;
+    overflow-x: auto;
+
+    .full-table {
+      width: 100%;
+      min-width: 800px;
+      th.mat-header-cell {
+        font-weight: 600;
+        color: $text-color;
+        white-space: nowrap;
+      }
+
+      td.mat-cell {
+        vertical-align: top;
+      }
+    }
+
+    .answer-preview {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      span {
+        display: inline-block;
+        max-width: 320px;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+      button {
+        height: 28px;
+        width: 28px;
+      }
+    }
+
+    .files {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      a {
+        color: $primary-color;
+        @include hover-effect($primary-color);
+      }
+    }
+
+    .marks-field {
+      width: 100px;
+    }
+
+    .remarks-field {
+      width: 200px;
+    }
+
+    .status-chips {
+      mat-chip-option {
+        font-weight: 500;
+        text-transform: capitalize;
+        color: white;
+
+        &.graded {
+          background-color: #43a047; // green
+        }
+        &.rejected {
+          background-color: #e53935; // red
+        }
+        &.resubmitted {
+          background-color: #fb8c00; // orange
+        }
+        &.submitted {
+          background-color: #1e88e5; // blue
+        }
+      }
+    }
+
+    .actions-cell {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+  }
+
+  /* Status Row Highlights */
+  .rejected-row {
+    background-color: #ffebee;
+  }
+  .graded-row {
+    background-color: #e8f5e9;
+  }
+  .resubmitted-row {
+    background-color: #fffde7;
+  }
+
+  /* Responsive Adjustments */
+  @media (max-width: 768px) {
+    .toolbar {
+      flex-direction: column;
+      align-items: stretch;
+
+      .search-field,
+      .status-filter,
+      .toolbar-buttons {
+        width: 100%;
+      }
+    }
+
+    .table-wrap {
+      .marks-field,
+      .remarks-field {
+        width: 100%;
+      }
+    }
+  }
 }

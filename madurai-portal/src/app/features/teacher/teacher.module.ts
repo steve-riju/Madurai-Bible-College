@@ -10,9 +10,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 import { MatTableModule } from '@angular/material/table';
-import { MatIconModule } from '@angular/material/icon'; // ✅ CORRECTED: Import the module, not the component
-import { MatDialogModule } from '@angular/material/dialog'; // ✅ CORRECTED: Import the main dialog module
-import { MatProgressBarModule } from '@angular/material/progress-bar'; // ✅ ADD THIS: For mat-progress-bar
+import { MatIconModule } from '@angular/material/icon'; 
+import { MatDialogModule } from '@angular/material/dialog'; 
+import { MatProgressBarModule } from '@angular/material/progress-bar'; 
 import { MtxDatetimepickerModule } from '@ng-matero/extensions/datetimepicker';
 import { MtxNativeDatetimeModule } from '@ng-matero/extensions/core'; 
 
@@ -30,6 +30,18 @@ import { ProfileComponent } from './profile/profile.component';
 import { TeacherLayoutComponent } from './teacher-layout/teacher-layout.component';
 import { SubmissionReviewComponent } from './submission-review/submission-review.component';
 import { RejectDialogComponent } from './reject-dialog/reject-dialog.component';
+import { ViewAnswerDialogComponent } from './view-answer-dialog/view-answer-dialog.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatCardModule } from '@angular/material/card';
+import { MatToolbarModule } from '@angular/material/toolbar';
+
+
+
 
 
 @NgModule({
@@ -40,7 +52,8 @@ import { RejectDialogComponent } from './reject-dialog/reject-dialog.component';
     ProfileComponent,
     TeacherLayoutComponent,
     SubmissionReviewComponent,
-    RejectDialogComponent
+    RejectDialogComponent,
+    ViewAnswerDialogComponent
   ],
   imports: [
     CommonModule,
@@ -59,9 +72,18 @@ import { RejectDialogComponent } from './reject-dialog/reject-dialog.component';
     MtxDatetimepickerModule,
     MtxNativeDatetimeModule,
     MatTableModule,
-    MatIconModule,         // ✅ CORRECTED
-    MatDialogModule,       // ✅ CORRECTED
-    MatProgressBarModule   // ✅ ADD THIS
+    MatIconModule,         
+    MatDialogModule,       
+    MatProgressBarModule,
+    MatProgressSpinnerModule,
+    MatSnackBarModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatTooltipModule,
+    MatToolbarModule, 
+    MatCardModule,
+    MatChipsModule    
+
   ]
 })
 export class TeacherModule {}

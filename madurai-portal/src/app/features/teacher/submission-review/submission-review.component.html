@@ -1,91 +1,213 @@
-<div class="review-root p-4">
-  <h2 class="page-title">📑 Assignment Submissions</h2>
+<div class="review-root mat-elevation-z2">
+  <!-- Toolbar -->
+  <mat-toolbar color="primary" class="toolbar">
+    <span class="title">📑 Assignment Submissions</span>
+    <span class="spacer"></span>
+
+    <!-- Search -->
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-icon matPrefix>search</mat-icon>
+      <input
+        matInput
+        placeholder="Search student / answer"
+        [(ngModel)]="searchText"
+        (ngModelChange)="applyFilter()"
+      />
+      <button
+        mat-icon-button
+        matSuffix
+        *ngIf="searchText"
+        (click)="searchText=''; applyFilter()"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <!-- Status Filter -->
+    <mat-form-field appearance="outline" class="status-filter">
+      <mat-label>Status</mat-label>
+      <mat-select [(value)]="filterStatus" (selectionChange)="applyFilter()">
+        <mat-option value="ALL">All</mat-option>
+        <mat-option value="SUBMITTED">Submitted</mat-option>
+        <mat-option value="GRADED">Graded</mat-option>
+        <mat-option value="REJECTED">Rejected</mat-option>
+        <mat-option value="RESUBMITTED">Resubmitted</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Buttons -->
+    <div class="toolbar-buttons">
+      <button mat-icon-button (click)="loadAll()" [disabled]="loading" matTooltip="Refresh">
+        <mat-icon>refresh</mat-icon>
+      </button>
+      <button
+        mat-flat-button
+        color="accent"
+        (click)="downloadAll()"
+        [disabled]="bulkDownloading || loading"
+      >
+        <mat-icon>file_download</mat-icon>
+        {{ bulkDownloading ? 'Preparing…' : 'Download all' }}
+      </button>
+    </div>
+  </mat-toolbar>
 
   <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
 
-  <div *ngIf="!loading && submissions.length === 0" class="empty">
-    No submissions yet.
-  </div>
+  <!-- Table -->
+  <ng-container *ngIf="!loading">
+    <div *ngIf="dataSource.data.length === 0" class="empty-state">
+      <mat-card>
+        <mat-card-content>
+          <p>No submissions yet.</p>
+          <small>Students have not submitted or deadline not reached.</small>
+        </mat-card-content>
+      </mat-card>
+    </div>
 
-  <table mat-table [dataSource]="submissions" class="mat-elevation-z2" *ngIf="submissions.length > 0">
-    
-    <!-- Student -->
-    <ng-container matColumnDef="student">
-      <th mat-header-cell *matHeaderCellDef> Student </th>
-      <td mat-cell *matCellDef="let s"> {{ s.studentName }} </td>
-    </ng-container>
+    <div *ngIf="dataSource.data.length > 0" class="table-wrap">
+      <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z1 full-table">
 
-    <!-- Answer -->
-    <ng-container matColumnDef="answer">
-      <th mat-header-cell *matHeaderCellDef> Answer </th>
-      <td mat-cell *matCellDef="let s">
-        <span *ngIf="s.textAnswer; else noAns">{{ s.textAnswer }}</span>
-        <ng-template #noAns>—</ng-template>
-      </td>
-    </ng-container>
+        <!-- Student -->
+        <ng-container matColumnDef="student">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Student</th>
+          <td mat-cell *matCellDef="let s"><strong>{{ s.studentName }}</strong></td>
+        </ng-container>
 
-    <!-- Files -->
-    <ng-container matColumnDef="files">
-      <th mat-header-cell *matHeaderCellDef> Files </th>
-      <td mat-cell *matCellDef="let s">
-        <div class="flex gap-2 flex-wrap">
-          <a *ngFor="let f of s.attachmentUrls" [href]="f" target="_blank">
-            <mat-icon>attach_file</mat-icon>
-          </a>
-        </div>
-      </td>
-    </ng-container>
+        <!-- Answer Preview -->
+        <ng-container matColumnDef="answerPreview">
+          <th mat-header-cell *matHeaderCellDef>Answer</th>
+          <td mat-cell *matCellDef="let s">
+            <div class="answer-preview">
+              <span [matTooltip]="s.textAnswer" matTooltipShowDelay="500">
+                {{ preview(s.textAnswer) }}
+              </span>
+              <button
+                mat-icon-button
+                *ngIf="s.textAnswer && s.textAnswer.length > 120"
+                (click)="openFullAnswer(s)"
+                matTooltip="View full answer"
+              >
+                <mat-icon>visibility</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
 
-    <!-- Marks -->
-    <ng-container matColumnDef="marks">
-      <th mat-header-cell *matHeaderCellDef> Marks </th>
-      <td mat-cell *matCellDef="let s">
-        <mat-form-field appearance="outline" class="w-24">
-          <input matInput type="number" [(ngModel)]="s.marksObtained" min="0" />
-        </mat-form-field>
-      </td>
-    </ng-container>
+        <!-- Files -->
+        <ng-container matColumnDef="files">
+          <th mat-header-cell *matHeaderCellDef>Files</th>
+          <td mat-cell *matCellDef="let s">
+            <div class="files">
+              <ng-container *ngIf="s.attachmentUrls.length; else nofiles">
+                <a
+                  *ngFor="let f of s.attachmentUrls"
+                  mat-icon-button
+                  (click)="downloadFile(f)"
+                  target="_blank"
+                  rel="noopener"
+                  matTooltip="Open file"
+                >
+                  <mat-icon>attach_file</mat-icon>
+                </a>
+              </ng-container>
+              <ng-template #nofiles>—</ng-template>
+            </div>
+          </td>
+        </ng-container>
 
-    <!-- Remarks -->
-    <ng-container matColumnDef="remarks">
-      <th mat-header-cell *matHeaderCellDef> Remarks </th>
-      <td mat-cell *matCellDef="let s">
-        <mat-form-field appearance="outline" class="w-40">
-          <input matInput [(ngModel)]="s.teacherRemarks" />
-        </mat-form-field>
-      </td>
-    </ng-container>
+        <!-- Marks -->
+        <ng-container matColumnDef="marks">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Marks</th>
+          <td mat-cell *matCellDef="let s">
+            <mat-form-field appearance="outline" class="marks-field">
+              <input
+                matInput
+                type="number"
+                [(ngModel)]="s.marksObtained"
+                [min]="0"
+                [max]="s.maxMarks ?? assignmentMeta.maxMarks ?? 100"
+              />
+              <mat-hint align="end">
+                {{ s.marksObtained != null ? (s.marksObtained + '/' + (s.maxMarks ?? assignmentMeta.maxMarks ?? 100)) : ('max: ' + (s.maxMarks ?? assignmentMeta.maxMarks ?? 100)) }}
+              </mat-hint>
+            </mat-form-field>
+          </td>
+        </ng-container>
 
-    <!-- Status -->
-    <ng-container matColumnDef="status">
-      <th mat-header-cell *matHeaderCellDef> Status </th>
-      <td mat-cell *matCellDef="let s">
-        <span class="status" [ngClass]="s.status">{{ s.status }}</span>
-      </td>
-    </ng-container>
+        <!-- Remarks -->
+        <ng-container matColumnDef="remarks">
+          <th mat-header-cell *matHeaderCellDef>Remarks</th>
+          <td mat-cell *matCellDef="let s">
+            <mat-form-field appearance="outline" class="remarks-field">
+              <input
+                matInput
+                maxlength="255"
+                [(ngModel)]="s.teacherRemarks"
+                placeholder="Optional note to student"
+              />
+              <mat-hint align="end">{{ s.teacherRemarks?.length || 0 }}/255</mat-hint>
+            </mat-form-field>
+          </td>
+        </ng-container>
 
-    <!-- Actions -->
-    <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef> Actions </th>
-      <td mat-cell *matCellDef="let s">
-        <button mat-mini-button color="primary" (click)="saveGrade(s)">
-          💾 Save
-        </button>
-        <button mat-mini-button color="warn" (click)="openRejectDialog(s)">
-          ❌ Reject
-        </button>
-      </td>
-    </ng-container>
+        <!-- Status -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let s">
+            <mat-chip-listbox class="status-chips">
+              <mat-chip-option
+                [ngClass]="s.status.toLowerCase()"
+                [selected]="true"
+              >
+                {{ s.status }}
+              </mat-chip-option>
+            </mat-chip-listbox>
+          </td>
+        </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row 
-    *matRowDef="let row; columns: displayedColumns" 
-    [ngClass]="{
-      'rejected-row': row.status === 'REJECTED',
-      'graded-row': row.status === 'GRADED',
-      'resubmitted-row': row.status === 'RESUBMITTED'
-    }">
-</tr>
+        <!-- Actions -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let s" class="actions-cell">
+            <button
+              mat-mini-button
+              color="primary"
+              (click)="saveGrade(s)"
+              [disabled]="!canSave(s) || savingMap[s.id]"
+            >
+              <mat-icon *ngIf="!savingMap[s.id]">save</mat-icon>
+              <mat-progress-spinner *ngIf="savingMap[s.id]" diameter="16" mode="indeterminate"></mat-progress-spinner>
+              Save
+            </button>
 
-  </table>
+            <button
+              mat-mini-button
+              color="warn"
+              (click)="openRejectDialog(s)"
+              [disabled]="savingMap[s.id]"
+            >
+              <mat-icon>block</mat-icon> Reject
+            </button>
+
+            <button mat-icon-button matTooltip="View full answer" (click)="openFullAnswer(s)">
+              <mat-icon>visibility</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <!-- Table Rows -->
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns"
+          [class.rejected-row]="row.status === 'REJECTED'"
+          [class.graded-row]="row.status === 'GRADED'"
+          [class.resubmitted-row]="row.status === 'RESUBMITTED'"
+        ></tr>
+      </table>
+
+      <mat-paginator [pageSizeOptions]="[25, 10, 5]" showFirstLastButtons></mat-paginator>
+    </div>
+  </ng-container>
 </div>

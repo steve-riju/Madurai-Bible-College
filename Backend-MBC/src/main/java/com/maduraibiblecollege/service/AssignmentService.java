@@ -34,6 +34,7 @@ public interface AssignmentService {
 	AssignmentSubmissionDto getSubmissionForStudent(Long assignmentId, Long studentId);
 	List<AssignmentDto> getAssignmentsForBatch(Long batchId, Long studentId);
 	AssignmentSubmissionDto rejectSubmission(RejectRequest req, Long teacherId);
+	AssignmentDto getAssignmentById(Long id);
 
 }
 

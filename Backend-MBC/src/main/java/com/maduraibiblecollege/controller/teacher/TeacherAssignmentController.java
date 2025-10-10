@@ -142,6 +142,12 @@ public class TeacherAssignmentController {
         req.setSubmissionId(submissionId);
         return ResponseEntity.ok(assignmentService.rejectSubmission(req, teacher.getId()));
     }
+    
+    @GetMapping("/{assignmentId}")
+    public ResponseEntity<AssignmentDto> getAssignment(@PathVariable Long assignmentId) {
+        return ResponseEntity.ok(assignmentService.getAssignmentById(assignmentId));
+    }
+
 
 
 

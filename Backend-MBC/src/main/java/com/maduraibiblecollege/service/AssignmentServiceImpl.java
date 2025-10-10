@@ -329,4 +329,11 @@ public class AssignmentServiceImpl implements AssignmentService {
         return dtoMapper.toSubmissionDto(saved);
     }
     
+    @Override
+    public AssignmentDto getAssignmentById(Long id) {
+        Assignment a = assignmentRepo.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Assignment not found"));
+        return dtoMapper.toAssignmentDto(a);
+    }
+
 }
