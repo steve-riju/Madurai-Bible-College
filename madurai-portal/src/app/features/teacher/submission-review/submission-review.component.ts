@@ -6,10 +6,11 @@ import { TeacherSubmissionReviewService } from '../services/teacher-submission-r
 import { RejectDialogComponent } from '../reject-dialog/reject-dialog.component';
 import { ViewAnswerDialogComponent } from '../view-answer-dialog/view-answer-dialog.component';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, Sort } from '@angular/material/sort';
 import { merge, of } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
 import { MatTableDataSource } from '@angular/material/table';
+import * as Papa from 'papaparse';
 
 @Component({
   selector: 'app-submission-review',
@@ -47,13 +48,35 @@ export class SubmissionReviewComponent implements OnInit {
   private applyTableSetup() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+
+    // Fix sorting for nested / computed fields
+    this.dataSource.sortingDataAccessor = (item, property) => {
+      switch (property) {
+        case 'student':
+          return item.studentName?.toLowerCase() || '';
+        case 'marks':
+          return item.marksObtained != null ? item.marksObtained : -1;
+        default:
+          return item[property];
+      }
+    };
+
+    // Apply filter while preserving current sort
+    const currentSort: Sort = this.sort?.active ? { ...this.sort, direction: this.sort.direction } : { active: '', direction: '' };
     this.applyFilter();
+
+    // Restore sort state after filtering
+    if (currentSort.active) {
+      this.sort.active = currentSort.active;
+      this.sort.direction = currentSort.direction;
+      this.dataSource.data = this.dataSource.data.slice(); // trigger table refresh
+    }
   }
 
   loadAll() {
     this.loading = true;
 
-    // fetch both assignment meta and submissions if possible
+    // fetch assignment meta
     this.service.getAssignment(this.assignmentId).pipe(
       catchError(() => of(null))
     ).subscribe(meta => {
@@ -67,7 +90,6 @@ export class SubmissionReviewComponent implements OnInit {
       }),
       finalize(() => this.loading = false)
     ).subscribe((res: any[]) => {
-      // normalize responses to expected shape
       const normalized = (res || []).map(s => ({
         id: s.id,
         studentName: s.studentName || s.student?.name || 'Unknown',
@@ -79,12 +101,12 @@ export class SubmissionReviewComponent implements OnInit {
         maxMarks: this.assignmentMeta?.maxMarks ?? s.maxMarks ?? null
       }));
       this.dataSource.data = normalized;
+
       // setup paginator & sort after data
       setTimeout(() => this.applyTableSetup(), 0);
     });
   }
 
-  // client-side filter (status + search)
   applyFilter() {
     const status = this.filterStatus;
     const search = (this.searchText || '').toLowerCase().trim();
@@ -95,21 +117,18 @@ export class SubmissionReviewComponent implements OnInit {
       const searchOk = !search || text.includes(search);
       return sOk && searchOk;
     };
+
     // MatTableDataSource expects a string to trigger filter recalculation
     this.dataSource.filter = Math.random().toString();
   }
 
-  // Truncated preview length
- // Show only first 3 words (or truncate long text)
-preview(text: string, wordLimit = 1) {
-  if (!text) return '—';
-  // split by whitespace, get first few words
-  const words = text.trim().split(/\s+/);
-  let shortText = words.slice(0, wordLimit).join(' ');
-  if (words.length > wordLimit) shortText += ' …';
-  return shortText;
-}
-
+  preview(text: string, wordLimit = 1) {
+    if (!text) return '—';
+    const words = text.trim().split(/\s+/);
+    let shortText = words.slice(0, wordLimit).join(' ');
+    if (words.length > wordLimit) shortText += ' …';
+    return shortText;
+  }
 
   openFullAnswer(sub: any) {
     this.dialog.open(ViewAnswerDialogComponent, { width: '700px', data: { answer: sub.textAnswer, student: sub.studentName } });
@@ -131,7 +150,7 @@ preview(text: string, wordLimit = 1) {
     }
     this.savingMap[sub.id] = true;
     this.service.gradeSubmission(sub.id, sub.marksObtained, sub.teacherRemarks).pipe(
-      catchError((err) => {
+      catchError(() => {
         this.snack.open('Failed to save grade', 'Close', { duration: 3000 });
         return of(null);
       }),
@@ -165,7 +184,6 @@ preview(text: string, wordLimit = 1) {
   }
 
   downloadFile(url: string) {
-    // opens in new tab (ensure correct CORS headers on storage)
     window.open(url, '_blank');
   }
 
@@ -180,7 +198,6 @@ preview(text: string, wordLimit = 1) {
       finalize(() => this.bulkDownloading = false)
     ).subscribe(blob => {
       if (!blob) return;
-      // Create temporary link to download
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -189,4 +206,70 @@ preview(text: string, wordLimit = 1) {
       window.URL.revokeObjectURL(url);
     });
   }
+
+  exportAsCSV() {
+    const data = this.dataSource.filteredData.length
+      ? this.dataSource.filteredData
+      : this.dataSource.data;
+
+    if (!data || data.length === 0) {
+      this.snack.open('No submissions to export', 'Close', { duration: 3000 });
+      return;
+    }
+
+    const csv = Papa.unparse(
+      data.map(s => ({
+        'Student Name': s.studentName || '',
+        'Grade': s.marksObtained != null ? s.marksObtained : '',
+        'Remarks': s.teacherRemarks || '',
+        'Status': s.status || ''
+      }))
+    );
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = window.URL.createObjectURL(blob);
+    const fileName =
+      (this.assignmentMeta.title?.replace(/[^\w\d-]/g, '_') || 'assignment') + '.csv';
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    a.click();
+    window.URL.revokeObjectURL(url);
+
+    this.snack.open('CSV exported successfully ✅', 'Close', { duration: 2000 });
+  }
+
+  uploadReviewFiles(sub: any) {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.multiple = true;
+
+  input.onchange = () => {
+    const files: FileList | null = input.files;
+    if (!files || files.length === 0) return;
+
+    const formData = new FormData();
+    for (let i = 0; i < files.length; i++) {
+      formData.append('files', files[i]);
+    }
+
+    this.savingMap[sub.id] = true;
+    this.service.uploadReview(sub.id, formData).pipe(
+      finalize(() => this.savingMap[sub.id] = false),
+      catchError(() => {
+        this.snack.open('Failed to upload review files', 'Close', { duration: 3000 });
+        return of(null);
+      })
+    ).subscribe(updated => {
+      if (updated) {
+        Object.assign(sub, updated);
+        this.snack.open('Review files uploaded ✅', 'Close', { duration: 2000 });
+      }
+    });
+  };
+
+  input.click();
+}
+
 }

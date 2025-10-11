@@ -116,4 +116,29 @@
       }
     }
   }
+  .attachment-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.attachment-item a {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  text-decoration: none;
+  color: #1976d2;
+  font-weight: 500;
+}
+
+.attachment-item a:hover {
+  text-decoration: underline;
+}
+
+mat-icon[inline] {
+  font-size: 20px;
+  vertical-align: middle;
+}
+
 }

@@ -33,6 +33,7 @@ import com.maduraibiblecollege.entity.assignmnets.AssignmentStatus;
 import com.maduraibiblecollege.entity.assignmnets.AssignmentSubmission;
 import com.maduraibiblecollege.entity.assignmnets.SubmissionAttachment;
 import com.maduraibiblecollege.entity.assignmnets.SubmissionStatus;
+import com.maduraibiblecollege.entity.assignmnets.TeacherSubmissionAttachment;
 import com.maduraibiblecollege.repository.AssignmentRepository;
 import com.maduraibiblecollege.repository.AssignmentSubmissionRepository;
 import com.maduraibiblecollege.repository.BatchRepository;
@@ -396,4 +397,33 @@ public class AssignmentServiceImpl implements AssignmentService {
             .orElseThrow(() -> new IllegalArgumentException("Assignment not found"));
         return dtoMapper.toAssignmentDto(a);
     }
+    
+    @Override
+    public AssignmentSubmissionDto uploadCorrectedFiles(Long submissionId, List<MultipartFile> files, Long teacherId) {
+        AssignmentSubmission sub = submissionRepo.findById(submissionId)
+                .orElseThrow(() -> new IllegalArgumentException("Submission not found"));
+
+        if (!teacherId.equals(sub.getAssignment().getTeacher().getId())) {
+            throw new SecurityException("Not authorized to upload review files");
+        }
+
+        if (sub.getTeacherAttachments() == null) sub.setTeacherAttachments(new ArrayList<>());
+
+        for (MultipartFile mf : files) {
+            if (mf == null || mf.isEmpty()) continue;
+
+            String url = storageService.uploadFile(mf);
+            TeacherSubmissionAttachment att = new TeacherSubmissionAttachment();
+            att.setFileName(Objects.requireNonNullElse(mf.getOriginalFilename(), "file"));
+            att.setFileUrl(url);
+            att.setSubmission(sub);
+
+            sub.getTeacherAttachments().add(att);
+        }
+
+        sub.setStatus(SubmissionStatus.GRADED); // new status for teacher-uploaded review
+        AssignmentSubmission saved = submissionRepo.save(sub);
+        return dtoMapper.toSubmissionDto(saved);
+    }
+
 }

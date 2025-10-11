@@ -1,8 +1,7 @@
-// features/student/my-submissions/my-submissions.component.ts
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { StudentAssignmentsService } from '../services/student-assignments.service';
 import { AssignmentSubmissionDto } from '../models/assignment';
-import { MatDialog } from '@angular/material/dialog';
 import { ViewSubmissionDialogComponent } from '../view-submission-dialog/view-submission-dialog.component';
 
 @Component({
@@ -15,54 +14,104 @@ export class MySubmissionsComponent implements OnInit {
   loading = false;
   error: string | null = null;
 
-  constructor(
-    private service: StudentAssignmentsService,
-    private dialog: MatDialog
-  ) {}
+  constructor(private service: StudentAssignmentsService, private dialog: MatDialog) {}
 
   ngOnInit(): void {
-    this.loadMySubmissions();
+    this.loadSubmissions();
   }
 
-  loadMySubmissions() {
+  loadSubmissions(): void {
     this.loading = true;
     this.service.getMySubmissions().subscribe({
-      next: res => {
-        this.submissions = res.sort((a, b) =>
-          new Date(b.submittedAt!).getTime() - new Date(a.submittedAt!).getTime()
-        );
+      next: (res) => {
+        this.submissions = res.map((s) => ({
+          ...s,
+          attachments: s.attachments?.map((a) => ({
+            ...a,
+            fileUrl: a.fileUrl?.startsWith('http')
+              ? a.fileUrl
+              : `http://localhost:8080/api/files/${a.fileUrl}`
+          }))
+        })) || [];
         this.loading = false;
       },
-      error: err => {
-        console.error(err);
-        this.error = 'Failed loading submissions';
+      error: (err) => {
+        console.error('❌ Failed to load submissions:', err);
+        this.error = 'Failed to load submissions.';
         this.loading = false;
       }
     });
   }
 
-  openSubmission(sub: AssignmentSubmissionDto) {
+  openSubmission(s: AssignmentSubmissionDto): void {
     this.dialog.open(ViewSubmissionDialogComponent, {
       width: '90%',
-      maxWidth: '800px',
-      data: { submission: sub }
+      maxWidth: '900px',
+      data: { submission: s }
     });
   }
 
-   
-
-  getStatusColor(status?: string): string {
-    switch (status) {
-      case 'SUBMITTED': return 'accent';
-      case 'GRADED': return 'primary';
-      case 'REJECTED': return 'warn';
-      default: return '';
+  extractFileName(url: string): string {
+    try {
+      const decoded = decodeURIComponent(url);
+      const parts = decoded.split('_');
+      const name = parts.length > 1 ? parts.slice(1).join('_') : decoded;
+      return name.substring(0, 60); // truncate long names
+    } catch {
+      return url;
     }
   }
 
-  extractFileName(url: string): string {
-  if (!url) return 'File';
-  return url.split('/').pop() || url;
+  getStatusColor(status?: string): string {
+    switch (status) {
+      case 'SUBMITTED':
+        return 'accent';
+      case 'GRADED':
+        return 'primary';
+      case 'REJECTED':
+        return 'warn';
+      default:
+        return '';
+    }
+  }
+
+  getFileIcon(name: string = ''): string {
+  const ext = name.split('.').pop()?.toLowerCase() || '';
+
+  switch (ext) {
+    case 'pdf':
+      return 'picture_as_pdf';
+    case 'doc':
+    case 'docx':
+      return 'description';
+    case 'ppt':
+    case 'pptx':
+      return 'slideshow';
+    case 'xls':
+    case 'xlsx':
+      return 'grid_on';
+    case 'zip':
+    case 'rar':
+    case '7z':
+      return 'archive';
+    case 'jpg':
+    case 'jpeg':
+    case 'png':
+    case 'gif':
+    case 'bmp':
+      return 'image';
+    case 'txt':
+      return 'article';
+    case 'mp4':
+    case 'mov':
+    case 'avi':
+      return 'movie';
+    case 'mp3':
+    case 'wav':
+      return 'audiotrack';
+    default:
+      return 'insert_drive_file';
+  }
 }
 
 }

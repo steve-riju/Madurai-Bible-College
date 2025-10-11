@@ -117,11 +117,13 @@
     }
 
     .actions-cell {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
+  display: flex;
+  justify-content: flex-start; // align menu to left if needed
+  button {
+    margin: 0; // remove inline button spacing
+  }
+}
+
   }
 
   /* Status Row Highlights */

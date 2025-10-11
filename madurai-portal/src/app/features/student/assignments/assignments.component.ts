@@ -118,11 +118,12 @@ export class AssignmentsComponent implements OnInit {
 
     // Normalize submission attachment URLs
     const submission = {
-      ...a.submission,
-      attachmentUrls: a.submission.attachmentUrls?.map(f =>
-        f.startsWith('http') ? f : baseUrl + f
-      ),
-    };
+  ...a.submission,
+  attachmentUrls: a.submission.attachments?.map(att =>
+    att.fileUrl?.startsWith('http') ? att.fileUrl : baseUrl + att.fileUrl
+  ) || []
+};
+
 
     this.dialog.open(ViewSubmissionDialogComponent, {
       width: '90%',

@@ -72,3 +72,19 @@ mat-dialog-actions {
   border-top: 1px solid #eee;
   background: #fff;
 }
+
+.attachments-section {
+  margin-top: 1rem;
+}
+
+.attachment-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.attachment-item {
+  display: flex;
+  align-items: center;
+}
+

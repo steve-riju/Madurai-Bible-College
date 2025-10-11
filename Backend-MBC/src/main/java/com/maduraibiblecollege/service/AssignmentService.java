@@ -35,6 +35,7 @@ public interface AssignmentService {
 	List<AssignmentDto> getAssignmentsForBatch(Long batchId, Long studentId);
 	AssignmentSubmissionDto rejectSubmission(RejectRequest req, Long teacherId);
 	AssignmentDto getAssignmentById(Long id);
+	AssignmentSubmissionDto uploadCorrectedFiles(Long submissionId, List<MultipartFile> files, Long teacherId);
 
 }
 

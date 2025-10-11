@@ -12,12 +12,11 @@ export class StudentAssignmentsService {
 
   constructor(private http: HttpClient) {}
 
-  // 🔹 Get assignments for a batch
+
   getAssignmentsForBatch(batchId: number): Observable<AssignmentDto[]> {
     return this.http.get<AssignmentDto[]>(`${this.apiUrl}${this.baseUrl}/batch/${batchId}`);
   }
 
-  // 🔹 Submit assignment — multipart: files + textAnswer
   submitAssignment(
     assignmentId: number,
     textAnswer: string | null,
@@ -34,19 +33,16 @@ export class StudentAssignmentsService {
     );
   }
 
-  // 🔹 Get all submissions for logged-in student
   getMySubmissions(): Observable<AssignmentSubmissionDto[]> {
     return this.http.get<AssignmentSubmissionDto[]>(`${this.apiUrl}${this.baseUrl}/my-submissions`);
   }
 
-  // 🔹 Get my submission for one assignment
   getMySubmissionForAssignment(assignmentId: number): Observable<AssignmentSubmissionDto> {
     return this.http.get<AssignmentSubmissionDto>(
       `${this.apiUrl}${this.baseUrl}/${assignmentId}/my-submission`
     );
   }
 
-  // 🔹 Get batches for the logged-in student (fix)
   getMyBatches(): Observable<BatchDto[]> {
     return this.http.get<BatchDto[]>(`${this.apiUrl}/api/admin/batches/student/my-batches`);
   }

@@ -39,6 +39,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatMenuModule } from '@angular/material/menu';
 
 
 
@@ -82,7 +83,9 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatTooltipModule,
     MatToolbarModule, 
     MatCardModule,
-    MatChipsModule    
+    MatChipsModule,
+    MatMenuModule
+   
 
   ]
 })

@@ -36,7 +36,9 @@ export interface AssignmentSubmissionDto {
   marksObtained?: number;
   teacherRemarks?: string;
   attemptNumber?: number;
-  attachmentUrls?: string[];
+  attachments?: { fileName: string; fileUrl: string }[]; // student-uploaded
+  teacherAttachments?: { fileName: string; fileUrl: string }[]; // teacher-uploaded
+
 }
 
 export interface SubmissionAttachmentDto {

@@ -1,56 +1,66 @@
 <div class="review-root mat-elevation-z2">
-  <!-- Toolbar -->
-  <mat-toolbar color="primary" class="toolbar">
-    <span class="title">📑 Assignment Submissions</span>
-    <span class="spacer"></span>
+<!-- Toolbar -->
+<mat-toolbar color="primary" class="toolbar">
+  <span class="title">📑 Assignment Submissions</span>
+  <span class="spacer"></span>
 
-    <!-- Search -->
-    <mat-form-field appearance="outline" class="search-field">
-      <mat-icon matPrefix>search</mat-icon>
-      <input
-        matInput
-        placeholder="Search student / answer"
-        [(ngModel)]="searchText"
-        (ngModelChange)="applyFilter()"
-      />
-      <button
-        mat-icon-button
-        matSuffix
-        *ngIf="searchText"
-        (click)="searchText=''; applyFilter()"
-      >
-        <mat-icon>close</mat-icon>
-      </button>
-    </mat-form-field>
+  <!-- Search -->
+  <mat-form-field appearance="outline" class="search-field">
+    <mat-icon matPrefix>search</mat-icon>
+    <input
+      matInput
+      placeholder="Search student / answer"
+      [(ngModel)]="searchText"
+      (ngModelChange)="applyFilter()"
+    />
+    <button
+      mat-icon-button
+      matSuffix
+      *ngIf="searchText"
+      (click)="searchText=''; applyFilter()"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
 
-    <!-- Status Filter -->
-    <mat-form-field appearance="outline" class="status-filter">
-      <mat-label>Status</mat-label>
-      <mat-select [(value)]="filterStatus" (selectionChange)="applyFilter()">
-        <mat-option value="ALL">All</mat-option>
-        <mat-option value="SUBMITTED">Submitted</mat-option>
-        <mat-option value="GRADED">Graded</mat-option>
-        <mat-option value="REJECTED">Rejected</mat-option>
-        <mat-option value="RESUBMITTED">Resubmitted</mat-option>
-      </mat-select>
-    </mat-form-field>
+  <!-- Status Filter -->
+  <mat-form-field appearance="outline" class="status-filter">
+    <mat-label>Status</mat-label>
+    <mat-select [(value)]="filterStatus" (selectionChange)="applyFilter()">
+      <mat-option value="ALL">All</mat-option>
+      <mat-option value="SUBMITTED">Submitted</mat-option>
+      <mat-option value="GRADED">Graded</mat-option>
+      <mat-option value="REJECTED">Rejected</mat-option>
+      <mat-option value="RESUBMITTED">Resubmitted</mat-option>
+    </mat-select>
+  </mat-form-field>
 
-    <!-- Buttons -->
-    <div class="toolbar-buttons">
-      <button mat-icon-button (click)="loadAll()" [disabled]="loading" matTooltip="Refresh">
-        <mat-icon>refresh</mat-icon>
-      </button>
-      <button
-        mat-flat-button
-        color="accent"
-        (click)="downloadAll()"
-        [disabled]="bulkDownloading || loading"
-      >
-        <mat-icon>file_download</mat-icon>
-        {{ bulkDownloading ? 'Preparing…' : 'Download all' }}
-      </button>
-    </div>
-  </mat-toolbar>
+  <!-- Menu Button -->
+  <button mat-icon-button [matMenuTriggerFor]="toolbarMenu" matTooltip="More actions">
+    <mat-icon>more_vert</mat-icon>
+  </button>
+
+  <!-- Dropdown Menu -->
+  <mat-menu #toolbarMenu="matMenu">
+    <button mat-menu-item (click)="loadAll()" [disabled]="loading">
+      <mat-icon>refresh</mat-icon>
+      <span>Refresh</span>
+    </button>
+    <button mat-menu-item (click)="downloadAll()" [disabled]="bulkDownloading || loading">
+      <mat-icon>file_download</mat-icon>
+      <span>{{ bulkDownloading ? 'Preparing…' : 'Download all' }}</span>
+    </button>
+    <button
+      mat-menu-item
+      (click)="exportAsCSV()"
+      [disabled]="dataSource.data.length === 0"
+    >
+      <mat-icon>table_view</mat-icon>
+      <span>Export as CSV</span>
+    </button>
+  </mat-menu>
+</mat-toolbar>
+
 
   <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
 
@@ -70,7 +80,7 @@
 
         <!-- Student -->
         <ng-container matColumnDef="student">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Student</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="student">Student</th>
           <td mat-cell *matCellDef="let s"><strong>{{ s.studentName }}</strong></td>
         </ng-container>
 
@@ -118,7 +128,7 @@
 
         <!-- Marks -->
         <ng-container matColumnDef="marks">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Marks</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="marks">Marks</th>
           <td mat-cell *matCellDef="let s">
             <mat-form-field appearance="outline" class="marks-field">
               <input
@@ -166,35 +176,56 @@
           </td>
         </ng-container>
 
-        <!-- Actions -->
-        <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef>Actions</th>
-          <td mat-cell *matCellDef="let s" class="actions-cell">
-            <button
-              mat-mini-button
-              color="primary"
-              (click)="saveGrade(s)"
-              [disabled]="!canSave(s) || savingMap[s.id]"
-            >
-              <mat-icon *ngIf="!savingMap[s.id]">save</mat-icon>
-              <mat-progress-spinner *ngIf="savingMap[s.id]" diameter="16" mode="indeterminate"></mat-progress-spinner>
-              Save
-            </button>
+<!-- Actions -->
+<ng-container matColumnDef="actions">
+  <th mat-header-cell *matHeaderCellDef>Actions</th>
+  <td mat-cell *matCellDef="let s" class="actions-cell">
 
-            <button
-              mat-mini-button
-              color="warn"
-              (click)="openRejectDialog(s)"
-              [disabled]="savingMap[s.id]"
-            >
-              <mat-icon>block</mat-icon> Reject
-            </button>
+    <!-- Row menu button -->
+    <button
+      mat-icon-button
+      [matMenuTriggerFor]="rowMenu"
+      matTooltip="More actions"
+    >
+      <mat-icon>more_vert</mat-icon>
+    </button>
 
-            <button mat-icon-button matTooltip="View full answer" (click)="openFullAnswer(s)">
-              <mat-icon>visibility</mat-icon>
-            </button>
-          </td>
-        </ng-container>
+    <!-- Row dropdown menu -->
+    <mat-menu #rowMenu="matMenu">
+      <button
+        mat-menu-item
+        (click)="openFullAnswer(s)"
+      >
+        <mat-icon>visibility</mat-icon>
+        <span>View</span>
+      </button>
+      <button mat-menu-item (click)="uploadReviewFiles(s)">
+    <mat-icon>upload_file</mat-icon>
+    <span>Upload Review</span>
+  </button>
+
+      <button
+        mat-menu-item
+        (click)="saveGrade(s)"
+        [disabled]="!canSave(s) || savingMap[s.id]"
+      >
+        <mat-icon>save</mat-icon>
+        <span>Save</span>
+      </button>
+
+      <button
+        mat-menu-item
+        (click)="openRejectDialog(s)"
+        [disabled]="savingMap[s.id]"
+      >
+        <mat-icon>block</mat-icon>
+        <span>Reject</span>
+      </button>
+    </mat-menu>
+
+  </td>
+</ng-container>
+
 
         <!-- Table Rows -->
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

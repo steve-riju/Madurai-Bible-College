@@ -150,8 +150,18 @@ public class TeacherAssignmentController {
     public ResponseEntity<AssignmentDto> getAssignment(@PathVariable Long assignmentId) {
         return ResponseEntity.ok(assignmentService.getAssignmentById(assignmentId));
     }
+    
+    @PutMapping("/submissions/{submissionId}/upload-review")
+    public ResponseEntity<AssignmentSubmissionDto> uploadReview(
+            @PathVariable Long submissionId,
+            @RequestPart(name = "files") List<MultipartFile> files,
+            Principal principal) {
 
+        User teacher = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new UsernameNotFoundException("Teacher not found"));
 
-
+        AssignmentSubmissionDto dto = assignmentService.uploadCorrectedFiles(submissionId, files, teacher.getId());
+        return ResponseEntity.ok(dto);
+    }
 
 }

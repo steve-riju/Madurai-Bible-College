@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { AssignmentSubmissionDto } from '../../student/models/assignment';
 
 @Injectable({ providedIn: 'root' })
 export class TeacherSubmissionReviewService {
@@ -34,4 +35,10 @@ export class TeacherSubmissionReviewService {
   extendDeadline(assignmentId: number, newDate: string) {
     return this.http.put<any>(`${this.baseUrl}/${assignmentId}/extend`, { newDeadline: newDate });
   }
+  uploadReview(submissionId: number, formData: FormData) {
+  return this.http.put<AssignmentSubmissionDto>(
+    `${this.baseUrl}/submissions/${submissionId}/upload-review`,
+    formData
+  );
+}
 }

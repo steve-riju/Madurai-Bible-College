@@ -3,6 +3,7 @@ package com.maduraibiblecollege.entity.assignmnets;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.maduraibiblecollege.entity.User;
@@ -41,4 +42,8 @@ public class AssignmentSubmission {
     private List<SubmissionAttachment> attachments;
 
     private Integer attemptNumber;
+    @Builder.Default
+    @OneToMany(mappedBy = "submission", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TeacherSubmissionAttachment> teacherAttachments = new ArrayList<>();
+
 }
