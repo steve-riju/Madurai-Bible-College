@@ -9,6 +9,8 @@ interface AuthResponse {
   tokenType: string;
   username: string;
   role: 'STUDENT' | 'TEACHER' | 'ADMIN';
+  id: number;
+  name: string;
 }
 
 @Injectable({
@@ -30,6 +32,8 @@ export class AuthService {
         localStorage.setItem('refreshToken', response.refreshToken);
         localStorage.setItem('userRole', normalizedRole);
         localStorage.setItem('username', response.username);
+        localStorage.setItem('id', response.id.toString());
+        localStorage.setItem('name', response.name);
 
         if (normalizedRole === 'student') {
           this.router.navigate(['/student/dashboard']);
@@ -47,6 +51,8 @@ export class AuthService {
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('userRole');
     localStorage.removeItem('username');
+    localStorage.removeItem('id');
+    localStorage.removeItem('name');
     this.router.navigate(['/auth/login']);
   }
 
@@ -56,6 +62,14 @@ export class AuthService {
 
   getUsername(): string | null {
     return localStorage.getItem('username');
+  }
+
+  getName(): string | null {
+    return localStorage.getItem('name');
+  }
+
+  getId(): number | null {
+    return Number(localStorage.getItem('id'));
   }
 
   isLoggedIn(): boolean {

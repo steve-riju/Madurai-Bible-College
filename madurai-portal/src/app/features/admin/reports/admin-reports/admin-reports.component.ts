@@ -1,5 +1,5 @@
-// admin-reports.component.ts
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { TeacherReportsService } from '../../../teacher/services/teacher-reports.service';
 import { TeacherDailyReportDto } from '../../../teacher/models/teacher-report';
 import { MatTableDataSource } from '@angular/material/table';
@@ -17,19 +17,25 @@ export class AdminReportsComponent implements OnInit {
   dataSource = new MatTableDataSource<TeacherDailyReportDto>([]);
   displayedColumns = ['teacherName','batchName','semester','date','lessonCovered','time','actions'];
 
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild('reportDialog') reportDialog!: TemplateRef<any>;
+
+  selectedReport?: TeacherDailyReportDto;
+
   filter = {
     teacherId: null as number | null,
-    date: null as string | null, // yyyy-mm-dd
+    date: null as string | null,
     batchName: '',
     semester: ''
   };
 
   teacherList: { id?: number, name?: string }[] = [];
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
-
-  constructor(private svc: TeacherReportsService) {}
+  constructor(
+    private svc: TeacherReportsService,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.loadReports();
@@ -40,7 +46,6 @@ export class AdminReportsComponent implements OnInit {
     this.reports.forEach(r => {
       if (r.teacherId && !map.has(r.teacherId)) {
         map.set(r.teacherId, r.teacherName || `T-${r.teacherId}`);
-        console.log('Added teacher to filter list:', r.teacherId, r.teacherName);
       }
     });
     this.teacherList = Array.from(map.entries()).map(([id, name]) => ({ id, name }));
@@ -55,7 +60,7 @@ export class AdminReportsComponent implements OnInit {
         setTimeout(() => {
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
-        }, 0);
+        });
       }
     });
   }
@@ -77,18 +82,11 @@ export class AdminReportsComponent implements OnInit {
   }
 
   viewReport(row: TeacherDailyReportDto) {
-    // open a dialog or new route. For simplicity use window alert or console
-    // You should replace with MatDialog to show details in a nice dialog
-    const info = [
-      `Teacher: ${row.teacherName}`,
-      `Batch: ${row.batchName}`,
-      `Date: ${row.date}`,
-      `Lessons: ${row.lessonCovered}`,
-      `Start: ${row.startTime} End: ${row.endTime}`,
-      `Assignments: ${row.assignmentsGiven}`,
-      `Notes: ${row.additionalNotes}`
-    ].join('\n\n');
-    alert(info);
+    this.selectedReport = row;
+    this.dialog.open(this.reportDialog, {
+      width: '500px',
+      panelClass: 'report-dialog-panel'
+    });
   }
 
   exportCsv() {
@@ -104,9 +102,10 @@ export class AdminReportsComponent implements OnInit {
       additionalNotes: r.additionalNotes,
       createdAt: r.createdAt
     }));
-
     const header = Object.keys(rows[0] || {}).join(',');
-    const csv = [header].concat(rows.map(row => Object.values(row).map(v => `"${(v ?? '').toString().replace(/"/g,'""')}"`).join(','))).join('\r\n');
+    const csv = [header].concat(rows.map(row =>
+      Object.values(row).map(v => `"${(v ?? '').toString().replace(/"/g,'""')}"`).join(',')
+    )).join('\r\n');
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     saveAs(blob, `teacher_daily_reports_${new Date().toISOString().slice(0,10)}.csv`);
   }

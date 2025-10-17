@@ -86,6 +86,28 @@ mat-paginator {
   padding-top: 0.5rem;
 }
 
+.report-dialog-panel {
+  mat-dialog-container {
+    padding: 1.5rem;
+    border-radius: 1rem;
+  }
+}
+
+.dialog-content {
+  p {
+    margin: 0.4rem 0;
+    line-height: 1.4;
+  }
+
+  .block-text {
+    background: #f6f6f6;
+    padding: 0.5rem;
+    border-radius: 0.4rem;
+    white-space: pre-wrap;
+  }
+}
+
+
 /* Responsive behavior */
 @media (max-width: 768px) {
   .filters {

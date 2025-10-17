@@ -36,7 +36,7 @@ public class AuthService {
 
     String access = jwtService.generateAccessToken(user);
     String refresh = jwtService.generateRefreshToken(user);
-    return AuthResponse.of(access, refresh, user.getUsername(), user.getRole().name());
+    return AuthResponse.of(access, refresh, user.getUsername(), user.getRole().name(), user.getId(), user.getName());
   }
 
   public AuthResponse authenticate(AuthRequest req) {
@@ -49,7 +49,7 @@ public class AuthService {
 	    String access = jwtService.generateAccessToken(user);
 	    String refresh = jwtService.generateRefreshToken(user);
 	    var u = (User) user;
-	    return AuthResponse.of(access, refresh, u.getUsername(), u.getRole().name());
+	    return AuthResponse.of(access, refresh, u.getUsername(), u.getRole().name(), u.getId(), u.getName());
 	}
 
 
@@ -58,6 +58,7 @@ public class AuthService {
     UserDetails user = userRepository.findByUsername(username).orElseThrow();
     if (!jwtService.isTokenValid(refreshToken, user)) throw new IllegalArgumentException("Invalid refresh token");
     String access = jwtService.generateAccessToken(user);
-    return new AuthResponse(access, refreshToken, "Bearer", user.getUsername(), ((User) user).getRole().name());
+    var u = (User) user;
+    return new AuthResponse(access, refreshToken, "Bearer", user.getUsername(), ((User) user).getRole().name(), u.getId(), u.getName());
   }
 }

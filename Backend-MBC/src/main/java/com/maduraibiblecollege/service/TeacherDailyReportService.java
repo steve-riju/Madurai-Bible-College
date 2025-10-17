@@ -46,9 +46,8 @@ public class TeacherDailyReportService {
     }
 
     private TeacherDailyReportDto mapToDto(TeacherDailyReport r) {
-    	System.out.println("Teacher id = "+r.getTeacherId());
-    	System.out.println("Teacher name = "+r.getTeacherName());
-    	System.out.println("reportid = "+r.getId());
+    	System.out.println("Teacher Id:"+r.getTeacherId());
+    	System.out.println("Teacher Name:"+r.getTeacherName());
         return TeacherDailyReportDto.builder()
                 .id(r.getId())
                 .teacherId(r.getTeacherId())

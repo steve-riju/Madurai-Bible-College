@@ -75,4 +75,26 @@
   </table>
 
   <mat-paginator [pageSizeOptions]="[10,25,50]" showFirstLastButtons></mat-paginator>
+
+  <ng-template #reportDialog>
+  <h2 mat-dialog-title>📋 Report Details</h2>
+  <mat-dialog-content class="dialog-content">
+    <p><strong>Teacher:</strong> {{ selectedReport?.teacherName }}</p>
+    <p><strong>Batch:</strong> {{ selectedReport?.batchName }}</p>
+    <p><strong>Semester:</strong> {{ selectedReport?.semester }}</p>
+    <p><strong>Date:</strong> {{ selectedReport?.date | date }}</p>
+    <p><strong>Start Time:</strong> {{ selectedReport?.startTime }}</p>
+    <p><strong>End Time:</strong> {{ selectedReport?.endTime }}</p>
+    <p><strong>Lessons Covered:</strong></p>
+    <p class="block-text">{{ selectedReport?.lessonCovered }}</p>
+    <p><strong>Assignments Given:</strong></p>
+    <p class="block-text">{{ selectedReport?.assignmentsGiven }}</p>
+    <p><strong>Additional Notes:</strong></p>
+    <p class="block-text">{{ selectedReport?.additionalNotes }}</p>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-flat-button color="primary" mat-dialog-close>Close</button>
+  </mat-dialog-actions>
+</ng-template>
+
 </mat-card>

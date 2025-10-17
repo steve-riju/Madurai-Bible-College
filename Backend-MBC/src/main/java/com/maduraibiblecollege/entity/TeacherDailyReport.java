@@ -19,7 +19,7 @@ public class TeacherDailyReport {
     private Long id;
 
     private Long teacherId;           // from User entity
-    private String teacherName;       // snapshot of teacher’s name
+    private String teacherName;     
 
     private LocalDate date;
     private String batchName;
@@ -29,7 +29,8 @@ public class TeacherDailyReport {
     private String lessonCovered;
     private LocalTime startTime;
     private LocalTime endTime;
-    @Column(length = 1000)
+    
+    @Column(length = 2000)
     private String assignmentsGiven;
 
     @Column(length = 2000)

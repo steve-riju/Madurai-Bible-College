@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TeacherReportsService } from '../../services/teacher-reports.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthService } from '../../../../shared/auth.service';
+
 
 @Component({
   selector: 'app-teacher-report',
@@ -9,19 +11,28 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./teacher-report.component.scss']
 })
 export class TeacherReportComponent implements OnInit {
+
   reportForm!: FormGroup;
   submitting = false;
-  teacherId = 1; // Hardcoded for demo — later replace with auth service
+  teacherId: number | null =0; 
+  teacherName: string | null ='Unknown Teacher';
 
   constructor(
     private fb: FormBuilder,
     private service: TeacherReportsService,
-    private snack: MatSnackBar
+    private snack: MatSnackBar,
+    private authService: AuthService
   ) {}
 
+
+
+
   ngOnInit(): void {
+    this.teacherId = this.authService.getId(); // get the user id from auth service
+    this.teacherName = this.authService.getName() ;
     this.reportForm = this.fb.group({
       teacherId: [this.teacherId, Validators.required],
+      teacherName: [this.teacherName, Validators.required],
       date: [new Date().toISOString().slice(0, 10), Validators.required],
       batchName: ['', Validators.required],
       semester: ['', Validators.required],
