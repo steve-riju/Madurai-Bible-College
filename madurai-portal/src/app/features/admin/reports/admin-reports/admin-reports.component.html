@@ -1,0 +1,78 @@
+<mat-card>
+  <h3>📅 Teacher Daily Reports</h3>
+
+  <div class="filters">
+    <mat-form-field>
+      <mat-label>Teacher</mat-label>
+      <mat-select [(value)]="filter.teacherId" (selectionChange)="applyFilters()">
+        <mat-option [value]="null">All</mat-option>
+        <mat-option *ngFor="let t of teacherList" [value]="t.id">{{ t.name }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Date</mat-label>
+      <input matInput type="date" [(ngModel)]="filter.date" (ngModelChange)="applyFilters()">
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Batch</mat-label>
+      <input matInput [(ngModel)]="filter.batchName" (ngModelChange)="applyFilters()">
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Semester</mat-label>
+      <input matInput [(ngModel)]="filter.semester" (ngModelChange)="applyFilters()">
+    </mat-form-field>
+
+    <div class="filter-actions">
+      <button mat-stroked-button (click)="clearFilters()">Clear</button>
+      <button mat-flat-button color="primary" (click)="exportCsv()">Export CSV</button>
+    </div>
+  </div>
+
+  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z1 full-table">
+
+    <ng-container matColumnDef="teacherName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Teacher</th>
+      <td mat-cell *matCellDef="let r">{{ r.teacherName }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="batchName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Batch</th>
+      <td mat-cell *matCellDef="let r">{{ r.batchName }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="semester">
+      <th mat-header-cell *matHeaderCellDef>Semester</th>
+      <td mat-cell *matCellDef="let r">{{ r.semester }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+      <td mat-cell *matCellDef="let r">{{ r.date | date }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="lessonCovered">
+      <th mat-header-cell *matHeaderCellDef>Lessons Covered</th>
+      <td mat-cell *matCellDef="let r">{{ r.lessonCovered }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="time">
+      <th mat-header-cell *matHeaderCellDef>Time</th>
+      <td mat-cell *matCellDef="let r">{{ r.startTime }} - {{ r.endTime }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let r">
+        <button mat-icon-button (click)="viewReport(r)" matTooltip="View details"><mat-icon>visibility</mat-icon></button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+
+  <mat-paginator [pageSizeOptions]="[10,25,50]" showFirstLastButtons></mat-paginator>
+</mat-card>

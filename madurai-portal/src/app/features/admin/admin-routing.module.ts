@@ -12,6 +12,7 @@ import { AuthGuard } from '../../shared/auth.guard';
 import { EnrollmentsComponent } from './enrollments/enrollments.component';
 import { AdmissionsComponent } from './admissions/admissions.component';
 import { OfferingsComponent } from './offerings/offerings.component';
+import { AdminReportsComponent } from './reports/admin-reports/admin-reports.component';
 
 
 const routes: Routes = [
@@ -29,6 +30,8 @@ const routes: Routes = [
       { path: 'enrollments', component: EnrollmentsComponent },
       { path: 'admissions', component: AdmissionsComponent },
       { path: 'offerings', component: OfferingsComponent },
+      { path: 'reports', component: AdminReportsComponent },
+
       { path: '**', redirectTo: 'dashboard' }
     ]
   }

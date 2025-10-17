@@ -9,6 +9,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { SubmissionReviewComponent } from './submission-review/submission-review.component';
 
 import { AuthGuard } from '../../shared/auth.guard';
+import { TeacherReportComponent } from './reports/teacher-report/teacher-report.component';
 
 const routes: Routes = [
   {
@@ -22,7 +23,7 @@ const routes: Routes = [
       { path: 'assignments', component: AssignmentsComponent },
       { path: 'profile', component: ProfileComponent },
       { path: 'assignments/:id/submissions', component: SubmissionReviewComponent },
-
+      { path: 'report', component: TeacherReportComponent },
       { path: '**', redirectTo: 'dashboard' }
     ]
   }

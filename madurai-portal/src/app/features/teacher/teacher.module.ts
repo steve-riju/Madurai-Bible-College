@@ -40,6 +40,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatMenuModule } from '@angular/material/menu';
+import { TeacherReportComponent } from './reports/teacher-report/teacher-report.component';
 
 
 
@@ -54,7 +55,8 @@ import { MatMenuModule } from '@angular/material/menu';
     TeacherLayoutComponent,
     SubmissionReviewComponent,
     RejectDialogComponent,
-    ViewAnswerDialogComponent
+    ViewAnswerDialogComponent,
+    TeacherReportComponent
   ],
   imports: [
     CommonModule,

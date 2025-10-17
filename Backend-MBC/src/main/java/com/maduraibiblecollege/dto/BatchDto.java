@@ -19,4 +19,13 @@ public class BatchDto {
  private List<String> courses;   // course names
  private List<String> students;  // student usernames
  private String semesterName;
+ 
+public BatchDto(Long id, String name, String semesterId) {
+	super();
+	this.id = id;
+	this.name = name;
+	this.semesterId = semesterId;
+}
+ 
+ 
 }

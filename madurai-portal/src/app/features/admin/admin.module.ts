@@ -27,6 +27,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { MatDialogModule } from '@angular/material/dialog';
+import { AdminReportsComponent } from './reports/admin-reports/admin-reports.component';
+import { MatCardModule } from '@angular/material/card';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 
 
@@ -41,7 +44,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     EnrollmentsComponent,
     AdmissionsComponent,
     OfferingsComponent,
-    InlineConfirmDialog
+    InlineConfirmDialog,
+    AdminReportsComponent
    ],
   imports: [
     CommonModule,
@@ -61,7 +65,9 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatIconModule,
     MatSnackBarModule,
     NgxMatSelectSearchModule,
-    MatDialogModule
+    MatDialogModule,
+    MatCardModule,       
+    MatPaginatorModule
   ]
 })
 export class AdminModule { }

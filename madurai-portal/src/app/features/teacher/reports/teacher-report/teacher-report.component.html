@@ -1,0 +1,63 @@
+<mat-card class="teacher-report-card">
+  <h3>📝 Submit Daily Report</h3>
+
+  <form [formGroup]="reportForm" (ngSubmit)="submitReport()" class="report-form">
+
+    <div class="row">
+      <mat-form-field appearance="outline">
+        <mat-label>Date</mat-label>
+        <input matInput type="date" formControlName="date" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Batch Name</mat-label>
+        <input matInput placeholder="e.g. Batch A" formControlName="batchName" required>
+      </mat-form-field>
+    </div>
+
+    <div class="row">
+      <mat-form-field appearance="outline">
+        <mat-label>Semester</mat-label>
+        <input matInput placeholder="e.g. Spring 2025" formControlName="semester" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Course Name</mat-label>
+        <input matInput placeholder="e.g. Data Structures" formControlName="courseName" required>
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Lessons Covered</mat-label>
+      <textarea matInput rows="3" formControlName="lessonCovered"></textarea>
+    </mat-form-field>
+
+    <div class="row">
+      <mat-form-field appearance="outline">
+        <mat-label>Start Time</mat-label>
+        <input matInput type="time" formControlName="startTime">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>End Time</mat-label>
+        <input matInput type="time" formControlName="endTime">
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Assignments Given</mat-label>
+      <textarea matInput rows="2" formControlName="assignmentsGiven"></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Additional Notes</mat-label>
+      <textarea matInput rows="2" formControlName="additionalNotes"></textarea>
+    </mat-form-field>
+
+    <div class="actions">
+      <button mat-flat-button color="primary" type="submit" [disabled]="submitting">
+        {{ submitting ? 'Submitting…' : 'Submit Report' }}
+      </button>
+    </div>
+  </form>
+</mat-card>
