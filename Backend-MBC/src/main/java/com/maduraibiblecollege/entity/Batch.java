@@ -29,8 +29,8 @@ public class Batch {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;       // e.g. "Batch A"
-    private String semesterId; // e.g. "2025-Spring"
+    private String name;       
+    private String semesterId; 
 
     // Courses assigned to this batch
     @ManyToMany

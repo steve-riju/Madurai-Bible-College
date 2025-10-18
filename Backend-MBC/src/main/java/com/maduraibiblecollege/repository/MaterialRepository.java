@@ -11,6 +11,7 @@ import com.maduraibiblecollege.entity.Material;
 public interface MaterialRepository extends JpaRepository<Material, Long> {
     List<Material> findByCourseId(Long courseId);
     List<Material> findByTeacherId(Long teacherId);
+	long countByTeacherId(Long teacherId);
 }
 
 

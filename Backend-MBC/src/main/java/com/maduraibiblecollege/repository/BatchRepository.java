@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import com.maduraibiblecollege.entity.Batch;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,4 +16,5 @@ public interface BatchRepository extends JpaRepository<Batch, Long> {
  boolean existsByNameAndSemesterId(String name, String semesterId);
  List<Batch> findByCourses_Id(Long courseAssignedId);
  List<Batch> findByStudents_Id(Long id);
+ List<Batch> findByCourses_IdIn(Collection<Long> courseAssignedIds);
 }

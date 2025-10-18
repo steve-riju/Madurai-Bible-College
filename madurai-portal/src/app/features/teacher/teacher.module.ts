@@ -41,6 +41,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatMenuModule } from '@angular/material/menu';
 import { TeacherReportComponent } from './reports/teacher-report/teacher-report.component';
+import { HttpClientModule } from '@angular/common/http';
+import { MatDividerModule } from '@angular/material/divider';
 
 
 
@@ -86,7 +88,9 @@ import { TeacherReportComponent } from './reports/teacher-report/teacher-report.
     MatToolbarModule, 
     MatCardModule,
     MatChipsModule,
-    MatMenuModule
+    MatMenuModule,
+    HttpClientModule,
+    MatDividerModule
    
 
   ]

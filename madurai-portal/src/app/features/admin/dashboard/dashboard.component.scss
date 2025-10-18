@@ -1,86 +1,108 @@
 @import 'variables';
 @import 'mixins';
 
-
-
+// --- Base Container ---
 .dashboard-container {
   padding: 1rem;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  max-width: 1600px;
+  margin: 0 auto;
   margin-bottom: 2rem;
 
   @media (min-width: 768px) {
-    padding: 1.5rem;
+    padding: 2rem;
+    gap: 2rem;
   }
 }
 
-
-
+// --- Base Card Style ---
 .card {
   background-color: $card-bg;
-  border-radius: 0.75rem;
-  box-shadow: $shadow;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  border: 1px solid #eef2f9;
   padding: 1.5rem;
   width: 100%;
-  @include hover-effect($primary-color);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+  }
 }
 
 .card-title {
-  font-size: 1.125rem;
+  font-size: 1.25rem;
   font-weight: 600;
-  margin-bottom: 1rem;
-  color: $text-color;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.75rem;
+  color: $primary-color;
+  border-bottom: 1px solid #f1f5f9;
 }
 
-
-
-// Grid for the top overview stats
+// --- Stats Grid ---
 .stats-grid {
   display: grid;
-  gap: 1.5rem;
-  grid-template-columns: 1fr; // Mobile-first: 1 column
+  gap: 1rem;
+  grid-template-columns: 1fr;
+  justify-items: center; // ✅ Centers cards in mobile view
+  transition: gap 0.3s ease;
 
   @media (min-width: 540px) {
     grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    justify-items: stretch;
   }
+
   @media (min-width: 1024px) {
     grid-template-columns: repeat(4, 1fr);
   }
 }
 
-// Grid for the events and admissions sections
-.content-grid {
-  display: grid;
-  gap: 1.5rem;
-  grid-template-columns: 1fr; // Mobile-first: 1 column
-
-  @media (min-width: 1024px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  // FIX: This allows grid items to shrink and prevents them from overlapping.
-  > .card {
-    min-width: 0;
-  }
-}
-
-
-// Overview Stat Cards
+// --- Stat Card ---
 .stat-card {
-  @extend .card; // Inherits base card styles
-  padding: 1rem;
+  @extend .card;
+  max-width: 320px; // ✅ prevent stretching full-width on mobile
   text-align: center;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+
+  // Subtle animated shine effect on hover
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -75%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.25), transparent);
+    transform: skewX(-25deg);
+    transition: 0.7s;
+  }
+
+  &:hover::before {
+    left: 125%;
+  }
 
   &__title {
     color: $light-text-color;
     font-size: 0.9rem;
+    font-weight: 500;
     margin-bottom: 0.25rem;
   }
 
   &__value {
     font-weight: 700;
-    @include responsive-font(1.75rem, 2rem);
+    line-height: 1.2;
+    @include responsive-font(2.25rem, 2.75rem);
 
     &--blue { color: #2563eb; }
     &--green { color: #16a34a; }
@@ -89,28 +111,47 @@
   }
 }
 
-// Upcoming Events List
+// --- Content Grid (Events & Admissions) ---
+.content-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: 1fr;
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+}
+
+// --- Events List ---
 .events-list {
   list-style: none;
   padding: 0;
   margin: 0;
-  
+
   &__item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 1rem; // Added gap for better spacing
-    padding: 0.75rem 0;
-    border-bottom: 1px solid #e2e8f0;
+    gap: 1rem;
+    padding: 1rem 0.5rem;
+    border-bottom: 1px solid #f1f5f9;
+    transition: background-color 0.2s ease;
+    border-left: 3px solid transparent;
 
     &:last-child {
       border-bottom: none;
+    }
+
+    &:hover {
+      background-color: #fcfdff;
+      border-left-color: $secondary-color;
     }
   }
 
   &__title {
     font-weight: 500;
-    // IMPROVEMENT: Prevents long titles from breaking the layout
+    color: $text-color;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -120,57 +161,80 @@
     font-size: 0.875rem;
     color: $light-text-color;
     white-space: nowrap;
-    flex-shrink: 0; // Prevents the date from being compressed
+    flex-shrink: 0;
   }
 }
 
-// Generic Table used for Admissions and Offerings
+// --- Table Wrapper ---
 .table-wrapper {
-  overflow-x: auto; // Ensures table is scrollable on small screens
+  overflow-x: auto;
+  width: 100%;
 }
 
+// --- Data Table ---
 .data-table {
   width: 100%;
   border-collapse: collapse;
 
-  th, td {
-    padding: 0.75rem;
+  th,
+  td {
+    padding: 1rem;
     text-align: left;
     white-space: nowrap;
+    font-size: 0.95rem;
   }
 
   thead {
     tr {
       border-bottom: 2px solid #e2e8f0;
     }
+
     th {
       font-weight: 600;
-      font-size: 0.875rem;
+      font-size: 0.8rem;
       color: $light-text-color;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.05em;
     }
   }
 
   tbody {
     tr {
-      border-bottom: 1px solid #e2e8f0;
+      border-bottom: 1px solid #f1f5f9;
+      transition: background-color 0.2s ease;
+
       &:last-child {
         border-bottom: none;
+      }
+
+      &:hover {
+        background-color: $page-bg;
       }
     }
   }
 
-  // Specific cell styling
   .status {
     font-weight: 600;
-    &--approved { color: #16a34a; }
-    &--rejected { color: #dc2626; }
-    &--pending  { color: #d97706; }
+    font-size: 0.8rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 99px;
+
+    &--approved {
+      background-color: rgba(#16a34a, 0.1);
+      color: #16a34a;
+    }
+    &--rejected {
+      background-color: rgba(#dc2626, 0.1);
+      color: #dc2626;
+    }
+    &--pending {
+      background-color: rgba(#d97706, 0.1);
+      color: #d97706;
+    }
   }
 
   .amount {
     font-weight: 600;
-    color: $secondary-color;
+    color: $text-color;
   }
 }
