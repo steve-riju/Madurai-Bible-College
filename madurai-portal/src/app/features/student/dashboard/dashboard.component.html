@@ -1,4 +1,85 @@
-<div class="dashboard">
-  <h1>Student Dashboard</h1>
-  <p>Welcome, Student! 🎓</p>
+<div class="student-dashboard-root" *ngIf="!loading; else loadingTpl">
+
+  <!-- 🕊️ Top Bar -->
+  <mat-toolbar color="primary" class="top-bar">
+    <span class="greeting">Good {{ greetingTime }}, {{ studentName }}</span>
+    <span class="spacer"></span>
+    <span class="bible-verse">“{{ dailyVerse }}” </span>
+  </mat-toolbar>
+
+  <!-- 📊 Stat Cards -->
+  <div class="stats-grid">
+    <mat-card class="stat-card">
+      <h3>📚 Courses</h3>
+      <p>{{ data.courseCount || 0 }}</p>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <h3>📝 Assignments</h3>
+      <p>{{ data.pendingAssignments || 0 }}</p>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <h3>📖 Materials</h3>
+      <p>{{ data.materialCount || 0 }}</p>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <h3>📢 Notices</h3>
+      <p>{{ data.noticeCount || '—' }}</p>
+    </mat-card>
+  </div>
+
+  <!-- 🎓 My Courses -->
+  <div class="my-courses-section mat-elevation-z2 mt-6">
+    <h2 class="section-title">🎓 My Courses</h2>
+
+    <table mat-table [dataSource]="data?.myCourses" class="mat-elevation-z1 full-width-table">
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Course Name</th>
+        <td mat-cell *matCellDef="let c"> {{ c.name }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="semester">
+        <th mat-header-cell *matHeaderCellDef>Semester</th>
+        <td mat-cell *matCellDef="let c"> {{ c.semesterName }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="teacher">
+        <th mat-header-cell *matHeaderCellDef>Teacher</th>
+        <td mat-cell *matCellDef="let c"> {{ c.teacherName }} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+
+  <!-- 🕒 Recent Assignments -->
+  <mat-card class="recent-assignments mt-6">
+    <h3>🕒 Recent Assignments</h3>
+    <ng-container *ngIf="data?.recentAssignments?.length; else noAssignmentsTpl">
+      <ul>
+        <li *ngFor="let a of data.recentAssignments">
+          {{ a.title }} - <span class="due">Due: {{ a.dueDate | date }}</span>
+        </li>
+      </ul>
+    </ng-container>
+    <ng-template #noAssignmentsTpl>
+      <p class="empty-msg">✅ No pending assignments. Keep it up!</p>
+    </ng-template>
+  </mat-card>
+
+  <!-- 📅 Notices & Events (Fallback safe) -->
+  <mat-card class="events-section mt-6">
+    <h3>📅 Upcoming Events</h3>
+    <p *ngIf="!data?.events?.length">No events at the moment.</p>
+  </mat-card>
 </div>
+
+<!-- Loading Template -->
+<ng-template #loadingTpl>
+  <div class="flex justify-center items-center h-48">
+    <mat-spinner></mat-spinner>
+  </div>
+</ng-template>

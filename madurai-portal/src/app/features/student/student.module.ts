@@ -26,6 +26,11 @@ import { MatOption } from '@angular/material/core';
 import { MatSelect, MatSelectModule } from '@angular/material/select';
 import { ViewSubmissionDialogComponent } from './view-submission-dialog/view-submission-dialog.component';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatListModule } from '@angular/material/list';
+import { MatTableModule } from '@angular/material/table';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 @NgModule({
   declarations: [
@@ -58,7 +63,14 @@ import { MatChipsModule } from '@angular/material/chips';
     MatOption,
     MatSelect,
     MatSelectModule, 
-    MatChipsModule
+    MatChipsModule,
+    MatListModule,
+    MatExpansionModule,
+    MatTableModule,
+    MatToolbarModule,
+    MatSidenavModule
+  
+
   ]
 })
 export class StudentModule { }

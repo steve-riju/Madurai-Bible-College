@@ -24,7 +24,6 @@ public class TeacherDashboardController {
     public ResponseEntity<TeacherDashboardDto> getDashboardData(Principal principal) {
         User teacher = userRepository.findByUsername(principal.getName())
                 .orElseThrow(() -> new UsernameNotFoundException("Teacher not found"));
-        System.out.println("Sent to Fe: "+ dashboardService.getDashboardData(teacher.getId()));
         return ResponseEntity.ok(dashboardService.getDashboardData(teacher.getId()));
     }
 }
