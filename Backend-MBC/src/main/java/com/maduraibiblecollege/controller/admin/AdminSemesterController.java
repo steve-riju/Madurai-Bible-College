@@ -8,9 +8,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * Exposes semesters at /api/admin/semesters for the frontend.
- */
 @RestController
 @RequestMapping("/api/admin/semesters")
 @RequiredArgsConstructor

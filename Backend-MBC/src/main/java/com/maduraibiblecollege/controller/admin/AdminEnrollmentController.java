@@ -1,10 +1,7 @@
 package com.maduraibiblecollege.controller.admin;
 
 import com.maduraibiblecollege.dto.BatchDto;
-import com.maduraibiblecollege.dto.CourseAssignmentDto;
 import com.maduraibiblecollege.dto.EnrollmentDto;
-import com.maduraibiblecollege.entity.Batch;
-import com.maduraibiblecollege.entity.CourseAssigned;
 import com.maduraibiblecollege.entity.Role;
 import com.maduraibiblecollege.entity.User;
 import com.maduraibiblecollege.repository.BatchRepository;

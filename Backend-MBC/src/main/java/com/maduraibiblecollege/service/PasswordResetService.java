@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional; // ✅ correct import
+import org.springframework.transaction.annotation.Transactional; 
 
 import com.maduraibiblecollege.config.EmailService;
 import com.maduraibiblecollege.entity.PasswordResetToken;

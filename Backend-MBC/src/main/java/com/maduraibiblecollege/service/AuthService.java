@@ -1,11 +1,16 @@
 package com.maduraibiblecollege.service;
 
-import com.maduraibiblecollege.dto.*;
 import com.maduraibiblecollege.entity.User;
 import com.maduraibiblecollege.repository.UserRepository;
 import com.maduraibiblecollege.config.JwtService;
+import com.maduraibiblecollege.dto.AuthRequest;
+import com.maduraibiblecollege.dto.AuthResponse;
+import com.maduraibiblecollege.dto.RegisterRequest;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.*;
+
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,7 +24,8 @@ public class AuthService {
   private final AuthenticationManager authManager;
   private final JwtService jwtService;
 
-  public AuthResponse register(RegisterRequest req) {
+  public AuthResponse register(RegisterRequest
+		  req) {
     if (userRepository.existsByUsername(req.username()))
       throw new IllegalArgumentException("Username already taken");
     if (userRepository.existsByEmail(req.email()))
