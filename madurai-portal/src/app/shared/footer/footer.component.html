@@ -1,1 +1,31 @@
-<p>footer works!</p>
+<footer class="footer mat-elevation-z2">
+  <div class="footer-content">
+    <!-- Left: Logo + Info -->
+    <div class="footer-left">
+      <img src="assets/images/mbc-logo.jpeg" alt="Madurai Bible College Logo" class="logo" />
+      <div class="footer-info">
+        <h3>Madurai Bible College</h3>
+        <p class="motto">Be a disciple of God and make disciples.</p>
+        <p>
+          📧 <a href="mailto:mbsmdu@gmail.com">mbsmdu&#64;gmail.com</a><br />
+          ☎️ <a href="tel:+919585533981">+91 95855 33981</a>
+        </p>
+      </div>
+    </div>
+
+    <!-- Right: Social Links -->
+    <div class="footer-right">
+        <a href="https://youtube.com" target="_blank" aria-label="YouTube"><mat-icon>youtube</mat-icon></a>
+      <a href="https://facebook.com" target="_blank" aria-label="Facebook"><mat-icon>facebook</mat-icon></a>
+      <a href="https://instagram.com" target="_blank" aria-label="Instagram"><mat-icon>instagram</mat-icon></a>
+    </div>
+  </div>
+
+  <!-- Bottom Row -->
+  <div class="footer-bottom">
+    <p>© {{ currentYear }} Madurai Bible College | All Rights Reserved.</p>
+    <button mat-fab color="primary" class="back-to-top" (click)="scrollToTop()">
+      <mat-icon>arrow_upward</mat-icon>
+    </button>
+  </div>
+</footer>

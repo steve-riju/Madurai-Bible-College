@@ -12,13 +12,13 @@ import { AuthInterceptor } from './shared/auth.interceptor';
 
 @NgModule({
   declarations: [
-    AppComponent // only AppComponent, no need to declare RoleLoginComponent here
+    AppComponent 
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     SharedModule,
-    AuthModule, // RoleLoginComponent is already part of AuthModule
+    AuthModule, 
     HttpClientModule
   ],
   providers: [

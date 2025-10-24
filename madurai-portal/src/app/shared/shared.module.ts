@@ -4,6 +4,7 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { FooterComponent } from './footer/footer.component';
 import { FilterPipe } from './pipes/filter.pipe';
 import { SafeUrlPipe } from './pipes/safe-url.pipe';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -13,7 +14,8 @@ import { SafeUrlPipe } from './pipes/safe-url.pipe';
     SafeUrlPipe
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    MatIconModule 
   ],
   exports: [
     NavbarComponent,

@@ -1,0 +1,108 @@
+@import 'variables';
+@import 'mixins';
+
+.footer {
+  background-color: $card-bg;
+  color: $text-color;
+  padding: 1rem;
+  font-family: $font-family;
+  box-shadow: $shadow;
+
+  .footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+
+    @media (min-width: 768px) {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-start;
+      text-align: left;
+    }
+  }
+
+  .footer-left {
+    @include flex-center;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    @media (min-width: 768px) {
+      flex-direction: row;
+      align-items: center;
+    }
+
+    .logo {
+  height: 140px;
+  width: auto;
+  border-radius: 8px;
+  box-shadow: $shadow;
+  @include hover-effect($primary-color);
+
+  @media (max-width: 600px) {
+    height: 48px;
+  }
+}
+
+
+    .footer-info {
+      h3 {
+        @include responsive-font(1rem, 1.4rem);
+        margin: 0;
+        color: $primary-color;
+      }
+
+      .motto {
+        color: $light-text-color;
+        margin: 0.3rem 0;
+      }
+
+      a {
+        color: $secondary-color;
+        font-weight: 500;
+        transition: 0.2s ease;
+
+        &:hover {
+          color: darken($secondary-color, 10%);
+        }
+      }
+    }
+  }
+
+  .footer-right {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+
+    a {
+      color: $primary-color;
+      font-size: 1.6rem;
+      @include hover-effect($primary-color);
+    }
+  }
+
+  .footer-bottom {
+    margin-top: 1rem;
+    position: relative;
+    text-align: center;
+    font-size: 0.85rem;
+    color: $light-text-color;
+
+    .back-to-top {
+      position: absolute;
+      right: 1rem;
+      bottom: 1rem;
+      transform: scale(0.8);
+      box-shadow: $shadow;
+      @include hover-effect($primary-color);
+    }
+
+    @media (max-width: 768px) {
+      .back-to-top {
+        position: static;
+        margin-top: 0.75rem;
+      }
+    }
+  }
+}
