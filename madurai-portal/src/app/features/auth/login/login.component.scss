@@ -8,20 +8,27 @@
   min-height: 100vh;
   background-color: $page-bg;
   font-family: $font-family;
-  padding: 16px;
+  padding: 12px;
+  
+  @media (min-width: 768px) {
+    padding: 16px;
+  }
 }
 
 /* Card */
 .login-card {
-  background: $card-bg;
-  border-radius: 16px;
-  box-shadow: $shadow;
-  padding: 28px 20px;
+  @include mobile-card;
   width: 100%;
   max-width: 380px;
   text-align: center;
   transition: all 0.3s ease;
   margin: auto;
+  
+  @media (min-width: 768px) {
+    border-radius: 16px;
+    box-shadow: $shadow;
+    padding: 28px 20px;
+  }
 
   .card-header {
     margin-bottom: 24px;
@@ -53,13 +60,15 @@
     align-items: center;
     gap: 8px;
     padding: 16px;
-    border-radius: 12px;
+    border-radius: 8px;
     border: 1px solid #e0e0e0;
     color: $primary-color;
     background-color: #fff;
     cursor: pointer;
     @include hover-effect($primary-color);
     transition: transform 0.15s ease, box-shadow 0.15s ease;
+    min-height: 80px;
+    justify-content: center;
 
     span {
       font-weight: 600;
@@ -69,6 +78,11 @@
     &:active {
       transform: scale(0.97);
       box-shadow: none;
+    }
+    
+    @media (min-width: 768px) {
+      border-radius: 12px;
+      min-height: 100px;
     }
   }
 
@@ -82,16 +96,11 @@
       position: relative;
 
       input {
-        width: 100%;
-        padding: 12px;
-        border-radius: 8px;
-        border: 1px solid #ddd;
-        font-size: 15px;
-        box-sizing: border-box;
-
-        &:focus {
-          outline: none;
-          border-color: $primary-color;
+        @include mobile-input;
+        font-size: 16px; /* Prevent zoom on iOS */
+        
+        @media (min-width: 768px) {
+          font-size: 15px;
         }
       }
 
@@ -114,15 +123,10 @@
     }
 
     .submit-btn {
-      padding: 12px;
-      border: none;
-      border-radius: 8px;
+      @include touch-button;
       background: $primary-color;
       color: #fff;
-      font-size: 16px;
       font-weight: 600;
-      cursor: pointer;
-      transition: background 0.3s ease;
 
       &:hover {
         background: $secondary-color;

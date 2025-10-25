@@ -82,11 +82,32 @@
 @media (max-width: 768px) {
   .sidebar {
     position: fixed;
-    top: 60px; /* UPDATED: This must match the navbar height */
+    top: 60px;
     left: 0;
-    height: calc(100% - 60px); /* UPDATED: This must match the navbar height */
+    width: 280px;
+    height: calc(100vh - 60px);
     transform: translateX(-100%);
     z-index: 1000;
+    padding: 20px 16px;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+
+    ul li {
+      padding: 16px 12px;
+      margin-bottom: 8px;
+      font-size: 16px;
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+    }
+
+    .faq {
+      padding: 20px 12px;
+      font-size: 16px;
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
   }
 
   .sidebar.open {
@@ -96,16 +117,18 @@
   /* Dim overlay when sidebar open */
   .overlay {
     position: fixed;
-    top: 60px; /* UPDATED: This must match the navbar height */
+    top: 60px;
     left: 0;
     width: 100%;
-    height: calc(100% - 60px); /* UPDATED: This must match the navbar height */
-    background: rgba(0, 0, 0, 0.4);
+    height: calc(100vh - 60px);
+    background: rgba(0, 0, 0, 0.5);
     z-index: 999;
   }
 
   .main-content {
     padding: 16px;
+    width: 100%;
+    min-height: calc(100vh - 60px);
   }
 }
 

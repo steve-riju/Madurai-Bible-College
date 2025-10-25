@@ -15,7 +15,8 @@
     box-shadow: 0 6px 14px rgba($color, 0.15);
   }
 }
-/* Responsive font size */
+
+/* Mobile-first responsive font size */
 @mixin responsive-font($min-size, $max-size) {
   font-size: $min-size;
 
@@ -25,5 +26,99 @@
 
   @media (min-width: 1200px) {
     font-size: $max-size;
+  }
+}
+
+/* Mobile-first container */
+@mixin mobile-container {
+  padding: $mobile-padding;
+  margin: 0 auto;
+  max-width: 100%;
+  
+  @media (min-width: $tablet) {
+    padding: 24px;
+    max-width: 1200px;
+  }
+}
+
+/* Mobile-first grid */
+@mixin mobile-grid($mobile-cols: 1, $tablet-cols: 2, $desktop-cols: 3) {
+  display: grid;
+  grid-template-columns: repeat($mobile-cols, 1fr);
+  gap: $mobile-margin;
+  
+  @media (min-width: $mobile) {
+    grid-template-columns: repeat($tablet-cols, 1fr);
+    gap: 16px;
+  }
+  
+  @media (min-width: $desktop) {
+    grid-template-columns: repeat($desktop-cols, 1fr);
+    gap: 20px;
+  }
+}
+
+/* Mobile-first card */
+@mixin mobile-card {
+  background: $card-bg;
+  border-radius: $mobile-border-radius;
+  box-shadow: $shadow-mobile;
+  padding: $mobile-padding;
+  
+  @media (min-width: $tablet) {
+    border-radius: 12px;
+    box-shadow: $shadow;
+    padding: 20px;
+  }
+}
+
+/* Touch-friendly button */
+@mixin touch-button {
+  min-height: $min-touch-target;
+  min-width: $min-touch-target;
+  padding: 12px 16px;
+  border-radius: $mobile-border-radius;
+  font-size: $mobile-font-size;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  @media (min-width: $tablet) {
+    padding: 14px 20px;
+    font-size: 16px;
+  }
+}
+
+/* Mobile-first form input */
+@mixin mobile-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: $mobile-border-radius;
+  font-size: $mobile-font-size;
+  background: #fff;
+  
+  &:focus {
+    outline: none;
+    border-color: $primary-color;
+    box-shadow: 0 0 0 2px rgba($primary-color, 0.1);
+  }
+  
+  @media (min-width: $tablet) {
+    padding: 14px 16px;
+    font-size: 16px;
+  }
+}
+
+/* Mobile navigation */
+@mixin mobile-nav {
+  @media (max-width: $mobile) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: #fff;
+    box-shadow: $shadow-mobile;
   }
 }   

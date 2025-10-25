@@ -10,8 +10,23 @@ $light-text-color: #777;
 
 /* Shadows */
 $shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+$shadow-mobile: 0 2px 8px rgba(0, 0, 0, 0.1);
 
 /* Fonts */
 $font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 $base-font-size: 16px;
-$base-line-height: 1.5; /* 24px line height */ 
+$base-line-height: 1.5; /* 24px line height */
+
+/* Mobile-specific variables */
+$mobile-padding: 16px;
+$mobile-margin: 12px;
+$mobile-border-radius: 8px;
+$mobile-font-size: 14px;
+
+/* Breakpoints */
+$mobile: 768px;
+$tablet: 1024px;
+$desktop: 1200px;
+
+/* Touch targets */
+$min-touch-target: 44px; 

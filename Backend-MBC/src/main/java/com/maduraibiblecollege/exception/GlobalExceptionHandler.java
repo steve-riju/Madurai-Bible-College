@@ -6,6 +6,7 @@ import jakarta.validation.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
@@ -65,37 +66,86 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
 	}
 
-	@ExceptionHandler(NoSuchElementException.class)
-	public ResponseEntity<ApiError> handleNotFound(NoSuchElementException ex, HttpServletRequest req) {
+	@ExceptionHandler({NoSuchElementException.class, ResourceNotFoundException.class})
+	public ResponseEntity<ApiError> handleNotFound(Exception ex, HttpServletRequest req) {
 		ApiError body = new ApiError(
 				Instant.now(),
 				HttpStatus.NOT_FOUND.value(),
 				"Not Found",
 				ex.getMessage() != null ? ex.getMessage() : "Resource not found.",
-						req.getRequestURI(),
-						null
-				);
+				req.getRequestURI(),
+				null
+		);
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
+	}
+
+	@ExceptionHandler(BusinessException.class)
+	public ResponseEntity<ApiError> handleBusinessException(BusinessException ex, HttpServletRequest req) {
+		ApiError body = new ApiError(
+				Instant.now(),
+				HttpStatus.BAD_REQUEST.value(),
+				"Business Error",
+				ex.getMessage(),
+				req.getRequestURI(),
+				null
+		);
+		return ResponseEntity.badRequest().body(body);
+	}
+
+	@ExceptionHandler(ValidationException.class)
+	public ResponseEntity<ApiError> handleValidationException(ValidationException ex, HttpServletRequest req) {
+		ApiError body = new ApiError(
+				Instant.now(),
+				HttpStatus.BAD_REQUEST.value(),
+				"Validation Error",
+				ex.getMessage(),
+				req.getRequestURI(),
+				ex.getValidationErrors()
+		);
+		return ResponseEntity.badRequest().body(body);
+	}
+
+	@ExceptionHandler(AccessDeniedException.class)
+	public ResponseEntity<ApiError> handleAccessDenied(AccessDeniedException ex, HttpServletRequest req) {
+		ApiError body = new ApiError(
+				Instant.now(),
+				HttpStatus.FORBIDDEN.value(),
+				"Access Denied",
+				"You don't have permission to access this resource.",
+				req.getRequestURI(),
+				null
+		);
+		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(body);
 	}
 
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ApiError> handleGeneric(Exception ex, HttpServletRequest req) {
+		// Log the full exception for debugging
+		System.err.println("Unexpected error occurred: " + ex.getClass().getSimpleName() + " - " + ex.getMessage());
+		ex.printStackTrace();
+		
 		ApiError body = new ApiError(
 				Instant.now(),
 				HttpStatus.INTERNAL_SERVER_ERROR.value(),
 				"Internal Server Error",
-				"Unexpected error occurred.",
+				"An unexpected error occurred. Please try again later.",
 				req.getRequestURI(),
-				List.of(ex.getMessage())
-				);
+				null
+		);
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
 	}
 
 	@ExceptionHandler(IllegalStateException.class)
-	public ResponseEntity<Map<String, String>> handleIllegalState(IllegalStateException ex) {
-		Map<String, String> error = new HashMap<>();
-		error.put("error", ex.getMessage());
-		return ResponseEntity.badRequest().body(error);
+	public ResponseEntity<ApiError> handleIllegalState(IllegalStateException ex, HttpServletRequest req) {
+		ApiError body = new ApiError(
+				Instant.now(),
+				HttpStatus.BAD_REQUEST.value(),
+				"Invalid State",
+				ex.getMessage(),
+				req.getRequestURI(),
+				null
+		);
+		return ResponseEntity.badRequest().body(body);
 	}
 	
 	@SuppressWarnings("deprecation")

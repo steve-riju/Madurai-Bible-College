@@ -3,35 +3,93 @@
   justify-content: space-between;
   align-items: center;
   background: #2c3e50;
-  padding: 1rem 2rem;
+  padding: 12px 16px;
   color: #fff;
+  min-height: 60px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 
   .logo {
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: bold;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .nav-links {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 8px;
+    flex-shrink: 0;
 
     span {
-      font-size: 1rem;
+      font-size: 0.9rem;
+      padding: 8px;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background-color 0.2s ease;
+      min-height: 44px;
+      min-width: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
     }
 
     button {
       background: #e74c3c;
       border: none;
-      padding: 0.5rem 1rem;
+      padding: 8px 12px;
       color: #fff;
       cursor: pointer;
       border-radius: 4px;
       transition: 0.2s;
+      min-height: 44px;
+      min-width: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
       &:hover {
         background: #c0392b;
       }
     }
+  }
+
+  @media (min-width: 768px) {
+    padding: 1rem 2rem;
+
+    .logo {
+      font-size: 1.2rem;
+    }
+
+    .nav-links {
+      gap: 1rem;
+
+      span {
+        font-size: 1rem;
+        padding: 12px;
+      }
+    }
+  }
+}
+
+// Hide menu button on desktop (screens wider than 768px)
+@media (min-width: 769px) {
+  .nav-links span:first-child {
+    display: none;
+  }
+}
+
+// Show menu button on mobile (screens 768px and below)
+@media (max-width: 768px) {
+  .nav-links span:first-child {
+    display: flex !important;
   }
 }

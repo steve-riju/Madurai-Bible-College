@@ -9,6 +9,7 @@ import { AuthModule } from './features/auth/auth.module';
 
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AuthInterceptor } from './shared/auth.interceptor';
+import { ErrorInterceptor } from './shared/interceptors/error.interceptor';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { AuthInterceptor } from './shared/auth.interceptor';
   ],
   providers: [
     provideAnimationsAsync(),
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
 })

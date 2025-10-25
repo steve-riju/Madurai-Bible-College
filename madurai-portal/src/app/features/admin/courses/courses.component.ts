@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AdminCoursesService, Course, Semester, CourseAssignment, Teacher } from '../services/admin-courses.service';
+import { ErrorUtilsService } from '../../../shared/services/error-utils.service';
 
 @Component({
   selector: 'app-admin-courses',
@@ -36,50 +37,23 @@ export class CoursesComponent implements OnInit {
   confirmDeleteSemesterId: number | null = null;
   confirmUnassignId: number | null = null;
 
-  constructor(private courseService: AdminCoursesService) {}
+  constructor(
+    private courseService: AdminCoursesService,
+    private errorUtils: ErrorUtilsService
+  ) {}
 
   ngOnInit(): void {
     this.loadData();
   }
 
   private handleError(err: any) {
-    console.error('API Error:', err);
-
-  let apiMessage: string | undefined;
-
-  if (err?.error?.message) {
-    // case: { message: "..." }
-    apiMessage = err.error.message;
-
-  } else if (err?.error?.error) {
-    // case: { error: "..." }
-    apiMessage = err.error.error;
-
-  } else if (typeof err?.error === 'string') {
-    // case: plain text
-    apiMessage = err.error;
-
-  } else if (err?.message) {
-    apiMessage = err.message;
+    // This method is now handled by the global error interceptor
+    // Keep this for any component-specific error handling if needed
+    console.error('Component Error:', err);
   }
-
-  // Map common backend exceptions to user-friendly text
-  if (apiMessage?.includes('SQLIntegrityConstraintViolationException')) {
-    apiMessage = 'This item cannot be deleted because it is linked with other records.';
-  } else if (apiMessage?.includes('ConstraintViolationException')) {
-    apiMessage = 'Invalid input. Please check the values and try again.';
-  } else if (apiMessage?.includes('User is not a teacher')) {
-    apiMessage = 'Selected user is not a teacher.';
-  }
-
-  this.errorMsg = apiMessage || 'Something went wrong. Please try again.';
-  setTimeout(() => (this.errorMsg = ''), 6000);
-}
-
 
   private handleSuccess(msg: string) {
-    this.successMsg = msg;
-    setTimeout(() => (this.successMsg = ''), 4000);
+    this.errorUtils.showSuccess(msg);
   }
 
   /** Load all initial data */
@@ -92,24 +66,30 @@ export class CoursesComponent implements OnInit {
       this.courseService.getTeachers().toPromise().then(t => (this.teachers = t ?? [])),
       this.courseService.getAssignments().toPromise().then(a => (this.assignments = a ?? [])),
     ])
-      .catch((err) => this.handleError(err))
+      .catch((err) => {
+        this.handleError(err);
+        this.errorUtils.handleError(err, { component: 'AdminCourses', action: 'loadData' });
+      })
       .finally(() => (this.loading = false));
   }
 
   /** Add new course (guarded by template validations) */
   addCourse() {
   if (!this.newCourse.code || !this.newCourse.name || this.newCourse.credits == null) {
-    this.handleError({ message: 'All fields are required.' });
+    this.errorUtils.showWarning('All fields are required.', 'Validation Error');
     return;
   }
   this.savingCourse = true;
   this.courseService.createCourse(this.newCourse).subscribe({
     next: () => {
       this.newCourse = { code: '', name: '', credits: 0 };
-      this.handleSuccess('Course created.');
+      this.handleSuccess('Course created successfully!');
       this.loadData();
     },
-    error: (err) => this.handleError(err),
+    error: (err) => {
+      this.handleError(err);
+      this.errorUtils.handleError(err, { component: 'AdminCourses', action: 'addCourse' });
+    },
     complete: () => (this.savingCourse = false),
   });
 }
@@ -117,17 +97,20 @@ export class CoursesComponent implements OnInit {
   /** Add new semester (guarded by template validations) */
  addSemester() {
   if (!this.newSemester.name || !this.newSemester.startDate || !this.newSemester.endDate) {
-    this.handleError({ message: 'All fields are required.' });
+    this.errorUtils.showWarning('All fields are required.', 'Validation Error');
     return;
   }
   this.savingSemester = true;
   this.courseService.createSemester(this.newSemester).subscribe({
     next: () => {
       this.newSemester = { name: '', startDate: '', endDate: '' };
-      this.handleSuccess('Semester created.');
+      this.handleSuccess('Semester created successfully!');
       this.loadData();
     },
-    error: (err) => this.handleError(err),
+    error: (err) => {
+      this.handleError(err);
+      this.errorUtils.handleError(err, { component: 'AdminCourses', action: 'addSemester' });
+    },
     complete: () => (this.savingSemester = false),
   });
 }
@@ -135,17 +118,20 @@ export class CoursesComponent implements OnInit {
   /** Assign teacher to course + semester (guarded by template validations) */
   assignTeacher() {
   if (!this.assignment.courseId || !this.assignment.semesterId || !this.assignment.teacherId) {
-    this.handleError({ message: 'All fields are required.' });
+    this.errorUtils.showWarning('All fields are required.', 'Validation Error');
     return;
   }
   this.assigning = true;
   this.courseService.assignTeacher(this.assignment).subscribe({
     next: () => {
       this.assignment = { courseId: 0, semesterId: 0, teacherId: 0 };
-      this.handleSuccess('Teacher assigned.');
+      this.handleSuccess('Teacher assigned successfully!');
       this.loadData();
     },
-    error: (err) => this.handleError(err),
+    error: (err) => {
+      this.handleError(err);
+      this.errorUtils.handleError(err, { component: 'AdminCourses', action: 'assignTeacher' });
+    },
     complete: () => (this.assigning = false),
   });
 }

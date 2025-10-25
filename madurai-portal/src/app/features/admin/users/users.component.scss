@@ -3,10 +3,17 @@
 
 .users-wrapper {
   background: $card-bg;
-  padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: $shadow;
-  margin-bottom: 3rem;
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin-bottom: 2rem;
+
+  @media (min-width: 768px) {
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: $shadow;
+    margin-bottom: 3rem;
+  }
 }
 
 /* Title */
@@ -32,8 +39,13 @@
     padding: 0.6rem;
     border: 1px solid lighten($text-color, 40%);
     border-radius: 6px;
-    font-size: 0.95rem;
+    font-size: 16px;
     width: 100%;
+    min-height: 44px;
+
+    @media (min-width: 768px) {
+      font-size: 0.95rem;
+    }
   }
 
   .btn-primary {
@@ -44,6 +56,8 @@
     padding: 0.7rem;
     font-size: 1rem;
     font-weight: 500;
+    min-height: 44px;
+    min-width: 44px;
     @include hover-effect($secondary-color);
   }
 }
@@ -81,9 +95,10 @@
 .users-table {
   width: 100%;
   border-collapse: collapse;
+  font-size: 0.85rem;
 
   th, td {
-    padding: 0.9rem;
+    padding: 0.6rem 0.4rem;
     border-bottom: 1px solid #eee;
     text-align: left;
   }
@@ -92,6 +107,19 @@
     background: lighten($primary-color, 45%);
     font-weight: 600;
     color: $text-color;
+    font-size: 0.8rem;
+  }
+
+  @media (min-width: 768px) {
+    font-size: 0.95rem;
+
+    th, td {
+      padding: 0.9rem;
+    }
+
+    th {
+      font-size: 0.9rem;
+    }
   }
 }
 
@@ -108,6 +136,8 @@
   border-radius: 6px;
   font-size: 0.85rem;
   font-weight: 500;
+  min-height: 44px;
+  min-width: 44px;
   @include hover-effect(red);
 }
 
@@ -117,6 +147,8 @@
   padding: 0.4rem 0.9rem;
   border-radius: 6px;
   font-size: 0.85rem;
+  min-height: 44px;
+  min-width: 44px;
 }
 
 /* Confirm Box */

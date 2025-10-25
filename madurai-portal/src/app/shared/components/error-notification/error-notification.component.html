@@ -1,0 +1,39 @@
+<div class="error-notification-container">
+  <div 
+    *ngFor="let notification of notifications" 
+    class="notification"
+    [ngClass]="getNotificationClass(notification.type)"
+    [@slideInOut]
+  >
+    <div class="notification-content">
+      <div class="notification-icon">
+        <mat-icon [class]="getIconClass(notification.type)">
+          {{ getIconClass(notification.type) }}
+        </mat-icon>
+      </div>
+      
+      <div class="notification-body">
+        <div class="notification-title">{{ notification.title }}</div>
+        <div class="notification-message">{{ notification.message }}</div>
+        
+        <div *ngIf="notification.details && notification.details.length > 0" class="notification-details">
+          <ul>
+            <li *ngFor="let detail of notification.details">{{ detail }}</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="notification-actions">
+        <button 
+          mat-icon-button 
+          (click)="removeNotification(notification.id)"
+          class="close-button"
+          aria-label="Close notification"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+

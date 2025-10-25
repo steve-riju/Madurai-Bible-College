@@ -5,11 +5,13 @@
 
   <div class="nav-links" *ngIf="username">
     <!-- Hamburger button (only for small screens) -->
-    <button class="hamburger" (click)="toggleSidebar.emit()">
+    <!-- <button (click)="toggleSidebar.emit()">
       ☰
-    </button>
-
+    </button> -->
+    <span (click)="toggleSidebar.emit()"><mat-icon>menu</mat-icon></span>
+    
     <span>Welcome, <b>{{ username | titlecase }}</b></span>
-    <button (click)="logout()">Logout</button>
+    <span (click)="logout()"><mat-icon>logout</mat-icon></span>
+    <!-- <button (click)="logout()">Logout</button> -->
   </div>
 </nav>

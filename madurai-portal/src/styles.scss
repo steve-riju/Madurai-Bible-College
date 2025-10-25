@@ -1,4 +1,53 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+@import 'variables';
+@import 'mixins';
+@import 'mobile';
+
+html, body { 
+  height: 100%; 
+  margin: 0; 
+  padding: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Mobile-first responsive design */
+@media (max-width: 768px) {
+  html {
+    font-size: 14px; /* Smaller base font for mobile */
+  }
+  
+  body {
+    overflow-x: hidden; /* Prevent horizontal scroll */
+  }
+}
+
+/* Ensure proper touch targets on mobile */
+@media (max-width: 768px) {
+  button, 
+  [role="button"], 
+  input[type="button"], 
+  input[type="submit"], 
+  input[type="reset"],
+  a {
+    min-height: 44px; /* Apple's recommended minimum touch target */
+    min-width: 44px;
+  }
+}
+
+/* Improve text rendering on mobile */
+@media (max-width: 768px) {
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+}
