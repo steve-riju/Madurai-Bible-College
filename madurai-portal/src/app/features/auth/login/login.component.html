@@ -42,7 +42,7 @@
   <!-- Login Form -->
   <div class="login-card" *ngIf="showLoginForm" @fadeSlide>
     <div class="card-header">
-      <h2>Login</h2>
+      <h2>Login <i class="fa-solid fa-arrow-right-to-bracket" style="color: #333;"></i></h2>
       <p>Please enter your credentials</p>
     </div>
 
@@ -71,7 +71,7 @@
         </span>
       </div>
 
-      <button type="submit" class="submit-btn" [disabled]="loginForm.invalid">Login</button>
+      <button type="submit" class="submit-btn" [disabled]="loginForm.invalid">Login <i class="fa-solid fa-arrow-right-to-bracket"></i></button>
       <div class="error" *ngIf="errorMessage">{{ errorMessage }}</div>
 
       <!-- Forgot Password -->
@@ -80,7 +80,7 @@
       </div>
     </form>
 
-    <button class="back-btn" (click)="goBack()">Back</button>
+    <i class="fa-regular fa-circle-left" style="color: #0056b3;"></i><button class="back-btn" (click)="goBack()">Back</button>
   </div>
 </div>
  <app-footer></app-footer>
