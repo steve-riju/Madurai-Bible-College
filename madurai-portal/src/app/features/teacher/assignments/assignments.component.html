@@ -53,6 +53,10 @@
         </label>
         <input id="file-upload" type="file" (change)="onFiles($event)" multiple class="file-input-hidden" />
         <span *ngIf="files.length" class="file-name-display">{{ files.length }} file(s) selected</span>
+        <div *ngIf="fileError" class="file-error-message">
+          <mat-icon>error</mat-icon>
+          <span>{{ fileError }}</span>
+        </div>
       </div>
 
       <button mat-raised-button color="primary" type="submit" [disabled]="assignmentForm.invalid" class="publish-btn">

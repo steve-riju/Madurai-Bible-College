@@ -16,6 +16,7 @@ public class Semester {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @jakarta.persistence.Column(length = 100)
     private String name;        // e.g., "Fall 2025"
     private LocalDate startDate;
     private LocalDate endDate;

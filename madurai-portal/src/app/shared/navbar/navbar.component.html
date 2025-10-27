@@ -5,9 +5,6 @@
 
   <div class="nav-links" *ngIf="username">
     <!-- Hamburger button (only for small screens) -->
-    <!-- <button (click)="toggleSidebar.emit()">
-      ☰
-    </button> -->
     <span (click)="toggleSidebar.emit()"><mat-icon>menu</mat-icon></span>
     
     <span>Welcome, <b>{{ username | titlecase }}</b></span>

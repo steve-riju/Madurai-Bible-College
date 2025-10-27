@@ -244,10 +244,28 @@ export class SubmissionReviewComponent implements OnInit {
   const input = document.createElement('input');
   input.type = 'file';
   input.multiple = true;
+  const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
 
   input.onchange = () => {
     const files: FileList | null = input.files;
     if (!files || files.length === 0) return;
+
+    // Validate file sizes
+    const invalidFiles: File[] = [];
+    for (let i = 0; i < files.length; i++) {
+      if (files[i].size > MAX_FILE_SIZE) {
+        invalidFiles.push(files[i]);
+      }
+    }
+
+    if (invalidFiles.length > 0) {
+      this.snack.open(
+        `Files exceed 50MB: ${invalidFiles.map(f => f.name).join(', ')}`,
+        'Close',
+        { duration: 5000 }
+      );
+      return;
+    }
 
     const formData = new FormData();
     for (let i = 0; i < files.length; i++) {

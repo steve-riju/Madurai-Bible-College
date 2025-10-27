@@ -51,6 +51,8 @@ public class AssignmentSubmission {
     private SubmissionStatus status; // SUBMITTED, REJECTED, GRADED, DRAFT
 
     private Integer marksObtained;
+    
+    @Column(columnDefinition = "TEXT")
     private String teacherRemarks;
 
     @OneToMany(mappedBy = "submission", cascade = CascadeType.ALL, orphanRemoval = true)

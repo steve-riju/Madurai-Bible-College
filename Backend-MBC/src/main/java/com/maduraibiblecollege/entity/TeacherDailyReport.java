@@ -19,13 +19,22 @@ public class TeacherDailyReport {
     private Long id;
 
     private Long teacherId;           // from User entity
+    
+    @Column(length = 100)
     private String teacherName;     
 
     private LocalDate date;
+    
+    @Column(length = 100)
     private String batchName;
+    
+    @Column(length = 200)
     private String courseName;
+    
+    @Column(length = 100)
     private String semester;
 
+    @Column(length = 500)
     private String lessonCovered;
     private LocalTime startTime;
     private LocalTime endTime;

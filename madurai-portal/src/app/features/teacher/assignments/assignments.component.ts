@@ -51,6 +51,8 @@ export interface SubmissionDto {
 export class AssignmentsComponent implements OnInit {
   assignmentForm: FormGroup;
   files: File[] = [];
+  private readonly MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB in bytes
+  fileError: string | null = null;
 
   assignments: AssignmentDto[] = [];
   batches: BatchDto[] = [];
@@ -97,7 +99,17 @@ export class AssignmentsComponent implements OnInit {
   }
 
   onFiles(event: any) {
-    this.files = Array.from(event.target.files);
+    const inputFiles = Array.from(event.target.files as File[]);
+    const invalidFiles = inputFiles.filter(f => f.size > this.MAX_FILE_SIZE);
+    
+    if (invalidFiles.length > 0) {
+      this.fileError = `One or more files exceed the 50MB size limit: ${invalidFiles.map(f => f.name).join(', ')}`;
+      this.files = [];
+      return;
+    }
+    
+    this.fileError = null;
+    this.files = inputFiles;
   }
 
   onCreate() {

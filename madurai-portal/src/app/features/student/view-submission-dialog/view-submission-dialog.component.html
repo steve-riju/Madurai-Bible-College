@@ -14,7 +14,8 @@
 
     <!-- Student Attachments -->
     <div *ngIf="submission.attachments?.length" class="attachments-section">
-      <h6>🖇️ Attachments</h6>
+      
+      <h6><mat-icon>attach_file</mat-icon> Attachments</h6>
       <div class="attachment-grid">
         <div *ngFor="let att of submission.attachments" class="attachment-item">
           <a [href]="att.fileUrl" target="_blank">
@@ -33,11 +34,11 @@
       <div class="attachment-grid">
         <div *ngFor="let att of submission.teacherAttachments" class="attachment-item">
           <a [href]="att.fileUrl" target="_blank">
-            <mat-chip color="accent" selected>
-              <mat-icon>attach_file</mat-icon>
-              {{ att.fileName }}
+            <!-- <mat-chip color="accent" selected> -->
+              <mat-icon>attach_file</mat-icon>{{ att.fileName }}
+              
               <span matBadge="Reviewed" matBadgePosition="after" matBadgeColor="warn" class="badge"></span>
-            </mat-chip>
+            <!-- </mat-chip> -->
           </a>
         </div>
       </div>

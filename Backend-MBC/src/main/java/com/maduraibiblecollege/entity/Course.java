@@ -16,10 +16,10 @@ public class Course {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 50)
     private String code;       // e.g., "CS101"
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 200)
     private String name;       // e.g., "Data Structures"
 
     private int credits;

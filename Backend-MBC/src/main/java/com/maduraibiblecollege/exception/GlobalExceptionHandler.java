@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.Instant;
@@ -116,6 +117,19 @@ public class GlobalExceptionHandler {
 				null
 		);
 		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(body);
+	}
+
+	@ExceptionHandler(MaxUploadSizeExceededException.class)
+	public ResponseEntity<ApiError> handleMaxUploadSizeExceeded(MaxUploadSizeExceededException ex, HttpServletRequest req) {
+		ApiError body = new ApiError(
+				Instant.now(),
+				HttpStatus.PAYLOAD_TOO_LARGE.value(),
+				"File Size Exceeded",
+				"The uploaded file exceeds the maximum allowed size of 50MB.",
+				req.getRequestURI(),
+				null
+		);
+		return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body(body);
 	}
 
 	@ExceptionHandler(Exception.class)

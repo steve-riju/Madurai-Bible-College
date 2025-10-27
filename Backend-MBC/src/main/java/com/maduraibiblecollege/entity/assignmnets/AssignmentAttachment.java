@@ -1,5 +1,6 @@
 package com.maduraibiblecollege.entity.assignmnets;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -21,8 +22,13 @@ public class AssignmentAttachment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(length = 500)
     private String fileUrl; // R2 public or signed URL
+    
+    @Column(length = 300)
     private String fileName;
+    
+    @Column(length = 100)
     private String contentType;
 
     @ManyToOne(fetch = FetchType.LAZY)

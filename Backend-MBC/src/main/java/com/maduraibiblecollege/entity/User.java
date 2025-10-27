@@ -43,7 +43,7 @@ public class User implements UserDetails {
   @Column(nullable = false, length = 20)
   private Role role;
   
-  @Column(length = 50)
+  @Column(length = 100)
   private String name;
   @Builder.Default
   private boolean enabled = true;

@@ -28,8 +28,8 @@
 
 <mat-dialog-actions align="end">
   <button mat-stroked-button (click)="close()" [disabled]="uploading">Cancel</button>
-  <button mat-raised-button color="primary" (click)="submitAssignment()" [disabled]="uploading">
-    <mat-progress-spinner *ngIf="uploading" mode="indeterminate" diameter="18"></mat-progress-spinner>
-    <span *ngIf="!uploading">Submit</span>
-  </button>
+  <button mat-raised-button color="primary" (click)="submitAssignment()" [disabled]="uploading || !!error">
+  <mat-progress-spinner *ngIf="uploading" mode="indeterminate" diameter="18"></mat-progress-spinner>
+  <span *ngIf="!uploading">Submit</span>
+</button>
 </mat-dialog-actions>

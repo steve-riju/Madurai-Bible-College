@@ -11,6 +11,8 @@ export class MaterialsComponent implements OnInit {
   teacherUsername!: string;
   courses: any[] = [];
   materials: { [courseId: number]: Material[] } = {};
+  private readonly MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB in bytes
+  fileError: string | null = null;
 
   // Form state
   selectedFile: File | null = null;
@@ -43,7 +45,17 @@ export class MaterialsComponent implements OnInit {
   }
 
   onFileChange(event: any) {
-    this.selectedFile = event.target.files[0];
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    if (file.size > this.MAX_FILE_SIZE) {
+      this.fileError = `File "${file.name}" exceeds the 50MB size limit`;
+      this.selectedFile = null;
+      return;
+    }
+    
+    this.fileError = null;
+    this.selectedFile = file;
   }
 
   uploadMaterial() {

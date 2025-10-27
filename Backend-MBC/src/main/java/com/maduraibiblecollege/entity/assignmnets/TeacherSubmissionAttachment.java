@@ -1,5 +1,6 @@
 package com.maduraibiblecollege.entity.assignmnets;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,7 +20,10 @@ public class TeacherSubmissionAttachment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(length = 300)
     private String fileName;
+    
+    @Column(length = 500)
     private String fileUrl;
 
     @ManyToOne

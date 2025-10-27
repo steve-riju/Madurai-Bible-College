@@ -17,6 +17,7 @@ export class AssignmentSubmitDialogComponent {
   uploading = false;
   error: string | null = null;
   previewFiles: {name:string,size:number}[] = [];
+  private readonly MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB in bytes
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { assignment: AssignmentDto },
@@ -33,13 +34,35 @@ export class AssignmentSubmitDialogComponent {
   onFileSelected(ev: Event) {
     const input = ev.target as HTMLInputElement;
     if (!input.files) return;
-    this.selectedFiles = Array.from(input.files);
+    
+    const files = Array.from(input.files);
+    const invalidFiles = files.filter(f => f.size > this.MAX_FILE_SIZE);
+    
+    if (invalidFiles.length > 0) {
+      this.error = `One or more files exceed the 50MB limit: ${invalidFiles.map(f => f.name).join(', ')}`;
+      
+
+      this.selectedFiles = []; 
+      this.previewFiles = [];
+      //  Reset the input field so the user can re-select files
+      input.value = ''; 
+      
+      return;
+    }
+    
+    // This code only runs if all files are valid
+    this.selectedFiles = files;
     this.previewFiles = this.selectedFiles.map(f => ({ name: f.name, size: f.size }));
+    this.error = null; 
   }
 
   removeFile(index: number) {
     this.selectedFiles.splice(index, 1);
     this.previewFiles.splice(index, 1);
+
+    if (this.selectedFiles.length === 0) {
+      this.error = null;
+    }
   }
 
   submitAssignment() {

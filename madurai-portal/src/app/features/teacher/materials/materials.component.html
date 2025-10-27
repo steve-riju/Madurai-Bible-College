@@ -44,6 +44,9 @@
     <div class="form-group" *ngIf="!editingMaterial">
       <label for="file">File</label>
       <input type="file" id="file" (change)="onFileChange($event)" />
+      <div *ngIf="fileError" class="error-message" style="color: red; margin-top: 8px;">
+        <span>{{ fileError }}</span>
+      </div>
     </div>
 
     <!-- Buttons -->
