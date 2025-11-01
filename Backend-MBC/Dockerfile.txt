@@ -1,36 +1,38 @@
-# Stage 1 Build the full application using Maven and Java 17
+# Stage 1: Build the full application using Maven and Java 17
 # We use a maven image which includes the JDK and the build tool
-FROM maven3.9.5-eclipse-temurin-17 AS builder
-WORKDIR app
+FROM maven:3.9.5-eclipse-temurin-17 AS builder
+WORKDIR /app
 
 # Copy the build files first to leverage Docker layer caching
-# This speeds up subsequent builds if only source code changes
 COPY pom.xml .
 COPY .mvn .mvn
 COPY mvnw .
 COPY mvnw.cmd .
 
 # Download all dependencies first to cache them
-RUN --mount=type=cache,target=root.m2 mvn dependencygo-offline
+# The '--mount=type=cache' is recommended for faster subsequent builds
+# Note the correct path and command spacing below
+RUN --mount=type=cache,target=/root/.m2 mvn dependency:go-offline
 
 # Copy the entire source code
-COPY src appsrc
+COPY src /app/src
 
-# Package the application. The result is the executable JAR file.
-RUN mvn clean install -DskipTests
+# Package the application. The artifactId is 'backend-mbc' from your pom.xml.
+RUN mvn package -DskipTests
 
-# --- Stage 2 Create the final, lightweight runtime image ---
+# --- Stage 2: Create the final, lightweight runtime image ---
 # Use a smaller JRE image for the final production container
-FROM eclipse-temurin17-jre-alpine
-WORKDIR app
+FROM eclipse-temurin:17-jre-alpine
+WORKDIR /app
 
 # Copy the built JAR file from the builder stage
-# We assume your final JAR is named after the artifactId and version from pom.xml backend-mbc-0.0.1-SNAPSHOT.jar
-# NOTE Replace 'backend-mbc-0.0.1-SNAPSHOT.jar' with your actual generated JAR name if different.
-COPY --from=builder apptargetbackend-mbc-0.0.1-SNAPSHOT.jar app.jar
+# Uses your artifactId: backend-mbc-0.0.1-SNAPSHOT.jar
+# Note the required forward slashes in the path below
+COPY --from=builder /app/target/backend-mbc-0.0.1-SNAPSHOT.jar app.jar
 
 # Spring Boot defaults to port 8080.
 EXPOSE 8080
 
 # Run the application
-ENTRYPOINT [java, -jar, app.jar]
+# CRITICAL FIX: The entire command must be wrapped in JSON array syntax (double quotes and commas)
+ENTRYPOINT ["java", "-jar", "app.jar"]
