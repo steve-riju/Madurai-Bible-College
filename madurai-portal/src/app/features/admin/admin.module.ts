@@ -30,6 +30,10 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { AdminReportsComponent } from './reports/admin-reports/admin-reports.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 
@@ -67,7 +71,11 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     NgxMatSelectSearchModule,
     MatDialogModule,
     MatCardModule,       
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatProgressSpinnerModule,
+    MatExpansionModule,
+    MatDividerModule,
+    MatTooltipModule
   ]
 })
 export class AdminModule { }

@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {
@@ -9,11 +9,14 @@ import {
   EnrollmentDto,
   CreateBatchWithEnrollmentsRequest
 } from '../services/admin-enrollments.service';
+import { Subject, takeUntil } from 'rxjs';
+import { debounceTime, distinctUntilChanged, take } from 'rxjs/operators';
 
 interface EnrollmentTree {
   batchId: number;
   batchName: string;
   semesterName?: string;
+  expanded?: boolean;
   students: {
     studentId: number;
     studentName: string;
@@ -26,7 +29,7 @@ interface EnrollmentTree {
   templateUrl: './enrollments.component.html',
   styleUrls: ['./enrollments.component.scss']
 })
-export class EnrollmentsComponent implements OnInit {
+export class EnrollmentsComponent implements OnInit, OnDestroy {
   students: StudentDto[] = [];
   filteredStudents: StudentDto[] = [];
   courses: CourseDto[] = [];
@@ -34,6 +37,7 @@ export class EnrollmentsComponent implements OnInit {
   semesters: SemesterDto[] = [];
   enrollments: EnrollmentDto[] = [];
   enrollmentTree: EnrollmentTree[] = [];
+  filteredEnrollmentTree: EnrollmentTree[] = [];
 
   newBatchName = '';
   selectedSemesterId?: number;
@@ -43,6 +47,14 @@ export class EnrollmentsComponent implements OnInit {
   filteredBatchNames: string[] = [];
   studentFilter = '';
   courseFilter = '';
+  batchSearchFilter = '';
+
+  isLoading = false;
+  isProcessing = false;
+
+  private destroy$ = new Subject<void>();
+  private batchSearch$ = new Subject<string>();
+  private batchNameSearch$ = new Subject<string>();
 
   constructor(
     private enrollmentService: AdminEnrollmentsService,
@@ -51,48 +63,86 @@ export class EnrollmentsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.setupSearchSubscriptions();
     this.loadDropdowns();
     this.loadEnrollments();
+    // ensure filteredEnrollmentTree initialized
+    this.filteredEnrollmentTree = [];
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private setupSearchSubscriptions(): void {
+    // debounce batch search (search input in header)
+    this.batchSearch$
+      .pipe(debounceTime(200), distinctUntilChanged(), takeUntil(this.destroy$))
+      .subscribe(value => {
+        this.batchSearchFilter = value ?? '';
+        this.filterBatches();
+      });
+
+    // debounce new batch-name autocomplete search
+    this.batchNameSearch$
+      .pipe(debounceTime(200), distinctUntilChanged(), takeUntil(this.destroy$))
+      .subscribe(value => this.filterBatchNames(value));
   }
 
   loadDropdowns(): void {
-    this.enrollmentService.getStudents().subscribe(s => {
-      this.students = s;
-      this.filteredStudents = s;
+    this.enrollmentService.getStudents().pipe(takeUntil(this.destroy$)).subscribe(s => {
+      this.students = s || [];
+      this.filteredStudents = [...this.students];
     });
-    this.enrollmentService.getCourses().subscribe(c => {
-      this.courses = c;
-      this.filteredCourses = c;
+
+    this.enrollmentService.getCourses().pipe(takeUntil(this.destroy$)).subscribe(c => {
+      this.courses = c || [];
+      this.filteredCourses = [...this.courses];
     });
-    this.enrollmentService.getSemesters().subscribe(sem => (this.semesters = sem));
-    this.enrollmentService.getBatches().subscribe(batches => {
-      this.batchNames = batches.map(b => b.name);
-      this.filteredBatchNames = this.batchNames;
+
+    this.enrollmentService.getSemesters().pipe(takeUntil(this.destroy$)).subscribe(sem => {
+      this.semesters = sem || [];
+    });
+
+    this.enrollmentService.getBatches().pipe(takeUntil(this.destroy$)).subscribe(batches => {
+      this.batchNames = (batches || []).map(b => b.name);
+      this.filteredBatchNames = [...this.batchNames];
     });
   }
 
   loadEnrollments(): void {
-    this.enrollmentService.getAllEnrollments().subscribe({
+    this.isLoading = true;
+    // take(1) to avoid multiple emissions causing repeated rebuilds
+    this.enrollmentService.getAllEnrollments().pipe(take(1)).subscribe({
       next: data => {
-        this.enrollments = data;
+        this.enrollments = data || [];
         this.buildTree();
+        this.isLoading = false;
       },
-      error: (err: any) => console.error(err)
+      error: (err: any) => {
+        console.error(err);
+        this.isLoading = false;
+        this.snackBar.open('❌ Error loading enrollments: ' + (err?.error?.message || err?.message || err), 'Close', { duration: 4000 });
+      }
     });
   }
 
   buildTree(): void {
     const grouped: { [batchId: number]: EnrollmentTree } = {};
     for (const e of this.enrollments) {
-      if (!grouped[e.batch.id]) {
-        grouped[e.batch.id] = {
-          batchId: e.batch.id,
-          batchName: e.batch.name,
-          semesterName: e.batch.semesterName ?? '',
+      const batchId = e.batch?.id;
+      if (batchId == null) { continue; }
+      if (!grouped[batchId]) {
+        grouped[batchId] = {
+          batchId,
+          batchName: e.batch?.name ?? 'Unnamed batch',
+          semesterName: e.batch?.semesterName ?? '',
+          expanded: false,
           students: []
         };
       }
-      const batch = grouped[e.batch.id];
+      const batch = grouped[batchId];
       let student = batch.students.find(s => s.studentId === e.student.id);
       if (!student) {
         student = { studentId: e.student.id, studentName: e.student.name, courses: [] };
@@ -103,61 +153,89 @@ export class EnrollmentsComponent implements OnInit {
       }
     }
     this.enrollmentTree = Object.values(grouped);
+    // Apply whatever filter is active
+    this.filterBatches();
   }
 
-  filterBatchNames(value: string) {
-    const filterValue = value.toLowerCase();
-    this.filteredBatchNames = this.batchNames.filter(n =>
-      n.toLowerCase().includes(filterValue)
-    );
+  // Called from template via (ngModelChange)
+  onBatchSearchChange(value: string): void {
+    this.batchSearch$.next(value ?? '');
+  }
+
+  // Called from template via (ngModelChange) for new batch name autocomplete
+  onBatchNameChange(value: string): void {
+    this.batchNameSearch$.next(value ?? '');
+  }
+
+  filterBatchNames(value: string | null | undefined): void {
+    const v = (value ?? '').toString().trim();
+    if (!v) {
+      this.filteredBatchNames = [...this.batchNames];
+      return;
+    }
+    const filterValue = v.toLowerCase();
+    this.filteredBatchNames = this.batchNames.filter(n => n.toLowerCase().includes(filterValue));
   }
 
   filterStudents(search: string) {
     this.filteredStudents = !search
-      ? this.students
+      ? [...this.students]
       : this.students.filter(s => s.name.toLowerCase().includes(search.toLowerCase()));
   }
 
   filterCourses(search: string) {
     this.filteredCourses = !search
-      ? this.courses
+      ? [...this.courses]
       : this.courses.filter(c => c.name.toLowerCase().includes(search.toLowerCase()));
   }
 
   processEnrollment(): void {
-    if (!this.newBatchName) {
-      this.snackBar.open('⚠️ Enter batch name', 'Close', { duration: 3000 });
-      return;
-    }
-    if (!this.selectedSemesterId) {
-      this.snackBar.open('⚠️ Select a semester', 'Close', { duration: 3000 });
-      return;
-    }
-    if (this.selectedStudentIds.length === 0) {
-      this.snackBar.open('⚠️ Select at least one student', 'Close', { duration: 3000 });
-      return;
-    }
-    if (this.selectedCourseIds.length === 0) {
-      this.snackBar.open('⚠️ Select at least one course', 'Close', { duration: 3000 });
+    if (!this.isFormValid()) {
       return;
     }
 
+    this.isProcessing = true;
     const request: CreateBatchWithEnrollmentsRequest = {
       name: this.newBatchName,
-      semesterId: this.selectedSemesterId.toString(),
+      semesterId: this.selectedSemesterId!.toString(),
       studentIds: this.selectedStudentIds,
       courseAssignedIds: this.selectedCourseIds
     };
 
-    this.enrollmentService.createBatchWithEnrollments(request).subscribe({
+    this.enrollmentService.createBatchWithEnrollments(request).pipe(take(1)).subscribe({
       next: () => {
-        this.snackBar.open('✅ Batch & enrollments processed successfully', 'Close', { duration: 3000 });
+        this.snackBar.open('✅ Batch & enrollments created successfully', 'Close', { duration: 3000 });
         this.resetForm();
+        // reload data
         this.loadEnrollments();
+        this.loadDropdowns();
+        this.isProcessing = false;
       },
-      error: (err: any) =>
-        this.snackBar.open('❌ Error: ' + (err?.error?.message || err.message), 'Close', { duration: 4000 })
+      error: (err: any) => {
+        this.isProcessing = false;
+        this.snackBar.open('❌ Error: ' + (err?.error?.message || err?.message || err), 'Close', { duration: 4000 });
+      }
     });
+  }
+
+  isFormValid(): boolean {
+    if (!this.newBatchName?.trim()) {
+      this.snackBar.open('⚠️ Please enter a batch name', 'Close', { duration: 3000 });
+      return false;
+    }
+    if (!this.selectedSemesterId) {
+      this.snackBar.open('⚠️ Please select a semester', 'Close', { duration: 3000 });
+      return false;
+    }
+    if (this.selectedStudentIds.length === 0) {
+      this.snackBar.open('⚠️ Please select at least one student', 'Close', { duration: 3000 });
+      return false;
+    }
+    if (this.selectedCourseIds.length === 0) {
+      this.snackBar.open('⚠️ Please select at least one course', 'Close', { duration: 3000 });
+      return false;
+    }
+    return true;
   }
 
   resetForm(): void {
@@ -165,23 +243,25 @@ export class EnrollmentsComponent implements OnInit {
     this.selectedSemesterId = undefined;
     this.selectedStudentIds = [];
     this.selectedCourseIds = [];
-    this.filteredStudents = this.students;
-    this.filteredCourses = this.courses;
+    this.studentFilter = '';
+    this.courseFilter = '';
+    this.filteredStudents = [...this.students];
+    this.filteredCourses = [...this.courses];
   }
 
   removeEnrollment(id: number): void {
     const dialogRef = this.dialog.open(InlineConfirmDialog, {
       data: { title: 'Remove Enrollment', message: '⚠️ Do you really want to remove this enrollment?' }
     });
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().pipe(takeUntil(this.destroy$)).subscribe(result => {
       if (result) {
-        this.enrollmentService.removeEnrollment(id).subscribe({
+        this.enrollmentService.removeEnrollment(id).pipe(take(1)).subscribe({
           next: () => {
             this.snackBar.open('🗑️ Enrollment removed', 'Close', { duration: 3000 });
             this.loadEnrollments();
           },
           error: (err: any) =>
-            this.snackBar.open('❌ Error: ' + err.message, 'Close', { duration: 4000 })
+            this.snackBar.open('❌ Error: ' + (err?.message || err), 'Close', { duration: 4000 })
         });
       }
     });
@@ -191,16 +271,16 @@ export class EnrollmentsComponent implements OnInit {
     const dialogRef = this.dialog.open(InlineConfirmDialog, {
       data: { title: 'Delete Batch', message: '⚠️ Delete this batch and all its enrollments?' }
     });
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().pipe(takeUntil(this.destroy$)).subscribe(result => {
       if (result) {
-        this.enrollmentService.deleteBatch(batchId).subscribe({
+        this.enrollmentService.deleteBatch(batchId).pipe(take(1)).subscribe({
           next: () => {
             this.snackBar.open('🗑️ Batch deleted', 'Close', { duration: 3000 });
             this.loadEnrollments();
             this.loadDropdowns();
           },
           error: (err: any) =>
-            this.snackBar.open('❌ Error: ' + err.message, 'Close', { duration: 4000 })
+            this.snackBar.open('❌ Error: ' + (err?.message || err), 'Close', { duration: 4000 })
         });
       }
     });
@@ -220,9 +300,60 @@ export class EnrollmentsComponent implements OnInit {
   get selectedCourses(): CourseDto[] {
     return this.courses.filter(c => this.selectedCourseIds.includes(c.id));
   }
+
+  // Statistics
+  get totalBatches(): number {
+    return this.enrollmentTree.length;
+  }
+
+  get totalEnrollments(): number {
+    return this.enrollments.length;
+  }
+
+  get totalStudents(): number {
+    const uniqueStudents = new Set<number>();
+    this.enrollments.forEach(e => uniqueStudents.add(e.student.id));
+    return uniqueStudents.size;
+  }
+
+  // Filter batches
+  filterBatches(): void {
+    const filterValue = (this.batchSearchFilter ?? '').toLowerCase().trim();
+    if (!filterValue) {
+      this.filteredEnrollmentTree = this.enrollmentTree.length > 0 ? [...this.enrollmentTree] : [];
+      return;
+    }
+
+    this.filteredEnrollmentTree = this.enrollmentTree.filter(batch =>
+      batch.batchName.toLowerCase().includes(filterValue) ||
+      (batch.semesterName && batch.semesterName.toLowerCase().includes(filterValue))
+    );
+  }
+
+  // Helper methods for trackBy functions
+  trackByBatchId(_: number, batch: EnrollmentTree): number {
+    return batch.batchId;
+  }
+
+  trackByStudentId(_: number, student: { studentId: number }): number {
+    return student.studentId;
+  }
+
+  trackByCourseId(_: number, course: { courseId: number }): number {
+    return course.courseId;
+  }
+
+  getTotalCoursesInBatch(batch: EnrollmentTree): number {
+    const courseSet = new Set<number>();
+    batch.students.forEach(student => {
+      student.courses.forEach(course => courseSet.add(course.courseId));
+    });
+    return courseSet.size;
+  }
+
 }
 
-/* Inline confirmation dialog */
+/* Inline confirmation dialog component */
 @Component({
   selector: 'inline-confirm-dialog',
   template: `

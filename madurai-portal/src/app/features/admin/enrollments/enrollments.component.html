@@ -1,125 +1,356 @@
-<div class="enrollments p-6 bg-white rounded-lg shadow">
-  <h2 class="title mb-4">📚 Batch Enrollments</h2>
-
-  <div class="form-row mb-3 flex gap-4">
-    <mat-form-field appearance="outline" class="flex-1">
-      <mat-label>Batch Name</mat-label>
-      <input
-        type="text"
-        matInput
-        [(ngModel)]="newBatchName"
-        (ngModelChange)="filterBatchNames($event)"
-        [matAutocomplete]="auto"
-        placeholder="Batch A"
-      />
-      <mat-autocomplete #auto="matAutocomplete">
-        <mat-option *ngFor="let name of filteredBatchNames" [value]="name">
-          {{ name }}
-        </mat-option>
-      </mat-autocomplete>
-    </mat-form-field>
-
-    <mat-form-field appearance="outline" class="flex-1">
-      <mat-label>Semester</mat-label>
-      <mat-select [(ngModel)]="selectedSemesterId">
-        <mat-option [value]="undefined">-- Select Semester --</mat-option>
-        <mat-option *ngFor="let sem of semesters" [value]="sem.id">
-          {{ sem.name }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-  </div>
-
-  <div class="form-row mb-3 flex gap-4">
-    <!-- Students -->
-    <div class="flex-1">
-      <label class="label">Students</label>
-      <mat-form-field appearance="outline" class="w-full">
-        <mat-label>Select Students</mat-label>
-        <mat-select [(ngModel)]="selectedStudentIds" multiple>
-          <ngx-mat-select-search
-            [placeholderLabel]="'🔍 Search students...'"
-            [noEntriesFoundLabel]="'No students found'"
-            [(ngModel)]="studentFilter"
-          ></ngx-mat-select-search>
-          <mat-option *ngFor="let s of students | filter:studentFilter:'name'" [value]="s.id">
-            {{ s.name }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <mat-chip-listbox>
-        <mat-chip
-          *ngFor="let student of selectedStudents"
-          [removable]="true"
-          (removed)="removeStudent(student)"
-        >
-          {{ student.name }}
-          <button matChipRemove><mat-icon>cancel</mat-icon></button>
-        </mat-chip>
-      </mat-chip-listbox>
-    </div>
-
-    <!-- Courses -->
-    <div class="flex-1">
-      <label class="label">Courses</label>
-      <mat-form-field appearance="outline" class="w-full">
-        <mat-label>Select Courses</mat-label>
-        <mat-select [(ngModel)]="selectedCourseIds" multiple>
-          <ngx-mat-select-search
-            [placeholderLabel]="'🔍 Search courses...'"
-            [noEntriesFoundLabel]="'No courses found'"
-            [(ngModel)]="courseFilter"
-          ></ngx-mat-select-search>
-          <mat-option *ngFor="let c of courses | filter:courseFilter:'name'" [value]="c.id">
-            {{ c.name }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <mat-chip-listbox>
-        <mat-chip
-          *ngFor="let c of selectedCourses"
-          [removable]="true"
-          (removed)="removeCourse(c)"
-        >
-          {{ c.name }}
-          <button matChipRemove><mat-icon>cancel</mat-icon></button>
-        </mat-chip>
-      </mat-chip-listbox>
-    </div>
-  </div>
-
-  <div class="mb-6">
-    <button mat-raised-button color="primary" (click)="processEnrollment()">
-      ➕ Add Enrollment
-    </button>
-  </div>
-
-  <div class="table-container mt-6">
-    <h2 class="subtitle mb-2">📑 Enrollments</h2>
-
-    <div *ngFor="let batch of enrollmentTree" class="batch-card mb-4 p-4 border rounded">
-      <div class="flex justify-between items-center mb-2">
-        <h3 class="font-bold">
-          {{ batch.batchName }} <small>({{ batch.semesterName }})</small>
-        </h3>
-        <button mat-icon-button color="warn" (click)="deleteBatch(batch.batchId)">
-          <mat-icon>delete_forever</mat-icon>
-        </button>
+<div class="enrollments-container">
+  <!-- Header -->
+  <div class="header-section">
+    <div class="header-content">
+      <div class="title-section">
+        <mat-icon class="header-icon">group_add</mat-icon>
+        <div>
+          <h1 class="page-title">Enrollment Management</h1>
+          <p class="page-subtitle">
+            Create and manage student enrollments in batches
+          </p>
+        </div>
       </div>
 
-      <div *ngFor="let student of batch.students" class="ml-4 mb-2">
-        <strong>👤 {{ student.studentName }}</strong>
-        <ul class="ml-6">
-          <li *ngFor="let c of student.courses">
-            📘 {{ c.courseName }}
-            <button mat-icon-button color="warn" (click)="removeEnrollment(c.enrollmentId)">
-              <mat-icon>delete</mat-icon>
-            </button>
-          </li>
-        </ul>
+      <div class="statistics-card" *ngIf="!isLoading">
+        <div class="stat-item">
+          <div class="stat-value">{{ totalBatches }}</div>
+          <div class="stat-label">Batches</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">{{ totalEnrollments }}</div>
+          <div class="stat-label">Enrollments</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">{{ totalStudents }}</div>
+          <div class="stat-label">Students</div>
+        </div>
       </div>
     </div>
   </div>
+
+  <!-- Create Enrollment -->
+  <mat-card class="form-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>add_circle_outline</mat-icon>
+        Create New Enrollment
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form class="enrollment-form">
+        <!-- Batch + Semester -->
+        <div class="form-row">
+          <!-- Batch -->
+          <mat-form-field appearance="outline" class="form-field-full">
+            <mat-label>Batch Name</mat-label>
+            <input
+              matInput
+              [(ngModel)]="newBatchName"
+              (ngModelChange)="onBatchNameChange($event)"
+              [matAutocomplete]="autoBatch"
+              placeholder="e.g., Batch A-2024"
+              name="batchName"
+              required
+            />
+            <mat-autocomplete #autoBatch="matAutocomplete">
+              <mat-option
+                *ngFor="let name of filteredBatchNames"
+                [value]="name"
+              >
+                {{ name }}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-icon matPrefix>label</mat-icon>
+            <mat-hint>
+              Enter a unique batch name or select from existing batches
+            </mat-hint>
+          </mat-form-field>
+
+          <!-- Semester -->
+          <mat-form-field appearance="outline" class="form-field-full">
+            <mat-label>Semester</mat-label>
+            <mat-select
+              [(ngModel)]="selectedSemesterId"
+              name="semester"
+              required
+            >
+              <mat-option [value]="undefined">-- Select Semester --</mat-option>
+              <mat-option
+                *ngFor="let sem of semesters"
+                [value]="sem.id"
+              >
+                {{ sem.name }}
+              </mat-option>
+            </mat-select>
+            <mat-icon matPrefix>event</mat-icon>
+            <mat-hint>Select the semester for this batch</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <!-- Students + Courses -->
+        <div class="form-row">
+          <!-- Students -->
+          <mat-form-field appearance="outline" class="form-field-full">
+            <mat-label>Select Students</mat-label>
+            <mat-select
+              [(ngModel)]="selectedStudentIds"
+              name="students"
+              multiple
+              required
+            >
+              <mat-option disabled>
+                <ngx-mat-select-search
+                  [placeholderLabel]="'Search students by name...'"
+                  [noEntriesFoundLabel]="'No students found'"
+                  [(ngModel)]="studentFilter"
+                  [ngModelOptions]="{ standalone: true }"
+                  (ngModelChange)="filterStudents($event)"
+                ></ngx-mat-select-search>
+              </mat-option>
+              <mat-option
+                *ngFor="let s of filteredStudents"
+                [value]="s.id"
+              >
+                {{ s.name }}
+              </mat-option>
+            </mat-select>
+            <mat-icon matPrefix>people</mat-icon>
+            <mat-hint>{{ selectedStudentIds.length }} student(s) selected</mat-hint>
+          </mat-form-field>
+
+          <div class="selected-chips" *ngIf="selectedStudents.length > 0">
+            <mat-chip-listbox>
+              <mat-chip
+                *ngFor="let student of selectedStudents"
+                [removable]="true"
+                (removed)="removeStudent(student)"
+                class="custom-chip"
+              >
+                <mat-icon class="chip-icon">person</mat-icon>
+                {{ student.name }}
+              </mat-chip>
+            </mat-chip-listbox>
+          </div>
+
+          <!-- Courses -->
+          <mat-form-field appearance="outline" class="form-field-full">
+            <mat-label>Select Courses</mat-label>
+            <mat-select
+              [(ngModel)]="selectedCourseIds"
+              name="courses"
+              multiple
+              required
+            >
+              <mat-option disabled>
+                <ngx-mat-select-search
+                  [placeholderLabel]="'Search courses by name...'"
+                  [noEntriesFoundLabel]="'No courses found'"
+                  [(ngModel)]="courseFilter"
+                  [ngModelOptions]="{ standalone: true }"
+                  (ngModelChange)="filterCourses($event)"
+                ></ngx-mat-select-search>
+              </mat-option>
+              <mat-option
+                *ngFor="let c of filteredCourses"
+                [value]="c.id"
+              >
+                {{ c.name }}
+              </mat-option>
+            </mat-select>
+            <mat-icon matPrefix>book</mat-icon>
+            <mat-hint>{{ selectedCourseIds.length }} course(s) selected</mat-hint>
+          </mat-form-field>
+
+          <div class="selected-chips" *ngIf="selectedCourses.length > 0">
+            <mat-chip-listbox>
+              <mat-chip
+                *ngFor="let course of selectedCourses"
+                [removable]="true"
+                (removed)="removeCourse(course)"
+                class="custom-chip"
+              >
+                <mat-icon class="chip-icon">menu_book</mat-icon>
+                {{ course.name }}
+              </mat-chip>
+            </mat-chip-listbox>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="form-actions">
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="processEnrollment()"
+            [disabled]="isProcessing"
+          >
+            <mat-icon *ngIf="!isProcessing">add</mat-icon>
+            <mat-spinner
+              *ngIf="isProcessing"
+              diameter="20"
+              class="button-spinner"
+            ></mat-spinner>
+            {{ isProcessing ? 'Processing...' : 'Create Enrollment' }}
+          </button>
+
+          <button
+            mat-stroked-button
+            type="button"
+            (click)="resetForm()"
+            [disabled]="isProcessing"
+          >
+            <mat-icon>refresh</mat-icon>
+            Reset Form
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Enrollment List -->
+  <mat-card class="enrollments-card">
+    <mat-card-header>
+      <div class="card-header-content">
+        <div>
+          <mat-card-title>
+            <mat-icon>list_alt</mat-icon>
+            Current Enrollments
+          </mat-card-title>
+          <p class="card-subtitle" *ngIf="!isLoading">
+            Managing {{ enrollmentTree.length }} batch(es) with
+            {{ totalEnrollments }} total enrollment(s)
+          </p>
+        </div>
+
+        <div class="header-actions">
+          <mat-form-field appearance="outline" class="search-field">
+            <mat-label>Search batches</mat-label>
+            <input
+              matInput
+              [(ngModel)]="batchSearchFilter"
+              (ngModelChange)="onBatchSearchChange($event)"
+              placeholder="Search by batch name..."
+              name="batchSearch"
+            />
+            <mat-icon matPrefix>search</mat-icon>
+          </mat-form-field>
+
+          <button
+            mat-icon-button
+            (click)="loadEnrollments()"
+            [disabled]="isLoading"
+            matTooltip="Refresh"
+          >
+            <mat-icon>refresh</mat-icon>
+          </button>
+        </div>
+      </div>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Loading -->
+      <div class="loading-container" *ngIf="isLoading">
+        <mat-spinner diameter="50"></mat-spinner>
+        <p>Loading enrollments...</p>
+      </div>
+
+      <!-- Empty -->
+      <div
+        class="empty-state"
+        *ngIf="!isLoading && filteredEnrollmentTree.length === 0"
+      >
+        <mat-icon class="empty-icon">inbox</mat-icon>
+        <h3>No Enrollments Found</h3>
+        <p>Start by creating a new enrollment batch above.</p>
+      </div>
+
+      <!-- Tree -->
+      <div
+        class="enrollment-tree"
+        *ngIf="!isLoading && filteredEnrollmentTree.length > 0"
+      >
+        <mat-expansion-panel
+          *ngFor="let batch of filteredEnrollmentTree; trackBy: trackByBatchId"
+          class="batch-panel"
+        >
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <div class="batch-header">
+                <mat-icon class="batch-icon">class</mat-icon>
+                <div class="batch-info">
+                  <span class="batch-name">{{ batch.batchName }}</span>
+                  <span class="batch-meta" *ngIf="batch.semesterName">
+                    {{ batch.semesterName }}
+                  </span>
+                </div>
+              </div>
+            </mat-panel-title>
+            <mat-panel-description>
+              <div class="batch-stats">
+                <span class="stat-badge">
+                  <mat-icon>people</mat-icon>
+                  {{ batch.students.length }}
+                </span>
+                <span class="stat-badge">
+                  <mat-icon>book</mat-icon>
+                  {{ getTotalCoursesInBatch(batch) }}
+                </span>
+              </div>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <div class="batch-content">
+            <div class="batch-actions-header">
+              <h4>Students and Courses</h4>
+              <button
+                mat-raised-button
+                color="warn"
+                (click)="deleteBatch(batch.batchId)"
+              >
+                <mat-icon>delete_forever</mat-icon>
+                Delete Batch
+              </button>
+            </div>
+
+            <mat-divider></mat-divider>
+
+            <div
+              class="student-card"
+              *ngFor="let student of batch.students; trackBy: trackByStudentId"
+            >
+              <div class="student-header">
+                <div class="student-info">
+                <mat-icon class="student-icon">person</mat-icon>
+                  <span class="student-name">{{ student.studentName }}</span>
+                  <span class="student-meta">
+                    Enrolled in {{ student.courses.length }} course(s)
+                  </span>
+                </div>
+              </div>
+
+              <mat-chip-listbox>
+                <mat-chip
+                  *ngFor="let course of student.courses; trackBy: trackByCourseId"
+                  class="course-chip"
+                >
+                  <mat-icon class="chip-icon">menu_book</mat-icon>
+                  {{ course.courseName }}
+                  <button
+                    mat-icon-button
+                    color="warn"
+                    (click)="removeEnrollment(course.enrollmentId)"
+                    matTooltip="Remove enrollment"
+                  >
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </mat-chip>
+              </mat-chip-listbox>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </div>
+    </mat-card-content>
+  </mat-card>
 </div>

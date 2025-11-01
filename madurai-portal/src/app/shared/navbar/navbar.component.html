@@ -1,12 +1,13 @@
 <nav class="navbar">
+  <div class="nav-links" *ngIf="username">
+    <!-- Hamburger button (only for small screens) -->
+    <span (click)="toggleSidebar.emit()"><mat-icon>menu</mat-icon></span>
+  </div>
   <div class="logo">
     📖 Madurai Bible College
   </div>
 
-  <div class="nav-links" *ngIf="username">
-    <!-- Hamburger button (only for small screens) -->
-    <span (click)="toggleSidebar.emit()"><mat-icon>menu</mat-icon></span>
-    
+  <div class="nav-links" *ngIf="username">    
     <span>Welcome, <b>{{ username | titlecase }}</b></span>
     <span (click)="logout()"><mat-icon>logout</mat-icon></span>
     <!-- <button (click)="logout()">Logout</button> -->
