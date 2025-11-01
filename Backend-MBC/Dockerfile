@@ -32,7 +32,7 @@ COPY --from=builder /app/target/backend-mbc-0.0.1-SNAPSHOT.jar app.jar
 ENV SERVER_PORT=8080
 ENV DB_URL=localhost:3306/your_db
 ENV DB_USERNAME=root
-ENV DB_PASSWORD=password
+ENV DB_PASSWORD=SchoolProject@2023
 
 # Expose Spring Boot port
 EXPOSE 8080
