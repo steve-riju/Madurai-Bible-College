@@ -1,41 +1,19 @@
-# ===============================
-# 1️⃣ Build Stage
-# ===============================
-FROM maven:3.9.5-eclipse-temurin-17 AS builder
+# ===== Build Stage =====
+FROM maven:3.9.6-eclipse-temurin-21 AS build
 WORKDIR /app
-
-# Copy only the Maven files first to leverage Docker caching
 COPY pom.xml .
-COPY .mvn .mvn
-COPY mvnw .
-COPY mvnw.cmd .
-
-# Pre-download dependencies
-RUN ./mvnw dependency:go-offline -B
-
-# Now copy the actual source code
 COPY src ./src
+RUN mvn clean package -DskipTests
 
-# Build the Spring Boot JAR
-RUN ./mvnw clean package -DskipTests
-
-# ===============================
-# 2️⃣ Runtime Stage
-# ===============================
-FROM eclipse-temurin:17-jre-alpine
+# ===== Runtime Stage =====
+FROM eclipse-temurin:21-jdk
 WORKDIR /app
 
-# Copy the built JAR from builder
-COPY --from=builder /app/target/backend-mbc-0.0.1-SNAPSHOT.jar app.jar
+# Copy the built JAR file
+COPY --from=build /app/target/*.jar app.jar
 
-# Environment variables (DigitalOcean can override these)
-ENV SERVER_PORT=8080
-ENV DB_URL=localhost:3306/your_db
-ENV DB_USERNAME=root
-ENV DB_PASSWORD=SchoolProject@2023
-
-# Expose Spring Boot port
+# Expose port (App Platform will map automatically)
 EXPOSE 8080
 
-# Run the app
-ENTRYPOINT ["java","-jar","app.jar"]
+# Run the Spring Boot app
+ENTRYPOINT ["java", "-jar", "app.jar"]
