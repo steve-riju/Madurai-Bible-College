@@ -55,6 +55,12 @@ public class DefaultUserInitializer {
             System.out.println("== TEMPORARY PASSWORD: " + DEFAULT_RAW_PASSWORD);
             System.out.println("== ACTION: PLEASE LOG IN AND CHANGE THIS PASSWORD IMMEDIATELY! ==");
             System.out.println("=======================================================================");
+        }else {
+        	System.out.println("=======================================================================");
+            System.out.println("== ✅ User Already Present with ==");
+            System.out.println("== USERNAME: " + DEFAULT_USERNAME);
+            System.out.println("== TEMPORARY PASSWORD: " + DEFAULT_RAW_PASSWORD);
+            System.out.println("=======================================================================");
         }
     }
 }
