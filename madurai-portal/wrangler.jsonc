@@ -1,6 +1,6 @@
 {
   "name": "madurai-portal",
-  "main": "dist/madurai-portal/index.html",
+  "main": "dist/madurai-portal/browser/index.html",
   "compatibility_date": "2025-11-04",
   "assets": {
     "directory": "./dist/madurai-portal"
