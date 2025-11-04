@@ -1,0 +1,19 @@
+# ============================================
+# Cloudflare Pages Configuration for Angular
+# Project: Madurai Bible College Portal (Frontend)
+# ============================================
+
+build:
+  command: npm run build -- --configuration production
+  directory: dist/madurai-portal
+  root_dir: madurai-portal
+
+# Optional: Environment variables (if using Angular environments)
+env:
+  NG_APP_API_URL: "https://madurai-bible-college-835yo.ondigitalocean.app"
+
+# SPA support (Angular Routing)
+# Ensures Cloudflare serves index.html for all routes
+routes:
+  - path: /*
+    serve: /index.html
