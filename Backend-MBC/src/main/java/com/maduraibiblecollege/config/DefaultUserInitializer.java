@@ -31,7 +31,7 @@ public class DefaultUserInitializer {
     public void init() {
     	System.out.println("===========================Trying to insert default user============");
         // 1. Check if the default admin user already exists
-        if (userRepository.findByUsername(DEFAULT_USERNAME).isEmpty() && userRepository.findByEmail(DEFAULT_EMAIL).isEmpty()) {
+        if (userRepository.findByUsername(DEFAULT_USERNAME).isEmpty()) { //&& userRepository.findByEmail(DEFAULT_EMAIL).isEmpty()
             
             // 2. Encode the password
             String encodedPassword = passwordEncoder.encode(DEFAULT_RAW_PASSWORD);
