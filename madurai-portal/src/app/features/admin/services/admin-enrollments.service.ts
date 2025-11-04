@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 
 export interface BatchDto {
   id: number;
@@ -51,9 +52,9 @@ export interface CreateBatchWithEnrollmentsRequest {
   providedIn: 'root'
 })
 export class AdminEnrollmentsService {
-  private apiUrl = 'http://localhost:8080/api/admin/enrollments';
-  private batchApiUrl = 'http://localhost:8080/api/admin/batches';
-  private semesterApiUrl = 'http://localhost:8080/api/admin/semesters';
+  private apiUrl = `${environment.apiUrl}/api/admin/enrollments`;
+  private batchApiUrl = `${environment.apiUrl}/api/admin/batches`;
+  private semesterApiUrl = `${environment.apiUrl}/api/admin/semesters`;
 
   constructor(private http: HttpClient) {}
 

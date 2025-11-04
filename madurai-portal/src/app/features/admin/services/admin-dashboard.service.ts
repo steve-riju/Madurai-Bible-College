@@ -2,6 +2,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 
 export interface AdminDashboardDto {
   userStats: { students: number; teachers: number; admins: number };
@@ -16,7 +17,7 @@ export interface AdminDashboardDto {
   providedIn: 'root'
 })
 export class AdminDashboardService {
-  private apiUrl = 'http://localhost:8080/api/admin/dashboard';
+  private apiUrl = `${environment.apiUrl}/api/admin/dashboard`;
 
   constructor(private http: HttpClient) {}
 

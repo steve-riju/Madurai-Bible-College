@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map, tap } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 interface AuthResponse {
   accessToken: string;
@@ -17,9 +18,7 @@ interface AuthResponse {
   providedIn: 'root'
 })
 export class AuthService {
-  // private apiUrl = 'http://192.168.1.6:8080/api/auth'; at valakom 
-  // private apiUrl = 'http://192.168.30.10:8080/api/admin/users'; //at mlty
-  private apiUrl = 'http://localhost:8080/api/auth';
+  private apiUrl = `${environment.apiUrl}/api/auth`;
 
   constructor(private router: Router, private http: HttpClient) {}
 

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-reset-password',
@@ -12,7 +13,7 @@ export class ResetPasswordComponent {
   form: FormGroup;
   message: string = '';
   loading = false;
-  apiUrl = 'http://localhost:8080/api/auth';
+  apiUrl = `${environment.apiUrl}/api/auth`;
   token: string | null;
 
   constructor(

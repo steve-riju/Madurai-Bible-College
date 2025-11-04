@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { StudentAssignmentsService } from '../services/student-assignments.service';
 import { AssignmentSubmissionDto } from '../models/assignment';
 import { ViewSubmissionDialogComponent } from '../view-submission-dialog/view-submission-dialog.component';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-my-submissions',
@@ -30,7 +31,7 @@ export class MySubmissionsComponent implements OnInit {
             ...a,
             fileUrl: a.fileUrl?.startsWith('http')
               ? a.fileUrl
-              : `http://localhost:8080/api/files/${a.fileUrl}`
+              : `${environment.apiUrl}/api/files/${a.fileUrl}`
           }))
         })) || [];
         this.loading = false;

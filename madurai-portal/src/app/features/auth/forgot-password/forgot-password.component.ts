@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-forgot-password',
@@ -11,7 +12,7 @@ export class ForgotPasswordComponent {
   form: FormGroup;
   message: string = '';
   loading = false;
-  apiUrl = 'http://localhost:8080/api/auth';
+  apiUrl = `${environment.apiUrl}/api/auth`;
 
   constructor(private fb: FormBuilder, private http: HttpClient) {
     this.form = this.fb.group({

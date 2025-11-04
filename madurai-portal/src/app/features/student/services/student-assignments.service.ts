@@ -2,12 +2,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 import { AssignmentDto, AssignmentSubmissionDto } from '../models/assignment';
 import { BatchDto } from '../../teacher/assignments/assignments.component';
 
 @Injectable({ providedIn: 'root' })
 export class StudentAssignmentsService {
-  private apiUrl = 'http://localhost:8080';
+  private apiUrl = environment.apiUrl;
   private baseUrl = '/api/student/assignments';
 
   constructor(private http: HttpClient) {}

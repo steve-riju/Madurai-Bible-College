@@ -7,6 +7,7 @@ import { AssignmentSubmitDialogComponent } from '../assignment-submit-dialog/ass
 import { ActivatedRoute } from '@angular/router';
 import { BatchDto } from '../../teacher/assignments/assignments.component';
 import { ViewSubmissionDialogComponent } from '../view-submission-dialog/view-submission-dialog.component';
+import { environment } from '../../../../environments/environment';
 @Component({
   selector: 'app-assignments',
   templateUrl: './assignments.component.html',
@@ -114,7 +115,7 @@ export class AssignmentsComponent implements OnInit {
 
     // The backend only returns filenames like “uuid_filename.docx”
     // So we’ll prefix with your backend’s base file URL
-    const baseUrl = 'http://localhost:8080/api/files/'; // change to your BE file endpoint
+    const baseUrl = `${environment.apiUrl}/api/files/`;
 
     // Normalize submission attachment URLs
     const submission = {

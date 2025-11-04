@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 
 export interface Course {
   id?: number;
@@ -35,8 +36,7 @@ export interface Teacher {
   providedIn: 'root'
 })
 export class AdminCoursesService {
-  // private apiUrl = 'http://192.168.1.6:8080/admin/courses';
-  private apiUrl = 'http://localhost:8080/admin/courses';
+    private apiUrl = `${environment.apiUrl}/admin/courses`;
   
 
   constructor(private http: HttpClient) {}
@@ -77,8 +77,7 @@ export class AdminCoursesService {
   }
 
   getTeachers(): Observable<Teacher[]> {
-  // return this.http.get<Teacher[]>('http://192.168.1.6:8080/api/admin/users/teachers');
-  return this.http.get<Teacher[]>('http://localhost:8080/api/admin/users/teachers');
+  return this.http.get<Teacher[]>(`${environment.apiUrl}/api/admin/users/teachers`);
 }
 
 // ---- Semesters ----
