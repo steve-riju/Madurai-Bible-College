@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Madurai Bible College - Equipping Servant-Leaders Since 1955. A Christian theological institution in Madurai, Tamil Nadu offering Biblical education and ministry training.">
+    <link rel="icon" href="/assets/mbc-icon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/assets/mbc-icon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="/assets/mbc-icon.ico">
+    <title>Madurai Bible College</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body class="font-inter text-gray-800 bg-gray-50">
+    
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-white/95 backdrop-blur-sm shadow-md z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <img src="/assets/mbc-logo-clean.png" alt="Madurai Bible College Logo" class="h-12 w-auto object-contain">
+                    <div>
+                        <h1 class="font-playfair text-xl font-bold text-blue-900">Madurai Bible College</h1>
+                        <p class="text-xs text-gray-600">Since 1955</p>
+                    </div>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#about" class="nav-link">About</a>
+                    <a href="#purpose" class="nav-link">Purpose</a>
+                    <a href="#history" class="nav-link">History</a>
+                    <a href="#academics" class="nav-link">Academics</a>
+                    <a href="#student-life" class="nav-link">Student Life</a>
+                    <a href="#contact" class="nav-link">Contact</a>
+                    <a href="#giving" class="btn-primary">Support Us</a>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden">
+                    <i data-lucide="menu" class="w-6 h-6 text-blue-900"></i>
+                </button>
+            </div>
+            
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden md:hidden mt-4 pb-4 space-y-3">
+                <a href="#about" class="block nav-link">About</a>
+                <a href="#purpose" class="block nav-link">Purpose</a>
+                <a href="#history" class="block nav-link">History</a>
+                <a href="#academics" class="block nav-link">Academics</a>
+                <a href="#student-life" class="block nav-link">Student Life</a>
+                <a href="#contact" class="block nav-link">Contact</a>
+                <a href="#giving" class="block btn-primary text-center">Support Us</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('/assets/hero-campus-golden-light.jpg');">
+            <div class="absolute inset-0 bg-gradient-to-r from-blue-900/90 to-blue-800/70"></div>
+        </div>
+        
+        <div class="relative z-10 container mx-auto px-4 text-center text-white">
+            <div data-aos="fade-down" data-aos-duration="1000">
+                <div class="inline-block mb-6">
+                    <i data-lucide="cross" class="w-16 h-16 text-gold"></i>
+                </div>
+                <h1 class="font-playfair text-5xl md:text-7xl font-bold mb-6 leading-tight">
+                    Madurai Bible College
+                </h1>
+                <p class="text-2xl md:text-3xl mb-8 font-light">
+                    Equipping Servant-Leaders Since 1955
+                </p>
+            </div>
+            
+            <div data-aos="fade-up" data-aos-delay="300" data-aos-duration="1000" class="max-w-3xl mx-auto mb-12">
+                <div class="bible-verse-box">
+                    <p class="text-lg md:text-xl italic leading-relaxed">
+                        "Study to shew thyself approved unto God, a workman that needeth not to be ashamed, rightly dividing the word of truth."
+                    </p>
+                    <p class="text-gold font-semibold mt-3">— 2 Timothy 2:15 (KJV)</p>
+                </div>
+            </div>
+            
+            <div data-aos="fade-up" data-aos-delay="600" data-aos-duration="1000" class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="#about" class="btn-primary-large">Learn More</a>
+                <a href="#contact" class="btn-secondary-large">Contact Us</a>
+            </div>
+        </div>
+        
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <i data-lucide="chevron-down" class="w-8 h-8 text-white"></i>
+        </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section id="about" class="section-padding bg-white">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div data-aos="fade-right">
+                    <img src="/assets/students-studying-theology.jpg" alt="Madurai Bible College Campus" class="rounded-lg shadow-2xl">
+                </div>
+                
+                <div data-aos="fade-left">
+                    <h2 class="section-title">About Us</h2>
+                    <div class="h-1 w-20 bg-gold mb-8"></div>
+                    
+                    <p class="text-lg leading-relaxed mb-6 text-gray-700">
+                        Madurai Bible School was born out of a desire for believers in Tamil Nadu to have the opportunity to pursue a solid, Biblical study without having to leave the state. Founded in 1955, MBS has faithfully trained men and women in the Word of God for over 69 years.
+                    </p>
+                    
+                    <p class="text-lg leading-relaxed mb-8 text-gray-700">
+                        Through the Lord's grace, it has grown from humble beginnings to a fully established Bible College with recognized courses and hundreds of alumni serving Christ across the world.
+                    </p>
+                    
+                    <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-gold">
+                        <p class="text-gray-700 mb-2">Sincerely,</p>
+                        <p class="font-playfair text-2xl font-semibold text-blue-900 mb-1">Sam Jones Cherian</p>
+                        <p class="text-gray-600">Principal, Madurai Bible College</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Purpose & Mission Section -->
+    <section id="purpose" class="section-padding bg-gradient-to-br from-blue-900 to-blue-800 text-white relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <img src="/assets/christian-symbol-watermark.png" alt="Christian Symbol" class="w-full h-full object-cover">
+        </div>
+        
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="section-title text-white">Our Purpose</h2>
+                <div class="h-1 w-20 bg-gold mx-auto mb-8"></div>
+                
+                <div class="max-w-3xl mx-auto bible-verse-box">
+                    <p class="text-xl italic leading-relaxed">
+                        "Study to shew thyself approved unto God, a workman that needeth not to be ashamed, rightly dividing the word of truth."
+                    </p>
+                    <p class="text-gold font-semibold mt-3">— 2 Timothy 2:15 (KJV)</p>
+                </div>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="purpose-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="purpose-icon">
+                        <i data-lucide="heart" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Deep Commitment</h3>
+                    <p class="text-blue-100">Encourage young men and women toward a life of deep commitment and discipleship.</p>
+                </div>
+                
+                <div class="purpose-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="purpose-icon">
+                        <i data-lucide="users" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Healthy Assemblies</h3>
+                    <p class="text-blue-100">Build up healthy local assemblies rooted in Biblical truth and fellowship.</p>
+                </div>
+                
+                <div class="purpose-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="purpose-icon">
+                        <i data-lucide="book-open" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Bible Teachers</h3>
+                    <p class="text-blue-100">Train Bible teachers to give spiritual leadership in their communities.</p>
+                </div>
+                
+                <div class="purpose-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="purpose-icon">
+                        <i data-lucide="compass" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Practical Ministry</h3>
+                    <p class="text-blue-100">Provide students with practical experience in ministry and outreach.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- History Section -->
+    <section id="history" class="section-padding bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="section-title">Our History</h2>
+                <div class="h-1 w-20 bg-gold mx-auto mb-6"></div>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    69 years of faithful service in Biblical education and ministry training
+                </p>
+            </div>
+            
+            <div class="max-w-4xl mx-auto">
+                <div class="timeline">
+                    <div class="timeline-item" data-aos="fade-right">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h3 class="text-2xl font-playfair font-bold text-blue-900 mb-2">1955</h3>
+                            <p class="text-gray-700">Madurai Bible School founded with a vision to provide Biblical education in Tamil Nadu.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item" data-aos="fade-left">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h3 class="text-2xl font-playfair font-bold text-blue-900 mb-2">1960</h3>
+                            <p class="text-gray-700">Expansion of curriculum and establishment of residential facilities for students.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item" data-aos="fade-right">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h3 class="text-2xl font-playfair font-bold text-blue-900 mb-2">1978</h3>
+                            <p class="text-gray-700">Introduction of Bachelor in Theology program with recognized accreditation.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item" data-aos="fade-left">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h3 class="text-2xl font-playfair font-bold text-blue-900 mb-2">1984</h3>
+                            <p class="text-gray-700">Establishment of ministry training programs and field experience initiatives.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item" data-aos="fade-right">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h3 class="text-2xl font-playfair font-bold text-blue-900 mb-2">2024</h3>
+                            <p class="text-gray-700">Celebrating 69 years of faithful service with hundreds of alumni serving Christ worldwide.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-12" data-aos="zoom-in">
+                    <img src="/assets/historic-college-building.jpg" alt="Historic College Building" class="rounded-lg shadow-2xl w-full">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Academics Section -->
+    <section id="academics" class="section-padding bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="section-title">Academics</h2>
+                <div class="h-1 w-20 bg-gold mx-auto mb-6"></div>
+                <p class="text-2xl font-playfair text-gray-700 mb-4">Timeless Teachings in a Changing World</p>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                    Our curriculum combines rigorous Biblical study with practical ministry training, preparing students for effective service in God's kingdom.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+                <div class="academic-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="academic-icon">
+                        <i data-lucide="graduation-cap" class="w-10 h-10"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Bachelor in Theology</h3>
+                    <p class="text-gray-600">3-year residential program in Tamil medium with comprehensive Biblical studies.</p>
+                </div>
+                
+                <div class="academic-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="academic-icon">
+                        <i data-lucide="book" class="w-10 h-10"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Short-term Courses</h3>
+                    <p class="text-gray-600">Specialized courses for sisters and lay leaders seeking Biblical knowledge.</p>
+                </div>
+                
+                <div class="academic-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="academic-icon">
+                        <i data-lucide="clipboard-check" class="w-10 h-10"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Weekly Assessments</h3>
+                    <p class="text-gray-600">Regular exams and evaluations ensuring thorough understanding of material.</p>
+                </div>
+                
+                <div class="academic-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="academic-icon">
+                        <i data-lucide="users-2" class="w-10 h-10"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Expert Faculty</h3>
+                    <p class="text-gray-600">Experienced teachers and guest lecturers with deep Biblical knowledge.</p>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-lg p-8 md:p-12" data-aos="fade-up">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-2xl font-playfair font-bold text-blue-900 mb-4">Our Approach</h3>
+                        <ul class="space-y-3 text-gray-700">
+                            <li class="flex items-start">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-gold mr-3 mt-1 flex-shrink-0"></i>
+                                <span>Strong emphasis on discipleship and character formation</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-gold mr-3 mt-1 flex-shrink-0"></i>
+                                <span>Mission field experience and practical ministry opportunities</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-gold mr-3 mt-1 flex-shrink-0"></i>
+                                <span>Sound doctrinal teaching rooted in Scripture</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-gold mr-3 mt-1 flex-shrink-0"></i>
+                                <span>Term structure with comprehensive curriculum coverage</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-2xl font-playfair font-bold text-blue-900 mb-4">Faculty Excellence</h3>
+                        <p class="text-gray-700 leading-relaxed mb-4">
+                            Our faculty consists of experienced Bible teachers and scholars who are committed to excellence in theological education. Regular guest lecturers from various ministries enrich our students' learning experience.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed">
+                            Each instructor brings years of ministry experience and a deep passion for equipping the next generation of servant-leaders.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Student Life Section -->
+    <section id="student-life" class="section-padding bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="section-title">Student Life</h2>
+                <div class="h-1 w-20 bg-gold mx-auto mb-6"></div>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto italic">
+                    "We consider each student as a unique individual, created in God's image."
+                </p>
+            </div>
+            
+            <div class="grid lg:grid-cols-2 gap-12 mb-16">
+                <div data-aos="fade-right">
+                    <div class="bg-gradient-to-br from-blue-900 to-blue-800 text-white p-8 rounded-lg shadow-xl">
+                        <div class="flex items-center mb-6">
+                            <div class="w-16 h-16 bg-gold rounded-full flex items-center justify-center mr-4">
+                                <i data-lucide="target" class="w-8 h-8 text-blue-900"></i>
+                            </div>
+                            <h3 class="text-3xl font-playfair font-bold">Our Motto</h3>
+                        </div>
+                        <p class="text-2xl font-semibold mb-4">"Be a Disciple and Make Disciples"</p>
+                        <p class="text-blue-100 leading-relaxed">
+                            This guiding principle shapes every aspect of student life at MBC, from classroom learning to practical ministry experience.
+                        </p>
+                    </div>
+                </div>
+                
+                <div data-aos="fade-left">
+                    <div class="bg-blue-50 p-8 rounded-lg border-l-4 border-gold">
+                        <h3 class="text-2xl font-playfair font-bold text-blue-900 mb-4">Gurukul System of Education</h3>
+                        <p class="text-gray-700 leading-relaxed mb-4">
+                            We embrace the traditional Gurukul model where students live and learn in close community with their teachers. This holistic approach fosters deep relationships and character development.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed">
+                            Students experience not just academic instruction but life-on-life mentorship that prepares them for effective ministry.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="student-life-card" data-aos="fade-up" data-aos-delay="100">
+                    <i data-lucide="home" class="w-12 h-12 text-gold mb-4"></i>
+                    <h3 class="text-xl font-bold mb-3">Residential Life</h3>
+                    <p class="text-gray-600">Comfortable hostel facilities providing a home away from home for students during their studies.</p>
+                </div>
+                
+                <div class="student-life-card" data-aos="fade-up" data-aos-delay="200">
+                    <i data-lucide="hand-helping" class="w-12 h-12 text-gold mb-4"></i>
+                    <h3 class="text-xl font-bold mb-3">Ministry Opportunities</h3>
+                    <p class="text-gray-600">Regular outreach programs, church ministry, and field experience to apply classroom learning.</p>
+                </div>
+                
+                <div class="student-life-card" data-aos="fade-up" data-aos-delay="300">
+                    <i data-lucide="heart-handshake" class="w-12 h-12 text-gold mb-4"></i>
+                    <h3 class="text-xl font-bold mb-3">Support & Care</h3>
+                    <p class="text-gray-600">Dedicated faculty and staff providing spiritual guidance, counseling, and personal support.</p>
+                </div>
+            </div>
+            
+            <div class="mt-16 bg-gradient-to-r from-blue-900 to-blue-800 text-white p-8 md:p-12 rounded-lg" data-aos="zoom-in">
+                <h3 class="text-3xl font-playfair font-bold mb-6 text-center">Applicant Requirements</h3>
+                <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                    <div class="flex items-start">
+                        <i data-lucide="check-circle" class="w-6 h-6 text-gold mr-3 mt-1 flex-shrink-0"></i>
+                        <p>Genuine commitment to Christian faith and ministry calling</p>
+                    </div>
+                    <div class="flex items-start">
+                        <i data-lucide="check-circle" class="w-6 h-6 text-gold mr-3 mt-1 flex-shrink-0"></i>
+                        <p>Willingness to embrace residential community living</p>
+                    </div>
+                    <div class="flex items-start">
+                        <i data-lucide="check-circle" class="w-6 h-6 text-gold mr-3 mt-1 flex-shrink-0"></i>
+                        <p>Desire for deep Biblical study and spiritual growth</p>
+                    </div>
+                    <div class="flex items-start">
+                        <i data-lucide="check-circle" class="w-6 h-6 text-gold mr-3 mt-1 flex-shrink-0"></i>
+                        <p>Heart for serving Christ and making disciples</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Giving Section -->
+    <section id="giving" class="section-padding bg-gradient-to-br from-gold/10 to-blue-50">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto text-center">
+                <div data-aos="fade-up">
+                    <div class="inline-block mb-6">
+                        <i data-lucide="heart" class="w-16 h-16 text-gold"></i>
+                    </div>
+                    <h2 class="section-title">Support This Ministry</h2>
+                    <div class="h-1 w-20 bg-gold mx-auto mb-8"></div>
+                </div>
+                
+                <div data-aos="fade-up" data-aos-delay="200">
+                    <p class="text-xl text-gray-700 leading-relaxed mb-8">
+                        For over fifty years, God has been faithful in providing for every need of Madurai Bible School through the contributions of believers. Your partnership enables us to continue training servant-leaders for God's kingdom.
+                    </p>
+                    
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8">
+                        <div class="bible-verse-box bg-blue-50">
+                            <p class="text-lg italic text-gray-700 leading-relaxed">
+                                "Give, and it shall be given unto you; good measure, pressed down, and shaken together, and running over, shall men give into your bosom."
+                            </p>
+                            <p class="text-gold font-semibold mt-3">— Luke 6:38 (KJV)</p>
+                        </div>
+                    </div>
+                    
+                    <a href="/cdn-cgi/l/email-protection#dcb1beafb1b8a99cbbb1bdb5b0f2bfb3b1" class="btn-primary-large inline-block">
+                        <i data-lucide="mail" class="w-5 h-5 inline mr-2"></i>
+                        Support This Ministry
+                    </a>
+                    
+                    <p class="text-gray-600 mt-6">
+                        For more information about giving opportunities, please contact us at 
+                        <a href="/cdn-cgi/l/email-protection#e18c83928c8594a1868c80888dcf828e8c" class="text-gold hover:text-blue-900 font-semibold"><span class="__cf_email__" data-cfemail="38555a4b555c4d785f55595154165b5755">[email&#160;protected]</span></a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section-padding bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="section-title">Contact Us</h2>
+                <div class="h-1 w-20 bg-gold mx-auto mb-6"></div>
+                <p class="text-xl text-gray-600">We'd love to hear from you</p>
+            </div>
+            
+            <div class="grid lg:grid-cols-2 gap-12">
+                <div data-aos="fade-right">
+                    <div class="space-y-6">
+                        <div class="contact-info-card">
+                            <div class="contact-icon">
+                                <i data-lucide="map-pin" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg mb-1">Address</h3>
+                                <p class="text-gray-600">Madurai Bible College<br>Madurai, Tamil Nadu<br>India</p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-info-card">
+                            <div class="contact-icon">
+                                <i data-lucide="mail" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg mb-1">Email</h3>
+                                <a href="/cdn-cgi/l/email-protection#711c13021c150431161c10181d5f121e1c" class="text-gold hover:text-blue-900"><span class="__cf_email__" data-cfemail="375a55445a534277505a565e5b1954585a">[email&#160;protected]</span></a>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-info-card">
+                            <div class="contact-icon">
+                                <i data-lucide="phone" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg mb-1">Phone</h3>
+                                <p class="text-gray-600">Contact us via email for phone details</p>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-blue-50 p-6 rounded-lg">
+                            <h3 class="font-bold text-lg mb-4 text-blue-900">Connect With Us</h3>
+                            <div class="flex space-x-4">
+                                <a href="https://www.facebook.com/maduraibiblecollege/" target="_blank" class="social-icon" aria-label="Facebook">
+                                    <i data-lucide="facebook" class="w-5 h-5"></i>
+                                </a>
+                                <a href="https://www.youtube.com/@MaduraiBibleCollege" target="_blank" class="social-icon" aria-label="YouTube">
+                                    <i data-lucide="youtube" class="w-5 h-5"></i>
+                                </a>
+                                <a href="https://www.instagram.com/maduraibiblecollege/" target="_blank" class="social-icon" aria-label="Instagram">
+                                    <i data-lucide="instagram" class="w-5 h-5"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div data-aos="fade-left">
+                    <div class="bg-gray-100 rounded-lg overflow-hidden shadow-lg h-full min-h-[400px]">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3930.0688!2d78.1198!3d9.9252!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zOcKwNTUnMzAuNyJOIDc4wrAwNycxMS4zIkU!5e0!3m2!1sen!2sin!4v1234567890"
+                            width="100%" 
+                            height="100%" 
+                            style="border:0;" 
+                            allowfullscreen="" 
+                            loading="lazy"
+                            class="w-full h-full min-h-[400px]">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gradient-to-br from-blue-900 to-blue-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-3 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="h-12 w-12 bg-white/10 backdrop-blur-sm rounded-lg p-2 flex items-center justify-center">
+                            <img src="/assets/mbc-logo-clean.png" alt="Madurai Bible College Logo" >
+                        </div>
+                        <div>
+                            <h3 class="font-playfair text-xl font-bold">Madurai Bible College</h3>
+                            <p class="text-sm text-blue-200">Since 1955</p>
+                        </div>
+                    </div>
+                    <p class="text-blue-100 text-sm leading-relaxed">
+                        Equipping servant-leaders through Biblical education and ministry training for over 69 years.
+                    </p>
+                </div>
+                
+                <div>
+                    <h3 class="font-bold text-lg mb-4">Quick Links</h3>
+                    <ul class="space-y-2 text-blue-100">
+                        <li><a href="#about" class="hover:text-gold transition">About Us</a></li>
+                        <li><a href="#purpose" class="hover:text-gold transition">Our Purpose</a></li>
+                        <li><a href="#academics" class="hover:text-gold transition">Academics</a></li>
+                        <li><a href="#contact" class="hover:text-gold transition">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="font-bold text-lg mb-4">Scripture</h3>
+                    <div class="bible-verse-box bg-blue-800/50">
+                        <p class="text-sm italic leading-relaxed">
+                            "Thy word is a lamp unto my feet, and a light unto my path."
+                        </p>
+                        <p class="text-gold font-semibold mt-2 text-sm">— Psalm 119:105 (KJV)</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-blue-700 pt-8 text-center">
+                <p class="text-blue-200 text-sm">
+                    © 2025 Madurai Bible College. All Rights Reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- AOS Animation Library -->
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script type="module" src="./script.js"></script>
+</body>
+
+</html>
