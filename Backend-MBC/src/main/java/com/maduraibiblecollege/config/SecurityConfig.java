@@ -48,20 +48,42 @@ public class SecurityConfig {
         .build();
   }
 
+//  @Bean
+//  public CorsConfigurationSource corsConfigurationSource() {
+//    CorsConfiguration config = new CorsConfiguration();
+//    // Allow any origin (echoed) using patterns so credentials can work in browsers
+//    config.setAllowedOriginPatterns(List.of("*"));
+//    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+//    config.setAllowedHeaders(List.of("*"));
+//    config.setAllowCredentials(true);
+//    config.setMaxAge(3600L);
+//
+//    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//    source.registerCorsConfiguration("/**", config);
+//    return source;
+//  }
+  
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
-    CorsConfiguration config = new CorsConfiguration();
-    // Allow any origin (echoed) using patterns so credentials can work in browsers
-    config.setAllowedOriginPatterns(List.of("*"));
-    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-    config.setAllowedHeaders(List.of("*"));
-    config.setAllowCredentials(true);
-    config.setMaxAge(3600L);
+      CorsConfiguration config = new CorsConfiguration();
 
-    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/**", config);
-    return source;
+      config.setAllowedOrigins(List.of(
+          "https://campusmbc.org",
+          "https://madurai-bible-college.pages.dev", // Cloudflare preview builds
+          "http://localhost:4200"                    // local dev
+      ));
+
+      config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+      config.setAllowedHeaders(List.of("*"));
+      config.setAllowCredentials(true);
+      config.setMaxAge(3600L);
+
+      UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+      source.registerCorsConfiguration("/**", config);
+
+      return source;
   }
+
 
   @Bean
   public AuthenticationProvider authenticationProvider() {
