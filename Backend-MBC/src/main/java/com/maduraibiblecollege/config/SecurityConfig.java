@@ -48,20 +48,6 @@ public class SecurityConfig {
         .build();
   }
 
-//  @Bean
-//  public CorsConfigurationSource corsConfigurationSource() {
-//    CorsConfiguration config = new CorsConfiguration();
-//    // Allow any origin (echoed) using patterns so credentials can work in browsers
-//    config.setAllowedOriginPatterns(List.of("*"));
-//    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-//    config.setAllowedHeaders(List.of("*"));
-//    config.setAllowCredentials(true);
-//    config.setMaxAge(3600L);
-//
-//    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//    source.registerCorsConfiguration("/**", config);
-//    return source;
-//  }
   
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {

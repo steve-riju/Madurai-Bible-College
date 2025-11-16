@@ -14,8 +14,8 @@ import com.maduraibiblecollege.entity.Role;
 public class EmailService {
     private final JavaMailSender mailSender;
 
-    private final String portalUrl ="http://localhost:4200/"; // Remember to change this to your production URL
-    String resetLink = "http://localhost:4200/auth/reset-password?token=";
+    private final String portalUrl ="https://campusmbc.org/";
+    String resetLink = "https://campusmbc.org/auth/reset-password?token=";
     
     public void sendPasswordEmail(String to, String username, String password, Role role) {
         SimpleMailMessage message = new SimpleMailMessage();
