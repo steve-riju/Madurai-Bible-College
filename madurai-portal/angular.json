@@ -35,6 +35,7 @@
             "assets": [
               "src/assets",
               "src/_redirects",
+              "src/sitemap.xml",
               {
                 "glob": "**/*",
                 "input": "public"
