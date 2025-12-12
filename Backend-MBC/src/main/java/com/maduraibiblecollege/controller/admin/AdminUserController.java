@@ -55,6 +55,7 @@ public class AdminUserController {
         // Generate password
         String rawPassword = PasswordGenerator.generatePassword();
         user.setPassword(passwordEncoder.encode(rawPassword));
+        user.setName(user.getUsername()); // new line
         User savedUser = userRepository.save(user);
 
         // Send mail
