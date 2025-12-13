@@ -26,6 +26,7 @@ export class LoginComponent {
   loginForm!: FormGroup;
   errorMessage: string = '';
   passwordVisible: boolean = false;
+  loading = false;
 
   constructor(
     private fb: FormBuilder,
@@ -37,6 +38,10 @@ export class LoginComponent {
       username: ['', Validators.required],
       password: ['', Validators.required]
     });
+    this.loginForm.valueChanges.subscribe(() => {
+  this.errorMessage = '';
+});
+
   }
 
   selectRole(role: string) {
@@ -66,29 +71,42 @@ export class LoginComponent {
     }, 400);
   }
 
+  private showError(message: string, timeout = 3000) {
+  this.errorMessage = message;
+
+  setTimeout(() => {
+    this.errorMessage = '';
+  }, timeout);
+}
+
+
   onSubmit() {
-    if (this.loginForm.invalid) {
-      this.errorMessage = 'Please fill in all fields.';
-      return;
-    }
+  if (this.loginForm.invalid) {
+    this.showError('Please fill in all fields.');
+    return;
+  }
+
+  this.loading = true;
 
     const { username, password } = this.loginForm.value;
 
-    this.authService.login(username, password).subscribe({
+    this.authService.login(username.trim(), password).subscribe({
       next: () => {
+        this.loading = false;
         // redirect handled in service
       },
-      error: () => {
-        this.errorMessage = 'Invalid credentials. Please try again.';
-      }
+     error: () => {
+      this.loading = false;
+      this.showError('Invalid credentials. Please try again.');
+    }
     });
   }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
-      if (params['sessionExpired']) {
-        this.errorMessage = "Your session has expired. Please log in again.";
-      }
+       if (params['sessionExpired']) {
+      this.showError('Your session has expired. Please log in again.', 9000);
+    }
     });
   }
 }
