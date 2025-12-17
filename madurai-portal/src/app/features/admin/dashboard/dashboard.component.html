@@ -1,26 +1,26 @@
 <div class="dashboard-container p-6 space-y-8" *ngIf="dashboardData">
 
   <div class="stats-grid">
-    <div class="stat-card">
+    <div class="stat-card" routerLink="/admin/users">
       <h3 class="stat-card__title">Students</h3>
       <p class="stat-card__value stat-card__value--blue">{{ dashboardData.userStats.students }}</p>
     </div>
-    <div class="stat-card">
+    <div class="stat-card" routerLink="/admin/users">
       <h3 class="stat-card__title">Teachers</h3>
       <p class="stat-card__value stat-card__value--green">{{ dashboardData.userStats.teachers }}</p>
     </div>
-    <div class="stat-card">
+    <div class="stat-card" routerLink="/admin/courses">
       <h3 class="stat-card__title">Courses</h3>
       <p class="stat-card__value stat-card__value--purple">{{ dashboardData.courseStats.totalCourses }}</p>
     </div>
-    <div class="stat-card">
+    <div class="stat-card" routerLink="/admin/enrollments">
       <h3 class="stat-card__title">Enrollments</h3>
       <p class="stat-card__value stat-card__value--orange">{{ dashboardData.enrollmentStats.current }}</p>
     </div>
   </div>
 
   <div class="content-grid">
-    <div class="card">
+    <div class="card" routerLink="/admin/events">
       <h3 class="card-title">Upcoming Events</h3>
       <ul class="events-list">
         <li *ngFor="let event of dashboardData.events" class="events-list__item">
@@ -30,7 +30,7 @@
       </ul>
     </div>
 
-    <div class="card">
+    <div class="card" routerLink="/admin/admissions">
       <h3 class="card-title">Recent Admissions</h3>
       <div class="table-wrapper">
         <table class="data-table">
@@ -59,7 +59,7 @@
     </div>
   </div>
 
-  <div class="card">
+  <div class="card" routerLink="/admin/offerings">
     <h3 class="card-title">Recent Offerings</h3>
     <div class="table-wrapper">
       <table class="data-table">

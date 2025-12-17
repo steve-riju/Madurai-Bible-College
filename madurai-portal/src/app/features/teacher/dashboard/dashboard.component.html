@@ -2,17 +2,17 @@
 
  <!-- 📊 Stats cards above  -->
   <div class="grid grid-cols-4 gap-4 mb-6">
-    <mat-card class="stat-card">
+    <mat-card class="stat-card" routerLink="/teacher/assignments">
       <h3>Assignments</h3>
       <p>{{ data.assignmentCount }}</p>
     </mat-card>
 
-    <mat-card class="stat-card">
+    <mat-card class="stat-card" routerLink="/teacher/materials">
       <h3>Materials</h3>
       <p>{{ data.materialCount }}</p>
     </mat-card>
 
-    <mat-card class="stat-card">
+    <mat-card class="stat-card" routerLink="/teacher/report">
       <h3>Reports</h3>
       <p>{{ data.reportCount }}</p>
     </mat-card>
@@ -61,7 +61,7 @@
 </div>
 
 
-  <mat-card>
+  <mat-card routerLink="/teacher/assignments">
     <h3>🕒 Recent Assignments</h3>
     <ul>
       <li *ngFor="let a of data.recentAssignments">{{ a }}</li>
