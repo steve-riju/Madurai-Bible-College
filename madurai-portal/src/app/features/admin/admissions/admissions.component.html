@@ -1,8 +1,231 @@
-<p>
-  Currently, admissions are handled through the online forms on our admissions page: 
-  <a href="https://www.maduraibiblecollege.org/admissions" target="_blank" rel="noopener noreferrer">
-    www.maduraibiblecollege.org/admissions
-  </a>
-</p>
+<div class="admissions-wrapper">
+  <div class="header-row">
+    <div>
+      <h2 class="title">Admissions</h2>
+      <p class="subtitle">Manage public admission forms and submitted applications.</p>
+    </div>
+    <a class="public-link" routerLink="/admissions" target="_blank">
+      <mat-icon>open_in_new</mat-icon>
+      Public Page
+    </a>
+  </div>
 
-<p>🚧 This section is under construction. Please check back later!</p>
+  <div class="view-switch">
+    <button [class.active]="activeView === 'forms'" (click)="activeView = 'forms'">
+      <mat-icon>dynamic_form</mat-icon>
+      Forms
+    </button>
+    <button [class.active]="activeView === 'submissions'" (click)="activeView = 'submissions'">
+      <mat-icon>assignment_turned_in</mat-icon>
+      Submissions
+    </button>
+  </div>
+
+  <section *ngIf="activeView === 'forms'" class="forms-section">
+    <form [formGroup]="formGroup" (ngSubmit)="saveForm()" class="form-card">
+      <h3>{{ editingFormId ? 'Edit Admission Form' : 'Create Admission Form' }}</h3>
+
+      <div class="form-grid">
+        <label>
+          <span>Title</span>
+          <input formControlName="title" placeholder="Sisters Course Application" />
+        </label>
+
+        <label>
+          <span>Slug</span>
+          <input formControlName="slug" placeholder="sisters-course" />
+        </label>
+
+        <label class="wide">
+          <span>Description</span>
+          <textarea formControlName="description" rows="3" placeholder="Short description shown on the public page"></textarea>
+        </label>
+
+        <label>
+          <span>Deadline</span>
+          <input type="datetime-local" formControlName="deadline" />
+        </label>
+
+        <label class="checkbox-label">
+          <input type="checkbox" formControlName="active" />
+          <span>Active and visible on public page</span>
+        </label>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn-secondary" *ngIf="editingFormId" (click)="resetForm()">Cancel Edit</button>
+        <button type="submit" class="btn-primary" [disabled]="formGroup.invalid || savingForm">
+          {{ savingForm ? 'Saving...' : (editingFormId ? 'Update Form' : 'Create Form') }}
+        </button>
+      </div>
+    </form>
+
+    <div class="table-card">
+      <div class="table-header">
+        <h3>Admission Forms</h3>
+        <button class="btn-secondary" (click)="loadForms()">Refresh</button>
+      </div>
+
+      <div *ngIf="loadingForms" class="empty-state">Loading forms...</div>
+      <div *ngIf="!loadingForms && forms.length === 0" class="empty-state">No admission forms created yet.</div>
+
+      <div class="table-wrapper" *ngIf="!loadingForms && forms.length">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Form</th>
+              <th>Deadline</th>
+              <th>Status</th>
+              <th>Extend Deadline</th>
+              <th class="action-col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let form of forms">
+              <td>
+                <b>{{ form.title }}</b>
+                <span class="muted">/{{ form.slug }}</span>
+              </td>
+              <td>{{ form.deadline | date:'medium' }}</td>
+              <td>
+                <span class="status" [ngClass]="{
+                  'status--open': form.active && form.open,
+                  'status--closed': form.active && !form.open,
+                  'status--inactive': !form.active
+                }">{{ statusLabel(form) }}</span>
+              </td>
+              <td>
+                <div class="deadline-edit">
+                  <input type="datetime-local" [(ngModel)]="deadlineEdits[form.id]" [ngModelOptions]="{standalone: true}" />
+                  <button class="icon-button" title="Update deadline" (click)="extendDeadline(form)">
+                    <mat-icon>update</mat-icon>
+                  </button>
+                </div>
+              </td>
+              <td>
+                <div class="row-actions" *ngIf="confirmArchiveId !== form.id; else archiveConfirm">
+                  <button class="icon-button" title="Edit" (click)="editForm(form)">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button class="icon-button" title="Toggle active" (click)="toggleActive(form)">
+                    <mat-icon>{{ form.active ? 'visibility_off' : 'visibility' }}</mat-icon>
+                  </button>
+                  <button class="icon-button icon-button--danger" title="Archive" (click)="confirmArchiveId = form.id">
+                    <mat-icon>archive</mat-icon>
+                  </button>
+                </div>
+                <ng-template #archiveConfirm>
+                  <div class="confirm-box">
+                    <span>Archive?</span>
+                    <button class="btn-danger" (click)="archiveForm(form)">Yes</button>
+                    <button class="btn-secondary" (click)="confirmArchiveId = undefined">No</button>
+                  </div>
+                </ng-template>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section *ngIf="activeView === 'submissions'" class="submissions-section">
+    <div class="filters">
+      <select [(ngModel)]="selectedFormFilter">
+        <option value="">All Forms</option>
+        <option *ngFor="let form of forms" [value]="form.id">{{ form.title }}</option>
+      </select>
+      <select [(ngModel)]="statusFilter">
+        <option value="">All Statuses</option>
+        <option value="PENDING">Pending</option>
+        <option value="REVIEWED">Reviewed</option>
+        <option value="ACCEPTED">Accepted</option>
+        <option value="REJECTED">Rejected</option>
+      </select>
+      <input [(ngModel)]="searchTerm" placeholder="Search applicant, city, phone..." />
+      <button class="btn-secondary" (click)="loadSubmissions()">Refresh</button>
+    </div>
+
+    <div class="submissions-layout">
+      <div class="table-card">
+        <h3>Submitted Applications</h3>
+
+        <div *ngIf="loadingSubmissions" class="empty-state">Loading submissions...</div>
+        <div *ngIf="!loadingSubmissions && filteredSubmissions.length === 0" class="empty-state">No matching submissions.</div>
+
+        <div class="table-wrapper" *ngIf="!loadingSubmissions && filteredSubmissions.length">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Applicant</th>
+                <th>Form</th>
+                <th>Phone</th>
+                <th>Status</th>
+                <th>Submitted</th>
+                <th class="action-col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let submission of filteredSubmissions" [class.selected]="selectedSubmission?.id === submission.id">
+                <td>
+                  <b>{{ submission.fullNameWithInitials }}</b>
+                  <span class="muted">{{ submission.cityTown }}</span>
+                </td>
+                <td>{{ submission.formTitle }}</td>
+                <td>{{ submission.whatsappNumber }}</td>
+                <td>
+                  <select
+                    class="status-select"
+                    [ngModel]="submission.status"
+                    (ngModelChange)="onSubmissionStatusChange(submission, $event)"
+                    [ngModelOptions]="{standalone: true}"
+                  >
+                    <option value="PENDING">Pending</option>
+                    <option value="REVIEWED">Reviewed</option>
+                    <option value="ACCEPTED">Accepted</option>
+                    <option value="REJECTED">Rejected</option>
+                  </select>
+                </td>
+                <td>{{ submission.submittedAt | date:'medium' }}</td>
+                <td>
+                  <button class="btn-secondary" (click)="viewSubmission(submission.id)">View</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <aside class="detail-card" *ngIf="selectedSubmission; else noSelection">
+        <div class="detail-header">
+          <h3>{{ selectedSubmission.fullNameWithInitials }}</h3>
+          <button class="icon-button" title="Close" (click)="selectedSubmission = undefined">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+        <p class="muted">{{ selectedSubmission.formTitle }} - {{ selectedSubmission.submittedAt | date:'medium' }}</p>
+
+        <dl class="detail-list">
+          <div><dt>Age</dt><dd>{{ selectedSubmission.age }}</dd></div>
+          <div><dt>Gender</dt><dd>{{ selectedSubmission.gender }}</dd></div>
+          <div><dt>Marital Status</dt><dd>{{ selectedSubmission.maritalStatus }}</dd></div>
+          <div><dt>Course Applied</dt><dd>{{ selectedSubmission.courseApplied }}</dd></div>
+          <div><dt>Qualification</dt><dd>{{ selectedSubmission.qualification }}</dd></div>
+          <div><dt>Occupation</dt><dd>{{ selectedSubmission.currentOccupation }}</dd></div>
+          <div><dt>Address</dt><dd>{{ selectedSubmission.fullAddress }}</dd></div>
+          <div><dt>City/Town</dt><dd>{{ selectedSubmission.cityTown }}</dd></div>
+          <div><dt>WhatsApp</dt><dd>{{ selectedSubmission.whatsappNumber }}</dd></div>
+          <div><dt>Church/Assembly</dt><dd>{{ selectedSubmission.churchAssemblyName }}</dd></div>
+          <div><dt>Evangelist/Pastor</dt><dd>{{ selectedSubmission.evangelistPastorName }}</dd></div>
+        </dl>
+      </aside>
+
+      <ng-template #noSelection>
+        <aside class="detail-card detail-card--empty">
+          <mat-icon>article</mat-icon>
+          <span>Select a submission to view details.</span>
+        </aside>
+      </ng-template>
+    </div>
+  </section>
+</div>

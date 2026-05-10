@@ -11,6 +11,7 @@ public class AdminDashboardDto {
     public AdmissionsStats admissionsStats;
     public OfferingsSummary offerings;
     public List<EventDto> events;
+    public List<SimpleAdmissionDto> admissions;
     public List<SimpleAdmissionDto> recentAdmissions;
     public List<OfferingDto> recentOfferings;
 

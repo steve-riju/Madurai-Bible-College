@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   { path: '', redirectTo: '/auth/login', pathMatch: 'full' },
+  { path: 'admissions', loadChildren: () => import('./features/public-admissions/public-admissions.module').then(m => m.PublicAdmissionsModule) },
   { path: 'auth', loadChildren: () => import('./features/auth/auth.module').then(m => m.AuthModule) },
   { path: 'student', loadChildren: () => import('./features/student/student.module').then(m => m.StudentModule) },
   { path: 'teacher', loadChildren: () => import('./features/teacher/teacher.module').then(m => m.TeacherModule) },

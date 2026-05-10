@@ -1,0 +1,55 @@
+<section class="public-admissions">
+  <header class="public-header">
+    <div>
+      <p class="eyebrow">Madurai Bible College</p>
+      <h1>Admissions</h1>
+    </div>
+    <a routerLink="/auth/login" class="admin-link">Portal Login</a>
+  </header>
+
+  <main class="content">
+    <div class="intro">
+      <h2>Application Forms</h2>
+      <p>Select an open application form and submit your details before the deadline.</p>
+    </div>
+
+    <div *ngIf="loading" class="state">
+      <mat-spinner diameter="38"></mat-spinner>
+      <span>Loading forms...</span>
+    </div>
+
+    <div *ngIf="!loading && error" class="state state--error">
+      <mat-icon>error_outline</mat-icon>
+      <span>{{ error }}</span>
+    </div>
+
+    <div *ngIf="!loading && !error && forms.length === 0" class="state">
+      <mat-icon>inventory_2</mat-icon>
+      <span>No admission forms are available right now.</span>
+    </div>
+
+    <div *ngIf="!loading && forms.length" class="forms-grid">
+      <article
+        class="form-card"
+        *ngFor="let form of forms"
+        [class.form-card--closed]="!form.open"
+        [routerLink]="form.open ? ['/admissions', form.slug || form.id] : null"
+      >
+        <div class="form-icon">
+          <mat-icon>{{ form.open ? 'assignment' : 'event_busy' }}</mat-icon>
+        </div>
+        <div class="form-content">
+          <span class="status" [class.status--closed]="!form.open">
+            {{ form.open ? 'Open' : 'Closed' }}
+          </span>
+          <h3>{{ form.title }}</h3>
+          <p>{{ form.description }}</p>
+          <div class="deadline">
+            <mat-icon>schedule</mat-icon>
+            <span>Deadline: {{ form.deadline | date:'medium' }}</span>
+          </div>
+        </div>
+      </article>
+    </div>
+  </main>
+</section>

@@ -1,0 +1,98 @@
+<section class="application-page">
+  <header class="public-header">
+    <button type="button" class="back-button" routerLink="/admissions">
+      <mat-icon>arrow_back</mat-icon>
+      <span>Forms</span>
+    </button>
+    <a routerLink="/auth/login" class="admin-link">Portal Login</a>
+  </header>
+
+  <main class="content">
+    <div *ngIf="loading" class="state">
+      <mat-spinner diameter="38"></mat-spinner>
+      <span>Loading form...</span>
+    </div>
+
+    <div *ngIf="!loading && error && !admissionForm" class="state state--error">
+      <mat-icon>error_outline</mat-icon>
+      <span>{{ error }}</span>
+    </div>
+
+    <ng-container *ngIf="!loading && admissionForm">
+      <section class="form-shell" *ngIf="!submitted">
+        <div class="form-heading">
+          <span class="status" [class.status--closed]="!admissionForm.open">
+            {{ admissionForm.open ? 'Open' : 'Closed' }}
+          </span>
+          <h1>{{ admissionForm.title }}</h1>
+          <p>{{ admissionForm.description }}</p>
+          <div class="deadline">
+            <mat-icon>schedule</mat-icon>
+            <span>Deadline: {{ admissionForm.deadline | date:'medium' }}</span>
+          </div>
+        </div>
+
+        <div *ngIf="!admissionForm.open" class="notice notice--closed">
+          This application form is closed. Please contact the college office for assistance.
+        </div>
+
+        <div *ngIf="error" class="notice notice--error">
+          {{ error }}
+        </div>
+
+        <form [formGroup]="applicationForm" (ngSubmit)="submit()" class="application-form">
+          <div class="field" *ngFor="let field of admissionForm.fields" [class.field--wide]="field.type === 'textarea'">
+            <label [for]="field.key">{{ field.label }} <span *ngIf="field.required">*</span></label>
+
+            <ng-container [ngSwitch]="field.type">
+              <textarea
+                *ngSwitchCase="'textarea'"
+                [id]="field.key"
+                [formControlName]="field.key"
+                rows="4"
+                [attr.maxlength]="field.maxLength || null"
+              ></textarea>
+
+              <select *ngSwitchCase="'select'" [id]="field.key" [formControlName]="field.key">
+                <option value="">Select {{ field.label }}</option>
+                <option *ngFor="let option of field.options || []" [value]="option">{{ option }}</option>
+              </select>
+
+              <input
+                *ngSwitchDefault
+                [id]="field.key"
+                [type]="field.type || 'text'"
+                [formControlName]="field.key"
+                [attr.maxlength]="field.maxLength || null"
+              />
+            </ng-container>
+
+            <p class="field-error" *ngIf="fieldError(field)">{{ fieldError(field) }}</p>
+          </div>
+
+          <div class="actions">
+            <button type="button" class="btn-secondary" routerLink="/admissions">Cancel</button>
+            <button
+              type="submit"
+              class="btn-primary"
+              [disabled]="submitting || applicationForm.invalid || !admissionForm.open"
+            >
+              <mat-icon>send</mat-icon>
+              <span>{{ submitting ? 'Submitting...' : 'Submit Application' }}</span>
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <section class="success" *ngIf="submitted">
+        <div class="success-icon">
+          <mat-icon>check_circle</mat-icon>
+        </div>
+        <h1>Application Submitted</h1>
+        <p>Your application for {{ admissionForm.title }} has been received.</p>
+        <p *ngIf="submissionId" class="reference">Reference ID: {{ submissionId }}</p>
+        <button type="button" class="btn-primary" routerLink="/admissions">View Other Forms</button>
+      </section>
+    </ng-container>
+  </main>
+</section>

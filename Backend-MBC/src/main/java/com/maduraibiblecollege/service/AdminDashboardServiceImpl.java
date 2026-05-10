@@ -3,7 +3,9 @@ package com.maduraibiblecollege.service;
 import org.springframework.stereotype.Service;
 
 import com.maduraibiblecollege.dto.AdminDashboardDto;
+import com.maduraibiblecollege.entity.AdmissionSubmissionStatus;
 import com.maduraibiblecollege.entity.Role;
+import com.maduraibiblecollege.repository.AdmissionSubmissionRepository;
 import com.maduraibiblecollege.repository.CourseRepository;
 import com.maduraibiblecollege.repository.EnrollmentRepository;
 import com.maduraibiblecollege.repository.UserRepository;
@@ -19,6 +21,7 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
     private final UserRepository userRepository;
     private final CourseRepository courseRepository;
     private final EnrollmentRepository enrollmentRepository;
+    private final AdmissionSubmissionRepository admissionSubmissionRepository;
 //    private final AdmissionRepository admissionRepository; // optional
 //    private final OfferingRepository offeringRepository; // optional
 //    private final EventRepository eventRepository; // optional
@@ -26,7 +29,8 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
     public AdminDashboardServiceImpl(
             UserRepository userRepository,
             CourseRepository courseRepository,
-            EnrollmentRepository enrollmentRepository //,
+            EnrollmentRepository enrollmentRepository,
+            AdmissionSubmissionRepository admissionSubmissionRepository //,
 //            AdmissionRepository admissionRepository,
 //            OfferingRepository offeringRepository,
 //            EventRepository eventRepository
@@ -34,6 +38,7 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
         this.userRepository = userRepository;
         this.courseRepository = courseRepository;
         this.enrollmentRepository = enrollmentRepository;
+        this.admissionSubmissionRepository = admissionSubmissionRepository;
 //        this.admissionRepository = admissionRepository;
 //        this.offeringRepository = offeringRepository;
 //        this.eventRepository = eventRepository;
@@ -85,23 +90,21 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
         enrollmentStats.previous = previousEnrollments;
         dto.enrollmentStats = enrollmentStats;
 
-//        // Admissions (optional)
-//        AdminDashboardDto.AdmissionsStats admissionsStats = new AdminDashboardDto.AdmissionsStats();
-//        if (admissionRepository != null) {
-//            admissionsStats.pending = safeCount(() -> admissionRepository.countByStatus("PENDING"));
-//            admissionsStats.approved = safeCount(() -> admissionRepository.countByStatus("APPROVED"));
-//            admissionsStats.rejected = safeCount(() -> admissionRepository.countByStatus("REJECTED"));
-//            dto.recentAdmissions = admissionRepository.findTop5ByOrderByCreatedAtDesc()
-//                    .stream()
-//                    .map(a -> {
-//                        AdminDashboardDto.SimpleAdmissionDto s = new AdminDashboardDto.SimpleAdmissionDto();
-//                        s.id = a.getId();
-//                        s.name = a.getFullName(); // adapt if field different
-//                        s.status = a.getStatus();
-//                        return s;
-//                    }).collect(Collectors.toList());
-//            dto.admissionsStats = admissionsStats;
-//        }
+        AdminDashboardDto.AdmissionsStats admissionsStats = new AdminDashboardDto.AdmissionsStats();
+        admissionsStats.pending = safeCount(() -> admissionSubmissionRepository.countByStatus(AdmissionSubmissionStatus.PENDING));
+        admissionsStats.approved = safeCount(() -> admissionSubmissionRepository.countByStatus(AdmissionSubmissionStatus.ACCEPTED));
+        admissionsStats.rejected = safeCount(() -> admissionSubmissionRepository.countByStatus(AdmissionSubmissionStatus.REJECTED));
+        dto.admissionsStats = admissionsStats;
+        dto.admissions = admissionSubmissionRepository.findTop5ByOrderBySubmittedAtDesc()
+                .stream()
+                .map(a -> {
+                    AdminDashboardDto.SimpleAdmissionDto s = new AdminDashboardDto.SimpleAdmissionDto();
+                    s.id = a.getId();
+                    s.name = a.getFullNameWithInitials();
+                    s.status = toDashboardAdmissionStatus(a.getStatus());
+                    return s;
+                }).toList();
+        dto.recentAdmissions = dto.admissions;
 //
 //        // Offerings (optional)
 //        if (offeringRepository != null) {
@@ -160,6 +163,16 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
     @FunctionalInterface
     private interface SupplierWithException<T> {
         T get() throws Exception;
+    }
+
+    private String toDashboardAdmissionStatus(AdmissionSubmissionStatus status) {
+        if (status == null) return "Pending";
+        return switch (status) {
+            case ACCEPTED -> "Approved";
+            case REJECTED -> "Rejected";
+            case REVIEWED -> "Reviewed";
+            case PENDING -> "Pending";
+        };
     }
 }
 
