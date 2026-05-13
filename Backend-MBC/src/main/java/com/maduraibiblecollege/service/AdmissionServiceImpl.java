@@ -36,7 +36,7 @@ import java.util.regex.Pattern;
 public class AdmissionServiceImpl implements AdmissionService {
 
     private static final Pattern SLUG_PATTERN = Pattern.compile("[^a-z0-9]+");
-    private static final Pattern WHATSAPP_PATTERN = Pattern.compile("^[0-9+\\-\\s]{7,20}$");
+    private static final Pattern WHATSAPP_PATTERN = Pattern.compile("^[0-9+\\-\\s]{10}$");
 
     private final AdmissionFormRepository formRepository;
     private final AdmissionSubmissionRepository submissionRepository;

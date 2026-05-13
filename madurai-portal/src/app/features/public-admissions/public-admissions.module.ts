@@ -11,7 +11,7 @@ import { RouterModule } from '@angular/router';
 import { PublicAdmissionsRoutingModule } from './public-admissions-routing.module';
 import { AdmissionLandingComponent } from './landing/admission-landing.component';
 import { AdmissionApplicationFormComponent } from './application-form/admission-application-form.component';
-
+import { SharedModule } from '../../shared/shared.module';
 @NgModule({
   declarations: [
     AdmissionLandingComponent,
@@ -27,7 +27,8 @@ import { AdmissionApplicationFormComponent } from './application-form/admission-
     MatCardModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    SharedModule
   ]
 })
 export class PublicAdmissionsModule {}
