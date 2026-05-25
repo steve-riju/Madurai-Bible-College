@@ -34,7 +34,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { LeavesComponent } from './leaves/leaves.component';
+import { LeaveConfirmDialogComponent, LeaveDetailsDialogComponent, LeavesComponent } from './leaves/leaves.component';
 
 
 
@@ -51,7 +51,9 @@ import { LeavesComponent } from './leaves/leaves.component';
     OfferingsComponent,
     InlineConfirmDialog,
     AdminReportsComponent,
-    LeavesComponent
+    LeavesComponent,
+    LeaveConfirmDialogComponent,
+    LeaveDetailsDialogComponent
    ],
   imports: [
     CommonModule,

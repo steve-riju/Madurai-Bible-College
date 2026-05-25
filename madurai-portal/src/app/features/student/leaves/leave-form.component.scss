@@ -2,37 +2,21 @@
 @import 'mixins';
 
 .leave-form-card {
-  border: 1px solid #e8eef6;
   border-radius: 8px;
-  padding: 16px;
-  background: #fff;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
 }
 
-h3 {
+mat-card-title {
   color: $primary-color;
-  margin: 0;
 }
 
-label {
+.leave-form {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  font-weight: 600;
+  gap: 12px;
 }
 
-input,
-select,
-textarea {
-  @include mobile-input;
-  font-family: inherit;
-}
-
-select.emergency {
-  border-color: #dc2626;
-  background: #fff7ed;
+mat-form-field {
+  width: 100%;
 }
 
 .date-grid {
@@ -65,20 +49,17 @@ select.emergency {
 .actions {
   display: flex;
   justify-content: flex-end;
+
+  button {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
 }
 
-.btn-primary {
-  min-height: 44px;
-  border: none;
-  border-radius: 6px;
-  font-weight: 700;
-  cursor: pointer;
-  background: $secondary-color;
-  color: #fff;
-  padding: 10px 16px;
-
-  &:disabled {
-    background: #b7c2d0;
-    cursor: not-allowed;
+@media (max-width: 640px) {
+  .actions button {
+    width: 100%;
   }
 }

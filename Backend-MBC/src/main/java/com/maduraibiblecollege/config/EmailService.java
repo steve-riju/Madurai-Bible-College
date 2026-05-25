@@ -1,12 +1,14 @@
 package com.maduraibiblecollege.config;
 
+import com.maduraibiblecollege.dto.LeaveRequestDto;
+import com.maduraibiblecollege.entity.Role;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import com.maduraibiblecollege.entity.Role;
+import java.util.List;
 
 
 @Service
@@ -65,5 +67,68 @@ public class EmailService {
 
         message.setText(emailBody);
         mailSender.send(message);
+    }
+
+    @Async
+    public void sendNewLeaveRequestNotification(List<String> adminEmails, LeaveRequestDto leaveRequest) {
+        if (adminEmails == null || adminEmails.isEmpty()) {
+            return;
+        }
+
+        String subject = "New Leave Request - " + leaveRequest.getStudentName();
+        String body = String.format(
+                "A new leave request has been submitted.\n\n" +
+                "Student: %s\n" +
+                "Dates: %s to %s\n" +
+                "Leave Type: %s\n" +
+                "Reason: %s\n\n" +
+                "Please review this request in the Madurai Bible College portal.",
+                leaveRequest.getStudentName(),
+                leaveRequest.getStartDate(),
+                leaveRequest.getEndDate(),
+                leaveRequest.getLeaveType(),
+                leaveRequest.getReason()
+        );
+
+        for (String adminEmail : adminEmails) {
+            sendSimpleEmail(adminEmail, subject, body);
+        }
+    }
+
+    @Async
+    public void sendLeaveStatusNotification(String studentEmail, LeaveRequestDto leaveRequest) {
+        if (studentEmail == null || studentEmail.isBlank()) {
+            return;
+        }
+
+        String subject = "Leave Request " + leaveRequest.getStatus();
+        String body = String.format(
+                "Your leave request has been %s.\n\n" +
+                "Dates: %s to %s\n" +
+                "Leave Type: %s\n" +
+                "Reason: %s\n" +
+                "Admin Remarks: %s\n\n" +
+                "Please log in to the Madurai Bible College portal for more details.",
+                leaveRequest.getStatus(),
+                leaveRequest.getStartDate(),
+                leaveRequest.getEndDate(),
+                leaveRequest.getLeaveType(),
+                leaveRequest.getReason(),
+                leaveRequest.getAdminRemarks() != null ? leaveRequest.getAdminRemarks() : "-"
+        );
+
+        sendSimpleEmail(studentEmail, subject, body);
+    }
+
+    private void sendSimpleEmail(String to, String subject, String body) {
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setTo(to);
+            message.setSubject(subject);
+            message.setText(body);
+            mailSender.send(message);
+        } catch (Exception ex) {
+            System.err.println("Failed to send email to " + to + ": " + ex.getMessage());
+        }
     }
 }

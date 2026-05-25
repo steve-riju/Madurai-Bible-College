@@ -1,39 +1,96 @@
 <section class="history-card">
   <div class="table-header">
     <h3>Leave History</h3>
-    <button type="button" class="btn-secondary" (click)="loadLeaves()">Refresh</button>
+    <button mat-raised-button type="button" color="primary" (click)="loadLeaves()">Refresh</button>
   </div>
 
-  <div *ngIf="loading" class="empty-state">Loading leave history...</div>
+  <div *ngIf="loading" class="empty-state">
+    <mat-progress-spinner diameter="36" mode="indeterminate"></mat-progress-spinner>
+  </div>
   <div *ngIf="!loading && leaves.length === 0" class="empty-state">No leave requests submitted yet.</div>
 
-  <div class="table-wrapper" *ngIf="!loading && leaves.length">
-    <table class="data-table">
-      <thead>
-        <tr>
-          <th>Dates</th>
-          <th>Type</th>
-          <th>Status</th>
-          <th>Applied</th>
-          <th>Remarks</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let leave of leaves" [class.emergency-row]="leave.leaveType === 'EMERGENCY'">
-          <td>
+  <div class="table-wrapper desktop-table" *ngIf="!loading && leaves.length">
+    <table mat-table [dataSource]="leaves">
+      <ng-container matColumnDef="dates">
+        <th mat-header-cell *matHeaderCellDef>Dates</th>
+        <td mat-cell *matCellDef="let leave">
+          <b>{{ leave.startDate | date:'mediumDate' }}</b>
+          <span class="muted">to {{ leave.endDate | date:'mediumDate' }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef>Type</th>
+        <td mat-cell *matCellDef="let leave">
+          <span class="type" [class.type--emergency]="leave.leaveType === 'EMERGENCY'">
+            {{ leave.leaveType }}
+          </span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let leave">
+          <span [class]="statusClass(leave.status)">{{ leave.status }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="appliedDate">
+        <th mat-header-cell *matHeaderCellDef>Applied</th>
+        <td mat-cell *matCellDef="let leave">{{ leave.appliedDate | date:'medium' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="adminRemarks">
+        <th mat-header-cell *matHeaderCellDef>Remarks</th>
+        <td mat-cell *matCellDef="let leave">{{ leave.adminRemarks || '-' }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let leave; columns: displayedColumns" [class.emergency-row]="leave.leaveType === 'EMERGENCY'"></tr>
+    </table>
+  </div>
+
+  <div class="mobile-cards" *ngIf="!loading && leaves.length">
+    <mat-card *ngFor="let leave of leaves" [class.emergency-card]="leave.leaveType === 'EMERGENCY'">
+      <mat-card-content>
+        <div class="card-row">
+          <span class="label">Dates</span>
+          <span>
             <b>{{ leave.startDate | date:'mediumDate' }}</b>
             <span class="muted">to {{ leave.endDate | date:'mediumDate' }}</span>
-          </td>
-          <td>
+          </span>
+        </div>
+        <div class="card-row">
+          <span class="label">Type</span>
+          <span>
             <span class="type" [class.type--emergency]="leave.leaveType === 'EMERGENCY'">
               {{ leave.leaveType }}
             </span>
-          </td>
-          <td><span [class]="statusClass(leave.status)">{{ leave.status }}</span></td>
-          <td>{{ leave.appliedDate | date:'medium' }}</td>
-          <td>{{ leave.adminRemarks || '-' }}</td>
-        </tr>
-      </tbody>
-    </table>
+          </span>
+        </div>
+        <div class="card-row">
+          <span class="label">Status</span>
+          <span [class]="statusClass(leave.status)">{{ leave.status }}</span>
+        </div>
+        <div class="card-row">
+          <span class="label">Applied</span>
+          <span>{{ leave.appliedDate | date:'medium' }}</span>
+        </div>
+        <div class="card-row">
+          <span class="label">Remarks</span>
+          <span>{{ leave.adminRemarks || '-' }}</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
   </div>
+
+  <mat-paginator
+    *ngIf="totalElements > 0"
+    [length]="totalElements"
+    [pageIndex]="pageIndex"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="pageSizeOptions"
+    showFirstLastButtons
+    (page)="onPageChange($event)">
+  </mat-paginator>
 </section>

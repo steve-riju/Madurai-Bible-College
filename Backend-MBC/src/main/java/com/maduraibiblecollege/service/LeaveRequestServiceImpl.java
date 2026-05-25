@@ -8,8 +8,13 @@ import com.maduraibiblecollege.entity.leave.LeaveStatus;
 import com.maduraibiblecollege.entity.leave.LeaveType;
 import com.maduraibiblecollege.exception.BusinessException;
 import com.maduraibiblecollege.exception.ResourceNotFoundException;
+import com.maduraibiblecollege.entity.Role;
+import com.maduraibiblecollege.repository.UserRepository;
 import com.maduraibiblecollege.repository.LeaveRequestRepository;
+import com.maduraibiblecollege.config.EmailService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +27,8 @@ import java.util.List;
 public class LeaveRequestServiceImpl implements LeaveRequestService {
 
     private final LeaveRequestRepository leaveRequestRepository;
+    private final UserRepository userRepository;
+    private final EmailService emailService;
 
     @Override
     public LeaveRequestDto applyLeave(LeaveRequestRequest request, User student) {
@@ -46,41 +53,52 @@ public class LeaveRequestServiceImpl implements LeaveRequestService {
         leaveRequest.setLeaveType(request.getLeaveType());
         leaveRequest.setStatus(LeaveStatus.PENDING);
 
-        return toDto(leaveRequestRepository.save(leaveRequest));
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<LeaveRequestDto> getLeavesByStudent(Long studentId) {
-        return leaveRequestRepository.findByStudentId(studentId).stream()
-                .map(this::toDto)
+        LeaveRequest saved = leaveRequestRepository.save(leaveRequest);
+        LeaveRequestDto dto = toDto(saved);
+        List<String> adminEmails = userRepository.findByRole(Role.ADMIN).stream()
+                .map(User::getEmail)
+                .filter(email -> email != null && !email.isBlank())
                 .toList();
+        emailService.sendNewLeaveRequestNotification(adminEmails, dto);
+        return dto;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<LeaveRequestDto> getAllLeaves(LeaveStatus status) {
-        List<LeaveRequest> leaves = status != null
-                ? leaveRequestRepository.findByStatus(status)
-                : leaveRequestRepository.findAll();
+    public Page<LeaveRequestDto> getLeavesByStudent(Long studentId, Pageable pageable) {
+        return leaveRequestRepository.findByStudentId(studentId, pageable).map(this::toDto);
+    }
 
-        return leaves.stream().map(this::toDto).toList();
+    @Override
+    @Transactional(readOnly = true)
+    public Page<LeaveRequestDto> getAllLeaves(LeaveStatus status, Pageable pageable) {
+        Page<LeaveRequest> leaves = status != null
+                ? leaveRequestRepository.findByStatus(status, pageable)
+                : leaveRequestRepository.findAll(pageable);
+
+        return leaves.map(this::toDto);
     }
 
     @Override
     public LeaveRequestDto approveLeave(Long id, String remarks) {
         LeaveRequest leaveRequest = getLeaveRequest(id);
+        validatePendingStatus(leaveRequest);
         leaveRequest.setStatus(LeaveStatus.APPROVED);
         leaveRequest.setAdminRemarks(trimToNull(remarks));
-        return toDto(leaveRequestRepository.save(leaveRequest));
+        LeaveRequestDto dto = toDto(leaveRequestRepository.save(leaveRequest));
+        emailService.sendLeaveStatusNotification(leaveRequest.getStudent().getEmail(), dto);
+        return dto;
     }
 
     @Override
     public LeaveRequestDto rejectLeave(Long id, String remarks) {
         LeaveRequest leaveRequest = getLeaveRequest(id);
+        validatePendingStatus(leaveRequest);
         leaveRequest.setStatus(LeaveStatus.REJECTED);
         leaveRequest.setAdminRemarks(trimToNull(remarks));
-        return toDto(leaveRequestRepository.save(leaveRequest));
+        LeaveRequestDto dto = toDto(leaveRequestRepository.save(leaveRequest));
+        emailService.sendLeaveStatusNotification(leaveRequest.getStudent().getEmail(), dto);
+        return dto;
     }
 
     private LeaveRequest getLeaveRequest(Long id) {
@@ -100,6 +118,12 @@ public class LeaveRequestServiceImpl implements LeaveRequestService {
 
         if (request.getLeaveType() == LeaveType.EMERGENCY && request.getReason().trim().isEmpty()) {
             throw new BusinessException("Reason is required for emergency leave.");
+        }
+    }
+
+    private void validatePendingStatus(LeaveRequest leaveRequest) {
+        if (leaveRequest.getStatus() != LeaveStatus.PENDING) {
+            throw new BusinessException("Only pending leave requests can be approved or rejected.");
         }
     }
 

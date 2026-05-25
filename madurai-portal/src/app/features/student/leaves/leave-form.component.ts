@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ErrorUtilsService } from '../../../shared/services/error-utils.service';
 import { LeaveRequestPayload } from '../../../shared/models/leave.model';
 import { StudentLeavesService } from '../services/student-leaves.service';
@@ -18,7 +19,8 @@ export class LeaveFormComponent {
   constructor(
     private fb: FormBuilder,
     private leavesService: StudentLeavesService,
-    private errorUtils: ErrorUtilsService
+    private errorUtils: ErrorUtilsService,
+    private snackBar: MatSnackBar
   ) {
     this.formGroup = this.fb.group({
       leaveType: ['NORMAL', Validators.required],
@@ -58,7 +60,7 @@ export class LeaveFormComponent {
 
     this.leavesService.applyLeave(payload).subscribe({
       next: () => {
-        this.errorUtils.showSuccess('Leave request submitted.');
+        this.snackBar.open('Leave request submitted.', 'Close', { duration: 3000 });
         this.formGroup.reset({ leaveType: 'NORMAL' });
         this.leaveApplied.emit();
       },

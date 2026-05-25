@@ -31,6 +31,8 @@ import { MatTableModule } from '@angular/material/table';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { LeavesComponent } from './leaves/leaves.component';
 import { LeaveFormComponent } from './leaves/leave-form.component';
 import { LeaveHistoryComponent } from './leaves/leave-history.component';
@@ -73,6 +75,8 @@ import { LeaveHistoryComponent } from './leaves/leave-history.component';
     MatListModule,
     MatExpansionModule,
     MatTableModule,
+    MatPaginatorModule,
+    MatSnackBarModule,
     MatToolbarModule,
     MatSidenavModule
   

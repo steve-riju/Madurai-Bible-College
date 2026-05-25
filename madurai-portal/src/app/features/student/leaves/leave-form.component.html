@@ -1,46 +1,54 @@
-<form [formGroup]="formGroup" (ngSubmit)="submit()" class="leave-form-card">
-  <h3>Apply Leave</h3>
+<mat-card class="leave-form-card">
+  <mat-card-header>
+    <mat-card-title>Apply Leave</mat-card-title>
+  </mat-card-header>
 
-  <label>
-    <span>Leave Type</span>
-    <select formControlName="leaveType" [class.emergency]="formGroup.get('leaveType')?.value === 'EMERGENCY'">
-      <option value="NORMAL">Normal</option>
-      <option value="EMERGENCY">Emergency</option>
-    </select>
-  </label>
+  <mat-card-content>
+    <form [formGroup]="formGroup" (ngSubmit)="submit()" class="leave-form">
+      <mat-form-field appearance="outline">
+        <mat-label>Leave Type</mat-label>
+        <mat-select formControlName="leaveType" [class.emergency]="formGroup.get('leaveType')?.value === 'EMERGENCY'">
+          <mat-option value="NORMAL">Normal</mat-option>
+          <mat-option value="EMERGENCY">Emergency</mat-option>
+        </mat-select>
+      </mat-form-field>
 
-  <div class="date-grid">
-    <label>
-      <span>Start Date</span>
-      <input type="date" formControlName="startDate" />
-    </label>
+      <div class="date-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Start Date</mat-label>
+          <input matInput type="date" formControlName="startDate" />
+        </mat-form-field>
 
-    <label>
-      <span>End Date</span>
-      <input type="date" formControlName="endDate" />
-    </label>
-  </div>
+        <mat-form-field appearance="outline">
+          <mat-label>End Date</mat-label>
+          <input matInput type="date" formControlName="endDate" />
+        </mat-form-field>
+      </div>
 
-  <div *ngIf="invalidDateRange" class="warning">
-    End date cannot be before start date.
-  </div>
+      <div *ngIf="invalidDateRange" class="warning">
+        End date cannot be before start date.
+      </div>
 
-  <div *ngIf="normalLeaveWarning" class="warning">
-    Normal leave must be applied at least 7 days before the start date.
-  </div>
+      <div *ngIf="normalLeaveWarning" class="warning">
+        Normal leave must be applied at least 7 days before the start date.
+      </div>
 
-  <label>
-    <span>Reason</span>
-    <textarea formControlName="reason" rows="5" placeholder="Enter leave reason"></textarea>
-  </label>
+      <mat-form-field appearance="outline">
+        <mat-label>Reason</mat-label>
+        <textarea matInput formControlName="reason" rows="5"></textarea>
+        <mat-error *ngIf="formGroup.get('reason')?.hasError('required')">Reason is required.</mat-error>
+      </mat-form-field>
 
-  <div *ngIf="formGroup.get('leaveType')?.value === 'EMERGENCY'" class="emergency-note">
-    Emergency leave can be submitted for same-day needs. Reason is required.
-  </div>
+      <div *ngIf="formGroup.get('leaveType')?.value === 'EMERGENCY'" class="emergency-note">
+        Emergency leave can be submitted for same-day needs. Reason is required.
+      </div>
 
-  <div class="actions">
-    <button type="submit" class="btn-primary" [disabled]="saving || formGroup.invalid || invalidDateRange || normalLeaveWarning">
-      {{ saving ? 'Submitting...' : 'Submit Leave' }}
-    </button>
-  </div>
-</form>
+      <div class="actions">
+        <button mat-raised-button color="primary" type="submit" [disabled]="saving || formGroup.invalid || invalidDateRange || normalLeaveWarning">
+          <mat-progress-spinner *ngIf="saving" diameter="18" mode="indeterminate"></mat-progress-spinner>
+          <span>{{ saving ? 'Submitting...' : 'Submit Leave' }}</span>
+        </button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

@@ -1,5 +1,4 @@
 @import 'variables';
-@import 'mixins';
 
 .admin-leaves-wrapper {
   background: $card-bg;
@@ -14,7 +13,9 @@
 
 .header-row,
 .filters,
-.row-actions {
+.row-actions,
+.mobile-actions,
+.calendar-actions {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -41,46 +42,97 @@
 }
 
 .filters {
-  margin: 22px 0;
+  margin: 22px 0 10px;
 
-  select,
-  input {
-    @include mobile-input;
-    flex: 1 1 220px;
+  mat-form-field {
+    flex: 1 1 240px;
   }
+}
+
+.calendar-card {
+  border-radius: 8px;
+  margin: 18px 0;
+}
+
+.calendar-card mat-card-header {
+  align-items: center;
+  justify-content: space-between;
+}
+
+.calendar-actions {
+  margin-left: auto;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 1px;
+  background: #e8eef6;
+  border: 1px solid #e8eef6;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.weekday,
+.calendar-day {
+  background: #fff;
+  min-width: 0;
+}
+
+.weekday {
+  color: $text-color;
+  font-weight: 800;
+  padding: 10px 8px;
+  text-align: center;
+}
+
+.calendar-day {
+  min-height: 104px;
+  padding: 8px;
+}
+
+.muted-day {
+  background: #f8fafc;
+}
+
+.day-number {
+  color: $light-text-color;
+  display: block;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.calendar-event {
+  width: 100%;
+  min-height: 34px;
+  margin-bottom: 6px;
+  font-size: 0.75rem;
+  line-height: 1.15;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.normal-event {
+  background: #2563eb !important;
+  color: #fff !important;
+}
+
+.emergency-event {
+  background: #dc2626 !important;
+  color: #fff !important;
 }
 
 .table-wrapper {
   overflow-x: auto;
 }
 
-.data-table {
+table {
   width: 100%;
-  border-collapse: collapse;
-
-  th,
-  td {
-    padding: 12px 10px;
-    text-align: left;
-    border-bottom: 1px solid #eef2f7;
-    vertical-align: top;
-  }
-
-  th {
-    background: lighten($primary-color, 45%);
-    color: $text-color;
-    font-weight: 700;
-  }
 }
 
-.action-col {
+.remarks-field {
   min-width: 180px;
-}
-
-textarea {
-  @include mobile-input;
-  min-width: 180px;
-  font-family: inherit;
+  width: 100%;
 }
 
 .type,
@@ -117,40 +169,9 @@ textarea {
   background: rgba(#dc2626, 0.1);
 }
 
-.emergency-row {
+.emergency-row,
+.emergency-card {
   background: #fffaf4;
-}
-
-.btn-primary,
-.btn-secondary,
-.btn-danger {
-  min-height: 44px;
-  min-width: 44px;
-  border: none;
-  border-radius: 6px;
-  font-weight: 700;
-  cursor: pointer;
-  padding: 10px 14px;
-
-  &:disabled {
-    background: #b7c2d0;
-    cursor: not-allowed;
-  }
-}
-
-.btn-primary {
-  background: $secondary-color;
-  color: #fff;
-}
-
-.btn-secondary {
-  background: #e8eef6;
-  color: $text-color;
-}
-
-.btn-danger {
-  background: #dc2626;
-  color: #fff;
 }
 
 .empty-state {
@@ -160,4 +181,68 @@ textarea {
   align-items: center;
   justify-content: center;
   text-align: center;
+}
+
+.mobile-cards {
+  display: none;
+}
+
+.card-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid #eef2f7;
+}
+
+.label {
+  color: $light-text-color;
+  font-weight: 800;
+}
+
+.reason {
+  color: $text-color;
+  margin: 12px 0;
+  word-break: break-word;
+}
+
+.mobile-remarks {
+  width: 100%;
+}
+
+@media (max-width: 760px) {
+  .header-row,
+  .filters,
+  .calendar-actions,
+  .mobile-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .header-row button,
+  .mobile-actions button,
+  .filters mat-form-field {
+    width: 100%;
+  }
+
+  .desktop-table {
+    display: none;
+  }
+
+  .mobile-cards {
+    display: grid;
+    gap: 12px;
+  }
+
+  .calendar-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .weekday {
+    display: none;
+  }
+
+  .calendar-day {
+    min-height: auto;
+  }
 }

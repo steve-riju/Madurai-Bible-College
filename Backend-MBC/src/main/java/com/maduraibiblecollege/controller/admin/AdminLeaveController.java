@@ -2,10 +2,14 @@ package com.maduraibiblecollege.controller.admin;
 
 import com.maduraibiblecollege.dto.LeaveActionRequest;
 import com.maduraibiblecollege.dto.LeaveRequestDto;
+import com.maduraibiblecollege.dto.PageResponse;
 import com.maduraibiblecollege.entity.leave.LeaveStatus;
 import com.maduraibiblecollege.service.LeaveRequestService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,8 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/admin/leaves")
 @RequiredArgsConstructor
@@ -27,8 +29,11 @@ public class AdminLeaveController {
     private final LeaveRequestService leaveRequestService;
 
     @GetMapping
-    public ResponseEntity<List<LeaveRequestDto>> getLeaves(@RequestParam(required = false) LeaveStatus status) {
-        return ResponseEntity.ok(leaveRequestService.getAllLeaves(status));
+    public ResponseEntity<PageResponse<LeaveRequestDto>> getLeaves(
+            @RequestParam(required = false) LeaveStatus status,
+            @PageableDefault(size = 10, sort = "appliedDate", direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        return ResponseEntity.ok(PageResponse.from(leaveRequestService.getAllLeaves(status, pageable)));
     }
 
     @PutMapping("/{id}/approve")

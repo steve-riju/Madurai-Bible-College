@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { LeaveActionPayload, LeaveRequest, LeaveStatus } from '../../../shared/models/leave.model';
+import { LeaveActionPayload, LeaveRequest, LeaveStatus, PageResponse } from '../../../shared/models/leave.model';
 
 @Injectable({ providedIn: 'root' })
 export class AdminLeavesService {
@@ -10,9 +10,22 @@ export class AdminLeavesService {
 
   constructor(private http: HttpClient) {}
 
-  getLeaves(status?: LeaveStatus | ''): Observable<LeaveRequest[]> {
-    const url = status ? `${this.apiUrl}?status=${status}` : this.apiUrl;
-    return this.http.get<LeaveRequest[]>(url);
+  getLeaves(
+    status: LeaveStatus | '' = '',
+    page = 0,
+    size = 10,
+    sort = 'appliedDate,desc'
+  ): Observable<PageResponse<LeaveRequest>> {
+    let params = new HttpParams()
+      .set('page', page)
+      .set('size', size)
+      .set('sort', sort);
+
+    if (status) {
+      params = params.set('status', status);
+    }
+
+    return this.http.get<PageResponse<LeaveRequest>>(this.apiUrl, { params });
   }
 
   approveLeave(id: number, payload: LeaveActionPayload): Observable<LeaveRequest> {

@@ -24,23 +24,8 @@ h3 {
   overflow-x: auto;
 }
 
-.data-table {
+table {
   width: 100%;
-  border-collapse: collapse;
-
-  th,
-  td {
-    padding: 12px 10px;
-    text-align: left;
-    border-bottom: 1px solid #eef2f7;
-    vertical-align: top;
-  }
-
-  th {
-    background: lighten($primary-color, 45%);
-    color: $text-color;
-    font-weight: 700;
-  }
 }
 
 .muted {
@@ -86,18 +71,6 @@ h3 {
   background: #fffaf4;
 }
 
-.btn-secondary {
-  min-height: 44px;
-  min-width: 44px;
-  border: none;
-  border-radius: 6px;
-  font-weight: 700;
-  cursor: pointer;
-  background: #e8eef6;
-  color: $text-color;
-  padding: 10px 14px;
-}
-
 .empty-state {
   color: $light-text-color;
   min-height: 100px;
@@ -105,4 +78,49 @@ h3 {
   align-items: center;
   justify-content: center;
   text-align: center;
+}
+
+.mobile-cards {
+  display: none;
+}
+
+.card-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid #eef2f7;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.label {
+  color: $light-text-color;
+  font-weight: 700;
+}
+
+.emergency-card {
+  background: #fffaf4;
+}
+
+@media (max-width: 720px) {
+  .desktop-table {
+    display: none;
+  }
+
+  .mobile-cards {
+    display: grid;
+    gap: 12px;
+  }
+
+  .table-header {
+    align-items: stretch;
+    flex-direction: column;
+
+    button {
+      width: 100%;
+    }
+  }
 }

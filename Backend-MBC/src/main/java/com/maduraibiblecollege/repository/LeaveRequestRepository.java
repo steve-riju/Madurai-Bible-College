@@ -2,6 +2,8 @@ package com.maduraibiblecollege.repository;
 
 import com.maduraibiblecollege.entity.leave.LeaveRequest;
 import com.maduraibiblecollege.entity.leave.LeaveStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -11,8 +13,8 @@ import java.util.Collection;
 import java.util.List;
 
 public interface LeaveRequestRepository extends JpaRepository<LeaveRequest, Long> {
-    List<LeaveRequest> findByStudentId(Long studentId);
-    List<LeaveRequest> findByStatus(LeaveStatus status);
+    Page<LeaveRequest> findByStudentId(Long studentId, Pageable pageable);
+    Page<LeaveRequest> findByStatus(LeaveStatus status, Pageable pageable);
 
     @Query("""
         SELECT l
