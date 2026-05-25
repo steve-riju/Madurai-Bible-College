@@ -1,0 +1,39 @@
+<section class="history-card">
+  <div class="table-header">
+    <h3>Leave History</h3>
+    <button type="button" class="btn-secondary" (click)="loadLeaves()">Refresh</button>
+  </div>
+
+  <div *ngIf="loading" class="empty-state">Loading leave history...</div>
+  <div *ngIf="!loading && leaves.length === 0" class="empty-state">No leave requests submitted yet.</div>
+
+  <div class="table-wrapper" *ngIf="!loading && leaves.length">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Dates</th>
+          <th>Type</th>
+          <th>Status</th>
+          <th>Applied</th>
+          <th>Remarks</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let leave of leaves" [class.emergency-row]="leave.leaveType === 'EMERGENCY'">
+          <td>
+            <b>{{ leave.startDate | date:'mediumDate' }}</b>
+            <span class="muted">to {{ leave.endDate | date:'mediumDate' }}</span>
+          </td>
+          <td>
+            <span class="type" [class.type--emergency]="leave.leaveType === 'EMERGENCY'">
+              {{ leave.leaveType }}
+            </span>
+          </td>
+          <td><span [class]="statusClass(leave.status)">{{ leave.status }}</span></td>
+          <td>{{ leave.appliedDate | date:'medium' }}</td>
+          <td>{{ leave.adminRemarks || '-' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>

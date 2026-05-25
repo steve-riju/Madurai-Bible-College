@@ -31,6 +31,9 @@ import { MatTableModule } from '@angular/material/table';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { LeavesComponent } from './leaves/leaves.component';
+import { LeaveFormComponent } from './leaves/leave-form.component';
+import { LeaveHistoryComponent } from './leaves/leave-history.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +46,10 @@ import { MatSidenavModule } from '@angular/material/sidenav';
     MaterialsComponent,
     AssignmentSubmitDialogComponent,
     MySubmissionsComponent,
-    ViewSubmissionDialogComponent
+    ViewSubmissionDialogComponent,
+    LeavesComponent,
+    LeaveFormComponent,
+    LeaveHistoryComponent
   ],
   imports: [
     CommonModule,

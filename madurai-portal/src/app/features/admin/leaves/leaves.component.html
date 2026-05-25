@@ -1,0 +1,79 @@
+<div class="admin-leaves-wrapper">
+  <div class="header-row">
+    <div>
+      <h2 class="title">Leave Management</h2>
+      <p class="subtitle">Review, filter, approve, and reject student leave requests.</p>
+    </div>
+    <button class="btn-secondary" (click)="loadLeaves()">Refresh</button>
+  </div>
+
+  <div class="filters">
+    <select [(ngModel)]="statusFilter" (ngModelChange)="loadLeaves()">
+      <option value="">All Statuses</option>
+      <option value="PENDING">Pending</option>
+      <option value="APPROVED">Approved</option>
+      <option value="REJECTED">Rejected</option>
+    </select>
+    <input [(ngModel)]="searchTerm" placeholder="Search student, type, status, reason..." />
+  </div>
+
+  <div *ngIf="loading" class="empty-state">Loading leave requests...</div>
+  <div *ngIf="!loading && filteredLeaves.length === 0" class="empty-state">No matching leave requests.</div>
+
+  <div class="table-wrapper" *ngIf="!loading && filteredLeaves.length">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Student</th>
+          <th>Dates</th>
+          <th>Type</th>
+          <th>Reason</th>
+          <th>Status</th>
+          <th>Admin Remarks</th>
+          <th class="action-col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let leave of filteredLeaves" [class.emergency-row]="leave.leaveType === 'EMERGENCY'">
+          <td>
+            <b>{{ leave.studentName }}</b>
+            <span class="muted"> Applied {{ leave.appliedDate | date:'mediumDate' }}</span>
+          </td>
+          <td>
+            <b>{{ leave.startDate | date:'mediumDate' }}</b>
+            <span class="muted"> to <b>{{ leave.endDate | date:'mediumDate' }}</b></span>
+          </td>
+          <td>
+            <span class="type" [class.type--emergency]="leave.leaveType === 'EMERGENCY'">
+              {{ leave.leaveType }}
+            </span>
+          </td>
+          <td>{{ leave.reason }}</td>
+          <td><span [class]="statusClass(leave.status)">{{ leave.status }}</span></td>
+          <td>
+            <textarea
+              [(ngModel)]="remarks[leave.id]"
+              [placeholder]="leave.adminRemarks || 'Add remarks'"
+              rows="2"
+              [disabled]="leave.status !== 'PENDING'"
+            ></textarea>
+            <span class="muted" *ngIf="leave.adminRemarks">{{ leave.adminRemarks }}</span>
+          </td>
+          <td>
+            <div class="row-actions" *ngIf="leave.status === 'PENDING'; else completedStatus">
+              <button class="btn-primary" (click)="approveLeave(leave)" [disabled]="processingId === leave.id">
+                Approve
+              </button>
+              <button class="btn-danger" (click)="rejectLeave(leave)" [disabled]="processingId === leave.id">
+                Reject
+              </button>
+            </div>
+            <ng-template #completedStatus>
+              <span class="muted">Completed</span>
+            </ng-template>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

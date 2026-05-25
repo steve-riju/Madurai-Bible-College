@@ -1,0 +1,46 @@
+<form [formGroup]="formGroup" (ngSubmit)="submit()" class="leave-form-card">
+  <h3>Apply Leave</h3>
+
+  <label>
+    <span>Leave Type</span>
+    <select formControlName="leaveType" [class.emergency]="formGroup.get('leaveType')?.value === 'EMERGENCY'">
+      <option value="NORMAL">Normal</option>
+      <option value="EMERGENCY">Emergency</option>
+    </select>
+  </label>
+
+  <div class="date-grid">
+    <label>
+      <span>Start Date</span>
+      <input type="date" formControlName="startDate" />
+    </label>
+
+    <label>
+      <span>End Date</span>
+      <input type="date" formControlName="endDate" />
+    </label>
+  </div>
+
+  <div *ngIf="invalidDateRange" class="warning">
+    End date cannot be before start date.
+  </div>
+
+  <div *ngIf="normalLeaveWarning" class="warning">
+    Normal leave must be applied at least 7 days before the start date.
+  </div>
+
+  <label>
+    <span>Reason</span>
+    <textarea formControlName="reason" rows="5" placeholder="Enter leave reason"></textarea>
+  </label>
+
+  <div *ngIf="formGroup.get('leaveType')?.value === 'EMERGENCY'" class="emergency-note">
+    Emergency leave can be submitted for same-day needs. Reason is required.
+  </div>
+
+  <div class="actions">
+    <button type="submit" class="btn-primary" [disabled]="saving || formGroup.invalid || invalidDateRange || normalLeaveWarning">
+      {{ saving ? 'Submitting...' : 'Submit Leave' }}
+    </button>
+  </div>
+</form>

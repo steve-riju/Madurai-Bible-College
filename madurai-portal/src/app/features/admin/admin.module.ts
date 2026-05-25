@@ -34,6 +34,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { LeavesComponent } from './leaves/leaves.component';
 
 
 
@@ -49,7 +50,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     AdmissionsComponent,
     OfferingsComponent,
     InlineConfirmDialog,
-    AdminReportsComponent
+    AdminReportsComponent,
+    LeavesComponent
    ],
   imports: [
     CommonModule,

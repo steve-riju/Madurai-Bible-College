@@ -1,0 +1,84 @@
+@import 'variables';
+@import 'mixins';
+
+.leave-form-card {
+  border: 1px solid #e8eef6;
+  border-radius: 8px;
+  padding: 16px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+h3 {
+  color: $primary-color;
+  margin: 0;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-weight: 600;
+}
+
+input,
+select,
+textarea {
+  @include mobile-input;
+  font-family: inherit;
+}
+
+select.emergency {
+  border-color: #dc2626;
+  background: #fff7ed;
+}
+
+.date-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr;
+
+  @media (min-width: 620px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.warning,
+.emergency-note {
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-weight: 600;
+}
+
+.warning {
+  color: #b91c1c;
+  background: rgba(#dc2626, 0.1);
+}
+
+.emergency-note {
+  color: #9a3412;
+  background: #fff7ed;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-primary {
+  min-height: 44px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 700;
+  cursor: pointer;
+  background: $secondary-color;
+  color: #fff;
+  padding: 10px 16px;
+
+  &:disabled {
+    background: #b7c2d0;
+    cursor: not-allowed;
+  }
+}

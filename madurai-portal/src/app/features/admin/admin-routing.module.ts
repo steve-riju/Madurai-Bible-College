@@ -13,6 +13,7 @@ import { EnrollmentsComponent } from './enrollments/enrollments.component';
 import { AdmissionsComponent } from './admissions/admissions.component';
 import { OfferingsComponent } from './offerings/offerings.component';
 import { AdminReportsComponent } from './reports/admin-reports/admin-reports.component';
+import { LeavesComponent } from './leaves/leaves.component';
 
 
 const routes: Routes = [
@@ -29,6 +30,7 @@ const routes: Routes = [
       { path: 'faqs', component: FaqsComponent },
       { path: 'enrollments', component: EnrollmentsComponent },
       { path: 'admissions', component: AdmissionsComponent },
+      { path: 'leaves', component: LeavesComponent },
       { path: 'offerings', component: OfferingsComponent },
       { path: 'reports', component: AdminReportsComponent },
 

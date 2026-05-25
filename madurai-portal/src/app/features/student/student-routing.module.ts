@@ -10,6 +10,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { StudentLayoutComponent } from './student-layout/student-layout.component';
 import { AuthGuard } from '../../shared/auth.guard';
 import { MySubmissionsComponent } from './my-submissions/my-submissions.component';
+import { LeavesComponent } from './leaves/leaves.component';
 
 const routes: Routes = [
   {
@@ -25,6 +26,7 @@ const routes: Routes = [
       { path: 'events', component: EventsComponent },
       { path: 'assignments', component: AssignmentsComponent },         // list
       { path: 'my-submissions', component: MySubmissionsComponent },     // tracking
+      { path: 'leaves', component: LeavesComponent },
 
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]

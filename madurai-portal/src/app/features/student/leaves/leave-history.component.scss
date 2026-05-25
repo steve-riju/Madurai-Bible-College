@@ -1,0 +1,108 @@
+@import 'variables';
+
+.history-card {
+  border: 1px solid #e8eef6;
+  border-radius: 8px;
+  padding: 16px;
+  background: #fff;
+}
+
+.table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+h3 {
+  color: $primary-color;
+  margin: 0;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: 12px 10px;
+    text-align: left;
+    border-bottom: 1px solid #eef2f7;
+    vertical-align: top;
+  }
+
+  th {
+    background: lighten($primary-color, 45%);
+    color: $text-color;
+    font-weight: 700;
+  }
+}
+
+.muted {
+  color: $light-text-color;
+  display: block;
+}
+
+.type,
+.status {
+  display: inline-flex;
+  border-radius: 99px;
+  padding: 4px 10px;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.type {
+  color: #475569;
+  background: #e8eef6;
+
+  &--emergency {
+    color: #9a3412;
+    background: #fff7ed;
+  }
+}
+
+.status--pending {
+  color: #a16207;
+  background: rgba(#eab308, 0.16);
+}
+
+.status--approved {
+  color: #15803d;
+  background: rgba(#16a34a, 0.12);
+}
+
+.status--rejected {
+  color: #b91c1c;
+  background: rgba(#dc2626, 0.1);
+}
+
+.emergency-row {
+  background: #fffaf4;
+}
+
+.btn-secondary {
+  min-height: 44px;
+  min-width: 44px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 700;
+  cursor: pointer;
+  background: #e8eef6;
+  color: $text-color;
+  padding: 10px 14px;
+}
+
+.empty-state {
+  color: $light-text-color;
+  min-height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}

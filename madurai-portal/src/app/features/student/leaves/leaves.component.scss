@@ -1,0 +1,41 @@
+@import 'variables';
+
+.leaves-page {
+  background: $card-bg;
+  border-radius: 8px;
+  box-shadow: $shadow;
+  padding: 16px;
+
+  @media (min-width: 768px) {
+    padding: 24px;
+  }
+}
+
+.header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.title {
+  color: $primary-color;
+  margin: 0;
+  font-size: 1.6rem;
+}
+
+.subtitle {
+  color: $light-text-color;
+  margin: 4px 0 0;
+}
+
+.student-leave-grid {
+  display: grid;
+  gap: 18px;
+  margin-top: 22px;
+  grid-template-columns: 1fr;
+
+  @media (min-width: 1120px) {
+    grid-template-columns: 360px minmax(0, 1fr);
+  }
+}
