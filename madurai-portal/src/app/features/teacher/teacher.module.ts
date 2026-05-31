@@ -43,6 +43,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { TeacherReportComponent } from './reports/teacher-report/teacher-report.component';
 import { HttpClientModule } from '@angular/common/http';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 
 
@@ -90,7 +91,8 @@ import { MatDividerModule } from '@angular/material/divider';
     MatChipsModule,
     MatMenuModule,
     HttpClientModule,
-    MatDividerModule
+    MatDividerModule,
+    MatExpansionModule
    
 
   ]

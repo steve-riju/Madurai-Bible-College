@@ -36,11 +36,14 @@ app:
     secret: ${JWT_SECRET}
     expiration-ms: 3600000          # 1 hour access token
     refresh-expiration-ms: 1209600000 # 14 days refresh
+  dp:
+    folder: ${DP_FOLDER}
 
 # CORS config moved to SecurityConfig.corsConfigurationSource()
 #cors:
 #  allowed-origins:
 #    - ${CORS_ALLOWED_ORGINS}
+ 
 
 cloudflare:
   r2:

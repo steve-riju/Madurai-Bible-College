@@ -35,11 +35,21 @@
   justify-content: space-between;
   transition: transform 0.3s ease-in-out;
   height: 100%; /* The sidebar will fill the height of its parent (.admin-container) */
+  overflow: hidden;
 
   ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+  
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
 
     li {
       display: block;
@@ -58,16 +68,44 @@
     }
   }
 
+  
   .faq {
-    margin-top: auto;
-    font-weight: 600;
-    color: $primary-color;
-    cursor: pointer;
-    @include hover-effect($primary-color);
-    padding: 100px;
-    border-radius: 8px;
-    text-align: center;
-  }
+  margin-top: 16px;
+  padding: 12px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 600;
+  color: $primary-color;
+  cursor: pointer;
+  flex-shrink: 0;
+
+  @include hover-effect($primary-color);
+}
+}
+
+.sidebar ul::-webkit-scrollbar {
+  width: 3px;
+}
+
+.sidebar ul::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar ul::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 10px;
+}
+
+/* Show scrollbar only when user hovers */
+.sidebar ul:hover::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+
+.sidebar-menu {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
 }
 
 /* Main Content */

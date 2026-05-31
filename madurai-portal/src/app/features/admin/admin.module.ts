@@ -35,6 +35,13 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { LeaveConfirmDialogComponent, LeaveDetailsDialogComponent, LeavesComponent } from './leaves/leaves.component';
+import {
+  AdminProfilesComponent,
+  StudentViewDialogComponent,
+  StudentEditDialogComponent,
+  TeacherViewDialogComponent,
+  TeacherEditDialogComponent
+} from './profiles/admin-profiles.component';
 
 
 
@@ -53,7 +60,12 @@ import { LeaveConfirmDialogComponent, LeaveDetailsDialogComponent, LeavesCompone
     AdminReportsComponent,
     LeavesComponent,
     LeaveConfirmDialogComponent,
-    LeaveDetailsDialogComponent
+    LeaveDetailsDialogComponent,
+    AdminProfilesComponent,
+    StudentViewDialogComponent,
+    StudentEditDialogComponent,
+    TeacherViewDialogComponent,
+    TeacherEditDialogComponent
    ],
   imports: [
     CommonModule,

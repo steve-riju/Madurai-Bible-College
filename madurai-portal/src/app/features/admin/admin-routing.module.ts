@@ -14,6 +14,7 @@ import { AdmissionsComponent } from './admissions/admissions.component';
 import { OfferingsComponent } from './offerings/offerings.component';
 import { AdminReportsComponent } from './reports/admin-reports/admin-reports.component';
 import { LeavesComponent } from './leaves/leaves.component';
+import { AdminProfilesComponent } from './profiles/admin-profiles.component';
 
 
 const routes: Routes = [
@@ -33,6 +34,7 @@ const routes: Routes = [
       { path: 'leaves', component: LeavesComponent },
       { path: 'offerings', component: OfferingsComponent },
       { path: 'reports', component: AdminReportsComponent },
+      { path: 'profiles', component: AdminProfilesComponent },
 
       { path: '**', redirectTo: 'dashboard' }
     ]

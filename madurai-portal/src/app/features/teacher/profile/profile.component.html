@@ -1,1 +1,149 @@
-<p>🚧 This section is under construction. Please check back later!</p>
+<div class="profile-page">
+  <div class="profile-header">
+    <div class="avatar-section">
+      <div class="avatar-wrapper">
+        <img [src]="photoPreviewUrl || photoUrl" (error)="onPhotoError($event)" alt="Profile Photo" class="avatar-img" />
+        <div class="avatar-overlay" *ngIf="photoLoading"><mat-spinner diameter="40"></mat-spinner></div>
+      </div>
+      <p class="avatar-hint" *ngIf="selectedFile">  {{ selectedFile.name }}  ({{ (selectedFile.size / 1024 / 1024).toFixed(2) }} MB)
+      </p>
+      <div class="avatar-actions">
+        <input type="file" #fileInput accept="image/jpeg,image/png,image/gif,image/webp"
+               (change)="onFileSelected($event)" style="display:none" />
+        <button mat-stroked-button color="primary" (click)="fileInput.click()">
+          <mat-icon>photo_camera</mat-icon> Choose Photo
+        </button>
+        <button mat-raised-button color="primary" *ngIf="selectedFile" (click)="uploadPhoto()" [disabled]="photoLoading">
+          <mat-icon>upload</mat-icon> Upload
+        </button>
+      </div>
+    </div>
+    <div class="header-info">
+      <h2>{{ profile?.firstName || '' }} {{ profile?.lastName || '' }}</h2>
+      <p class="role-badge">{{ profile?.role }}</p>
+      <p class="designation">{{ profile?.designation || '' }}</p>
+      <p class="username">&#64;{{ profile?.username }}</p>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading-center"><mat-spinner diameter="48"></mat-spinner></div>
+
+  <mat-accordion *ngIf="!loading" multi>
+
+    <!-- Personal Information -->
+    <mat-expansion-panel>
+      <mat-expansion-panel-header><mat-panel-title>👤 Personal Information</mat-panel-title></mat-expansion-panel-header>
+      <form [formGroup]="personalForm" (ngSubmit)="savePersonal()">
+        <div class="form-grid">
+          <mat-form-field appearance="outline"><mat-label>First Name</mat-label><input matInput formControlName="firstName" /></mat-form-field>
+          <mat-form-field appearance="outline"><mat-label>Last Name</mat-label><input matInput formControlName="lastName" /></mat-form-field>
+          <mat-form-field appearance="outline"><mat-label>Preferred Name</mat-label><input matInput formControlName="preferredName" /></mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Gender</mat-label>
+            <mat-select formControlName="gender">
+              <mat-option *ngFor="let g of genderOptions" [value]="g">{{ g }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline"><mat-label>Date of Birth</mat-label><input matInput type="date" formControlName="dateOfBirth" /></mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Marital Status</mat-label>
+            <mat-select formControlName="maritalStatus">
+              <mat-option *ngFor="let m of maritalStatusOptions" [value]="m">{{ m }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="form-actions"><button mat-raised-button color="primary" type="submit" [disabled]="saving || personalForm.invalid">Save Personal Info</button></div>
+      </form>
+    </mat-expansion-panel>
+
+    <!-- Contact Information -->
+    <mat-expansion-panel>
+      <mat-expansion-panel-header><mat-panel-title>📞 Contact Information</mat-panel-title></mat-expansion-panel-header>
+      <form [formGroup]="contactForm" (ngSubmit)="saveContact()">
+        <div class="form-grid">
+          <mat-form-field appearance="outline"><mat-label>Primary Mobile</mat-label><input matInput formControlName="primaryMobile" maxlength="10" /><mat-error *ngIf="contactForm.get('primaryMobile')?.hasError('pattern')">Must be 10 digits</mat-error></mat-form-field>
+          <mat-form-field appearance="outline"><mat-label>Alternate Mobile</mat-label><input matInput formControlName="alternateMobile" maxlength="10" /></mat-form-field>
+          <mat-form-field appearance="outline"><mat-label>Personal Email</mat-label><input matInput formControlName="personalEmail" type="email" /><mat-error *ngIf="contactForm.get('personalEmail')?.hasError('email')">Invalid email</mat-error></mat-form-field>
+          <mat-form-field appearance="outline" class="full-width"><mat-label>Permanent Address</mat-label><textarea matInput formControlName="permanentAddress" rows="3"></textarea></mat-form-field>
+          <mat-form-field appearance="outline"><mat-label>Emergency Contact Name</mat-label><input matInput formControlName="emergencyContactName" /></mat-form-field>
+          <mat-form-field appearance="outline"><mat-label>Emergency Contact Relationship</mat-label><input matInput formControlName="emergencyContactRelationship" /></mat-form-field>
+          <mat-form-field appearance="outline"><mat-label>Emergency Contact Phone</mat-label><input matInput formControlName="emergencyContactPhone" maxlength="10" /></mat-form-field>
+        </div>
+        <div class="form-actions"><button mat-raised-button color="primary" type="submit" [disabled]="saving || contactForm.invalid">Save Contact Info</button></div>
+      </form>
+    </mat-expansion-panel>
+
+    <!-- Employment Information (read-only) -->
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>💼 Employment Information</mat-panel-title>
+        <mat-panel-description>View only</mat-panel-description>
+      </mat-expansion-panel-header>
+      <div class="info-grid">
+        <div class="info-item"><span class="label">Employee ID</span><span class="value">{{ profile?.employeeId || '—' }}</span></div>
+        <div class="info-item"><span class="label">Designation</span><span class="value">{{ profile?.designation || '—' }}</span></div>
+        <div class="info-item"><span class="label">Employment Type</span><span class="value">{{ profile?.employmentType || '—' }}</span></div>
+      </div>
+    </mat-expansion-panel>
+
+    <!-- Church & Ministry -->
+    <mat-expansion-panel>
+      <mat-expansion-panel-header><mat-panel-title>⛪ Church & Ministry Information</mat-panel-title></mat-expansion-panel-header>
+      <form [formGroup]="churchForm" (ngSubmit)="saveChurch()">
+        <div class="form-grid">
+          <mat-form-field appearance="outline"><mat-label>Home Church</mat-label><input matInput formControlName="homeChurch" /></mat-form-field>
+          <mat-form-field appearance="outline"><mat-label>Church Denomination</mat-label><input matInput formControlName="churchDenomination" /></mat-form-field>
+          <div class="checkbox-field"><label><input type="checkbox" formControlName="baptized" /> Baptized</label></div>
+          <mat-form-field appearance="outline" class="full-width"><mat-label>Ministry Experience</mat-label><textarea matInput formControlName="ministryExperience" rows="3"></textarea></mat-form-field>
+          <mat-form-field appearance="outline" class="full-width"><mat-label>Ministry Interests</mat-label><textarea matInput formControlName="ministryInterests" rows="2"></textarea></mat-form-field>
+          <mat-form-field appearance="outline" class="full-width"><mat-label>Calling / Testimony</mat-label><textarea matInput formControlName="callingTestimony" rows="4"></textarea></mat-form-field>
+        </div>
+        <div class="form-actions"><button mat-raised-button color="primary" type="submit" [disabled]="saving || churchForm.invalid">Save Church Info</button></div>
+      </form>
+    </mat-expansion-panel>
+
+    <!-- Preferences -->
+    <mat-expansion-panel>
+      <mat-expansion-panel-header><mat-panel-title>⚙️ Preferences</mat-panel-title></mat-expansion-panel-header>
+      <form [formGroup]="preferencesForm" (ngSubmit)="savePreferences()">
+        <div class="form-grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Language Preference</mat-label>
+            <mat-select formControlName="languagePreference">
+              <mat-option *ngFor="let l of languageOptions" [value]="l">{{ l }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="form-actions"><button mat-raised-button color="primary" type="submit" [disabled]="saving">Save Preferences</button></div>
+      </form>
+    </mat-expansion-panel>
+
+    <!-- Security Settings -->
+    <mat-expansion-panel>
+      <mat-expansion-panel-header><mat-panel-title>🔒 Security Settings</mat-panel-title></mat-expansion-panel-header>
+      <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+        <div class="form-grid">
+          <mat-form-field appearance="outline"><mat-label>Current Password</mat-label><input matInput type="password" formControlName="currentPassword" /></mat-form-field>
+          <mat-form-field appearance="outline"><mat-label>New Password</mat-label><input matInput type="password" formControlName="newPassword" /><mat-error *ngIf="passwordForm.get('newPassword')?.hasError('minlength')">Min 8 characters</mat-error></mat-form-field>
+          <mat-form-field appearance="outline"><mat-label>Confirm New Password</mat-label><input matInput type="password" formControlName="confirmPassword" /></mat-form-field>
+        </div>
+        <div class="form-actions"><button mat-raised-button color="warn" type="submit" [disabled]="saving || passwordForm.invalid">Change Password</button></div>
+      </form>
+    </mat-expansion-panel>
+
+    <!-- Account Information (read-only) -->
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>ℹ️ Account Information</mat-panel-title>
+        <mat-panel-description>View only</mat-panel-description>
+      </mat-expansion-panel-header>
+      <div class="info-grid">
+        <div class="info-item"><span class="label">Username</span><span class="value">{{ profile?.username }}</span></div>
+        <div class="info-item"><span class="label">Role</span><span class="value">{{ profile?.role }}</span></div>
+        <div class="info-item"><span class="label">Account Status</span><span class="value">{{ profile?.accountStatus ? 'Active' : 'Inactive' }}</span></div>
+        <div class="info-item"><span class="label">Member Since</span><span class="value">{{ profile?.createdAt | date:'mediumDate' }}</span></div>
+      </div>
+    </mat-expansion-panel>
+
+  </mat-accordion>
+</div>

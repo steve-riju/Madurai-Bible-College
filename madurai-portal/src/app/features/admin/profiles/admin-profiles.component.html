@@ -1,0 +1,101 @@
+<div class="profiles-page">
+  <div class="page-header">
+    <h2>👤 Profile Directory</h2>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-bar">
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>Role</mat-label>
+      <mat-select [(ngModel)]="filterRole" (ngModelChange)="onFilterChange()">
+        <mat-option value="">All</mat-option>
+        <mat-option value="STUDENT">Students</mat-option>
+        <mat-option value="TEACHER">Teachers</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="filter-field filter-search">
+      <mat-label>Search by Name</mat-label>
+      <input matInput [(ngModel)]="filterName" (ngModelChange)="onFilterChange()" placeholder="Type a name..." />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="filter-field" *ngIf="filterRole !== 'TEACHER'">
+      <mat-label>Academic Year</mat-label>
+      <input matInput [(ngModel)]="filterAcademicYear" (ngModelChange)="onFilterChange()" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="filter-field" *ngIf="filterRole !== 'TEACHER'">
+      <mat-label>Semester</mat-label>
+      <input matInput [(ngModel)]="filterSemester" (ngModelChange)="onFilterChange()" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="filter-field" *ngIf="filterRole !== 'TEACHER'">
+      <mat-label>Batch</mat-label>
+      <input matInput [(ngModel)]="filterBatch" (ngModelChange)="onFilterChange()" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="filter-field" *ngIf="filterRole !== 'TEACHER'">
+      <mat-label>Program</mat-label>
+      <input matInput [(ngModel)]="filterProgram" (ngModelChange)="onFilterChange()" />
+    </mat-form-field>
+
+    <button mat-stroked-button (click)="clearFilters()" class="clear-btn">
+      <mat-icon>clear</mat-icon> Clear
+    </button>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-center">
+    <mat-spinner diameter="48"></mat-spinner>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && cards.length === 0" class="empty-state">
+    <mat-icon>person_off</mat-icon>
+    <p>No profiles found.</p>
+  </div>
+
+  <!-- Cards Grid -->
+  <div *ngIf="!loading && cards.length > 0" class="cards-grid">
+    <mat-card *ngFor="let card of cards" class="profile-card">
+      <div class="card-photo">
+        <img [src]="card.photoUrl || 'assets/images/default-avatar.svg'" (error)="onPhotoError($event)" [alt]="card.fullName" class="card-avatar" />
+      </div>
+      <mat-card-content>
+        <h3 class="card-name">{{ card.fullName }}</h3>
+        <span class="role-chip" [class.student]="card.role === 'STUDENT'" [class.teacher]="card.role === 'TEACHER'">
+          {{ card.role }}
+        </span>
+        <div class="card-meta" *ngIf="card.role === 'STUDENT'">
+          <p *ngIf="card.batch"><mat-icon>group</mat-icon> {{ card.batch }}</p>
+          <p *ngIf="card.academicYear"><mat-icon>calendar_today</mat-icon> {{ card.academicYear }}</p>
+          <p *ngIf="card.program"><mat-icon>school</mat-icon> {{ card.program }}</p>
+        </div>
+        <div class="card-meta" *ngIf="card.role === 'TEACHER'">
+          <p *ngIf="card.designation"><mat-icon>work</mat-icon> {{ card.designation }}</p>
+          <p *ngIf="card.employmentType"><mat-icon>schedule</mat-icon> {{ card.employmentType | titlecase }}</p>
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-stroked-button color="primary" (click)="card.role === 'STUDENT' ? viewStudent(card) : viewTeacher(card)">
+          <mat-icon>visibility</mat-icon> View
+        </button>
+        <button mat-raised-button color="primary" (click)="card.role === 'STUDENT' ? editStudent(card) : editTeacher(card)">
+          <mat-icon>edit</mat-icon> Edit
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <!-- Paginator -->
+  <mat-paginator
+    *ngIf="totalElements > 0"
+    [length]="totalElements"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="pageSizeOptions"
+    [pageIndex]="pageIndex"
+    (page)="onPageChange($event)"
+    showFirstLastButtons>
+  </mat-paginator>
+</div>
