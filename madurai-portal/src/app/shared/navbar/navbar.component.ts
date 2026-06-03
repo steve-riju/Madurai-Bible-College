@@ -14,7 +14,7 @@ export class NavbarComponent implements OnInit {
   constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
-    this.username = this.authService.getUsername();   // 🔹 fetch username
+    this.username = this.authService.getName() || this.authService.getUsername();   // 🔹 fetch username
   }
 
   logout(): void {

@@ -4,158 +4,272 @@
 .materials-container {
   padding: 1rem;
   margin-bottom: 2rem;
+  max-width: 1400px;
+  margin-inline: auto;
 
-  .page-title {
-    @include responsive-font(1.2rem, 1.6rem);
+  .page-card {
     margin-bottom: 1rem;
-    font-weight: 600;
-    color: $primary-color;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: $shadow;
+
+    mat-card-header {
+      margin-bottom: 1rem;
+    }
+
+    mat-card-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: $primary-color;
+      font-weight: 600;
+
+      @include responsive-font(1.2rem, 1.5rem);
+
+      mat-icon {
+        font-size: 28px;
+        width: 28px;
+        height: 28px;
+      }
+    }
   }
 
   .material-form {
-    background: $card-bg;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .full-width {
+    width: 100%;
+  }
+
+  .file-upload-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
     padding: 1rem;
-    border-radius: 0.75rem;
-    box-shadow: $shadow;
-    margin-bottom: 1.5rem;
+    border: 2px dashed rgba(0, 0, 0, 0.12);
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.02);
 
-    .form-group {
-      margin-bottom: 1rem;
-
-      label {
-        display: block;
-        font-size: 0.9rem;
-        font-weight: 500;
-        margin-bottom: 0.25rem;
-        color: $text-color;
-      }
-
-      input,
-      textarea,
-      select {
-        width: 100%;
-        padding: 0.5rem;
-        border: 1px solid #ddd;
-        border-radius: 0.5rem;
-        font-size: 0.9rem;
-      }
+    .file-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+      color: $text-color;
     }
 
-    .form-actions {
+    input[type='file'] {
+      width: 100%;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .selected-file {
       display: flex;
+      align-items: center;
       gap: 0.5rem;
-
-      .btn {
-        padding: 0.5rem 1rem;
-        border-radius: 0.5rem;
-        font-size: 0.9rem;
-        @include hover-effect(#000);
-      }
-
-      .btn-primary {
-        background: $primary-color;
-        color: #fff;
-      }
-
-      .btn-secondary {
-        background: #aaa;
-        color: #fff;
-      }
+      padding: 0.75rem;
+      border-radius: 8px;
+      background: rgba(25, 118, 210, 0.08);
+      color: $primary-color;
+      font-size: 0.9rem;
+      word-break: break-word;
     }
   }
 
-  .course-card {
-    background: $card-bg;
-    padding: 1rem;
-    border-radius: 0.75rem;
-    box-shadow: $shadow;
+  .form-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+
+    button {
+      min-height: 44px;
+    }
+  }
+
+  mat-accordion {
+    display: block;
+  }
+
+  mat-expansion-panel {
     margin-bottom: 1rem;
+    border-radius: 16px !important;
+    overflow: hidden;
 
-    .course-title {
-      font-size: 1rem;
+    mat-panel-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
       font-weight: 600;
-      margin-bottom: 0.75rem;
-      color: $secondary-color;
     }
 
-    .material-list {
-      list-style: none;
-      padding: 0;
-
-      .material-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        padding: 0.75rem 0;
-        border-bottom: 1px solid #eee;
-
-        &:last-child {
-          border-bottom: none;
-        }
-
-        .material-info {
-          max-width: 70%;
-
-          strong {
-            display: block;
-            margin-bottom: 0.25rem;
-            color: $text-color;
-          }
-
-          .desc {
-            font-size: 0.85rem;
-            color: $light-text-color;
-            margin-bottom: 0.25rem;
-          }
-
-          .download-link {
-            font-size: 0.85rem;
-            color: $secondary-color;
-            text-decoration: underline;
-          }
-        }
-
-        .material-actions {
-          display: flex;
-          flex-direction: column;
-          gap: 0.25rem;
-
-          .btn {
-            padding: 0.25rem 0.5rem;
-            font-size: 0.8rem;
-          }
-
-          .btn-warning {
-            background: #f59e0b;
-            color: #fff;
-          }
-
-          .btn-danger {
-            background: #dc2626;
-            color: #fff;
-          }
-        }
-      }
-    }
-
-    .empty-text {
+    mat-panel-description {
+      justify-content: flex-end;
+      color: $light-text-color;
       font-size: 0.85rem;
+    }
+  }
+
+  .material-item {
+    height: auto !important;
+    padding: 0 !important;
+
+    &:not(:last-child) {
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  .material-content {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem 0;
+  }
+
+  .material-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .material-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: $text-color;
+    margin-bottom: 0.35rem;
+    word-break: break-word;
+  }
+
+  .material-description {
+    color: $light-text-color;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 0.75rem;
+    word-break: break-word;
+  }
+
+  .download-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    text-decoration: none;
+    color: $secondary-color;
+    font-weight: 500;
+    transition: all 0.2s ease;
+
+    &:hover {
+      opacity: 0.8;
+    }
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  .material-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    flex-shrink: 0;
+  }
+
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    text-align: center;
+
+    mat-icon {
+      width: 48px;
+      height: 48px;
+      font-size: 48px;
+      color: $light-text-color;
+      margin-bottom: 0.75rem;
+    }
+
+    p {
+      margin: 0;
       color: $light-text-color;
       font-style: italic;
     }
   }
 }
 
-/* ✅ Mobile-first by default.
-   Larger screens only adjust spacing/font */
-@media (min-width: 768px) {
+/* Mobile */
+
+@media (max-width: 767px) {
   .materials-container {
-    .material-form {
-      padding: 1.5rem;
+    padding: 0.75rem;
+
+    .form-actions {
+      flex-direction: column;
+
+      button {
+        width: 100%;
+      }
     }
 
-    .course-card {
-      padding: 1.5rem;
+    .material-content {
+      flex-direction: column;
+      gap: 0.75rem;
     }
+
+    .material-actions {
+      width: 100%;
+      justify-content: flex-end;
+      border-top: 1px solid rgba(0, 0, 0, 0.08);
+      padding-top: 0.5rem;
+    }
+
+    ::ng-deep .mat-expansion-panel-header {
+      padding: 0 16px !important;
+      min-height: 72px !important;
+    }
+
+    ::ng-deep .mat-content {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+    }
+
+    ::ng-deep .mat-expansion-panel-body {
+      padding: 0 16px 16px !important;
+    }
+  }
+}
+
+/* Tablet */
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .materials-container {
+    padding: 1rem 1.5rem;
+  }
+
+  .material-content {
+    gap: 1.5rem;
+  }
+}
+
+/* Desktop */
+
+@media (min-width: 1025px) {
+  .materials-container {
+    padding: 1.5rem;
+  }
+
+  .page-card {
+    margin-bottom: 1.5rem;
+  }
+
+  .material-content {
+    gap: 2rem;
   }
 }

@@ -1,98 +1,239 @@
 <div class="materials-container">
-  <h2 class="page-title">📚 Manage Course Materials</h2>
 
-  <!-- Upload / Edit Form -->
-  <form
-    class="material-form"
-    (submit)="editingMaterial ? saveEdit() : uploadMaterial()"
-  >
-    <!-- Course -->
-    <div class="form-group" id="form-group">
-      <label for="course">Course</label>
-      <select
-        [(ngModel)]="selectedCourseId"
-        name="courseId"
-        id="course"
-        required
+  <mat-card class="page-card">
+
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>library_books</mat-icon>
+        Manage Course Materials
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+
+      <form
+        class="material-form"
+        (ngSubmit)="editingMaterial ? saveEdit() : uploadMaterial()"
       >
-        <option value=null disabled selected>Select a course</option>
-        <option *ngFor="let c of courses" [value]="c.id">
-          {{ c.name }}
-        </option>
-      </select>
-    </div>
 
-    <!-- Title -->
-    <div class="form-group">
-      <label for="title">Title</label>
-      <input
-        [(ngModel)]="title"
-        name="title"
-        id="title"
-        type="text"
-        required
-      />
-    </div>
+        <!-- Course -->
+        <mat-form-field appearance="outline" class="full-width" id="form-group">
+          <mat-label>Course</mat-label>
+          <mat-select
+            [(ngModel)]="selectedCourseId"
+            name="courseId"
+            required
+          >
+            <mat-option [value]="null" disabled>
+              Select Course
+            </mat-option>
 
-    <!-- Description -->
-    <div class="form-group">
-      <label for="description">Description</label>
-      <textarea [(ngModel)]="description" name="description" id="description"></textarea>
-    </div>
+            <mat-option
+              *ngFor="let c of courses"
+              [value]="c.id"
+            >
+              {{ c.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
 
-    <!-- File Input (only on create) -->
-    <div class="form-group" *ngIf="!editingMaterial">
-      <label for="file">File</label>
-      <input type="file" id="file" (change)="onFileChange($event)" />
-      <div *ngIf="fileError" class="error-message" style="color: red; margin-top: 8px;">
-        <span>{{ fileError }}</span>
-      </div>
-    </div>
+        <!-- Title -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Title</mat-label>
 
-    <!-- Buttons -->
-    <div class="form-actions">
-      <button type="submit" class="btn btn-primary">
-        {{ editingMaterial ? "Save Changes" : "Upload Material" }}
-      </button>
-      <button type="button" class="btn btn-secondary" (click)="resetForm()">
-        Reset
-      </button>
-    </div>
-  </form>
+          <input
+            matInput
+            [(ngModel)]="title"
+            name="title"
+            required
+          />
+        </mat-form-field>
 
-  <!-- Course Materials List -->
-  <div
-    *ngFor="let course of courses"
-    class="course-card"
-    (click)="loadMaterials(course.id)"
-  >
-    <h3 class="course-title">{{ course.name }}</h3>
+        <!-- Description -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Description</mat-label>
 
-    <ul
-      class="material-list"
-      *ngIf="materials[course.id] && materials[course.id].length > 0; else noMaterials"
+          <textarea
+            matInput
+            rows="4"
+            [(ngModel)]="description"
+            name="description"
+          >
+          </textarea>
+        </mat-form-field>
+
+        <!-- File Upload -->
+        <div class="file-upload-section" *ngIf="!editingMaterial">
+
+          <label class="file-label">
+            <mat-icon>attach_file</mat-icon>
+            Upload File
+          </label>
+
+          <input
+            type="file"
+            (change)="onFileChange($event)"
+          />
+
+          <div *ngIf="selectedFile" class="selected-file">
+            <mat-icon>description</mat-icon>
+            {{ selectedFile.name }}
+          </div>
+
+          <mat-error *ngIf="fileError">
+            {{ fileError }}
+          </mat-error>
+
+        </div>
+
+        <!-- Actions -->
+        <div class="form-actions">
+
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+          >
+            <mat-icon>
+              {{ editingMaterial ? 'save' : 'upload' }}
+            </mat-icon>
+
+            {{ editingMaterial ? 'Save Changes' : 'Upload Material' }}
+          </button>
+
+          <button
+            mat-stroked-button
+            type="button"
+            (click)="resetForm()"
+          >
+            <mat-icon>refresh</mat-icon>
+            Reset
+          </button>
+
+        </div>
+
+      </form>
+
+    </mat-card-content>
+
+  </mat-card>
+
+  <!-- Course Materials -->
+
+  <mat-accordion multi>
+
+    <mat-expansion-panel
+      *ngFor="let course of courses"
+      (opened)="loadMaterials(course.id)"
     >
-      <li *ngFor="let m of materials[course.id]" class="material-item">
-        <div class="material-info">
-          <strong>{{ m.title }}</strong>
-          <p class="desc">{{ m.description }}</p>
-          <a [href]="m.fileUrl" target="_blank" class="download-link">
-            Download
-          </a>
-        </div>
-        <div class="material-actions">
-          <button class="btn btn-warning" (click)="editMaterial(m)">
-            Edit
-          </button>
-          <button class="btn btn-danger" (click)="deleteMaterial(m)">
-            Delete
-          </button>
-        </div>
-      </li>
-    </ul>
 
-    <ng-template #noMaterials>
-      <p class="empty-text">No materials uploaded yet.</p>
-    </ng-template>
-  </div>
+      <mat-expansion-panel-header>
+
+        <mat-panel-title>
+          <mat-icon>menu_book</mat-icon>
+          {{ course.name }}
+        </mat-panel-title>
+
+        <mat-panel-description>
+          {{
+            materials[course.id]
+              ? materials[course.id].length
+              : 0
+          }}
+          Materials
+        </mat-panel-description>
+
+      </mat-expansion-panel-header>
+
+      <ng-container
+        *ngIf="
+          materials[course.id] &&
+          materials[course.id].length > 0;
+          else noMaterials
+        "
+      >
+
+        <mat-list>
+
+          <mat-list-item
+            *ngFor="let m of materials[course.id]"
+            class="material-item"
+          >
+
+            <div class="material-content">
+
+              <div class="material-info">
+
+                <div class="material-title">
+                  {{ m.title }}
+                </div>
+
+                <div
+                  class="material-description"
+                  *ngIf="m.description"
+                >
+                  {{ m.description }}
+                </div>
+
+                <a
+                  [href]="m.fileUrl"
+                  target="_blank"
+                  class="download-link"
+                >
+                  <mat-icon>download</mat-icon>
+                  Download Material
+                </a>
+
+              </div>
+
+              <div class="material-actions">
+
+                <button
+                  mat-icon-button
+                  color="primary"
+                  (click)="editMaterial(m)"
+                  matTooltip="Edit Material"
+                >
+                  <mat-icon>edit</mat-icon>
+                </button>
+
+                <button
+                  mat-icon-button
+                  color="warn"
+                  (click)="deleteMaterial(m)"
+                  matTooltip="Delete Material"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+
+              </div>
+
+            </div>
+
+          </mat-list-item>
+
+          <mat-divider></mat-divider>
+
+        </mat-list>
+
+      </ng-container>
+
+      <ng-template #noMaterials>
+
+        <div class="empty-state">
+
+          <mat-icon>folder_open</mat-icon>
+
+          <p>
+            No materials uploaded yet.
+          </p>
+
+        </div>
+
+      </ng-template>
+
+    </mat-expansion-panel>
+
+  </mat-accordion>
+
 </div>
