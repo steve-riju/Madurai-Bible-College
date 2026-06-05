@@ -90,6 +90,62 @@
     }
   }
 
+  // Upload progress section
+  .upload-progress {
+  width: 100%;
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 12px;
+  background: rgba(25, 118, 210, 0.05);
+  border: 1px solid rgba(25, 118, 210, 0.15);
+    }
+
+    .upload-file-name {
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      word-break: break-word;
+    }
+
+    .progress-header,
+    .progress-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .progress-header {
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    .progress-footer {
+      margin-top: 0.5rem;
+      font-size: 0.85rem;
+      opacity: 0.8;
+    }
+
+    mat-progress-bar {
+      height: 8px;
+      border-radius: 8px;
+    }
+    .upload-success {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+
+      padding: 16px;
+
+      font-weight: 600;
+      color: #2e7d32;
+
+      mat-icon {
+        font-size: 28px;
+        width: 28px;
+        height: 28px;
+      }
+    }
+//
   mat-accordion {
     display: block;
   }

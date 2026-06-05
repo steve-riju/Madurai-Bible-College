@@ -72,6 +72,7 @@
 
           <input
             type="file"
+            [disabled]="uploading"
             (change)="onFileChange($event)"
           />
 
@@ -93,6 +94,7 @@
             mat-raised-button
             color="primary"
             type="submit"
+            [disabled]="uploading"
           >
             <mat-icon>
               {{ editingMaterial ? 'save' : 'upload' }}
@@ -104,12 +106,77 @@
           <button
             mat-stroked-button
             type="button"
+            [disabled]="uploading"
             (click)="resetForm()"
           >
             <mat-icon>refresh</mat-icon>
             Reset
           </button>
+          <!-- Upload Progress -->
+          <div
+            class="upload-progress"
+            *ngIf="uploading || uploadCompleted"
+          >
 
+            <!-- Uploading State -->
+
+            <ng-container *ngIf="uploading">
+
+              <div class="upload-file-name">
+                {{ selectedFile?.name }}
+              </div>
+
+              <div class="progress-header">
+
+                <span>
+                  {{ uploadedSize }} / {{ totalSize }}
+                </span>
+
+                <span>
+                  {{ uploadProgress }}%
+                </span>
+
+              </div>
+
+              <mat-progress-bar
+                mode="determinate"
+                [value]="uploadProgress"
+              >
+              </mat-progress-bar>
+
+              <div class="progress-footer">
+
+                <span>
+                  Speed: {{ uploadSpeed }}
+                </span>
+
+                <span>
+                  Remaining: {{ remainingTime }}
+                </span>
+
+              </div>
+
+            </ng-container>
+
+            <!-- Success State -->
+
+            <div
+              class="upload-success"
+              *ngIf="uploadCompleted"
+            >
+
+              <mat-icon color="primary">
+                check_circle
+              </mat-icon>
+
+              <span>
+                {{ uploadStatusMessage }}
+              </span>
+
+            </div>
+
+          </div>
+            <!--  -->
         </div>
 
       </form>

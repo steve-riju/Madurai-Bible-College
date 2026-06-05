@@ -1,3 +1,70 @@
+<!-- Loading State -->
+
+<div
+  class="state-container"
+  *ngIf="loading"
+>
+
+  <mat-spinner diameter="50"></mat-spinner>
+
+  <h3>Loading materials...</h3>
+
+  <p>
+    Please wait while course materials are being loaded.
+  </p>
+
+</div>
+
+<!-- Error State -->
+
+<div
+  class="state-container"
+  *ngIf="!loading && error"
+>
+
+  <mat-icon color="warn">
+    error_outline
+  </mat-icon>
+
+  <h3>Unable to load materials</h3>
+
+  <p>
+    Please refresh the page and try again.
+  </p>
+
+</div>
+
+<!-- Empty State -->
+
+<div
+  class="state-container"
+  *ngIf="!loading && !error && materials.length === 0"
+>
+
+  <mat-icon>
+    folder_open
+  </mat-icon>
+
+  <h3>No Materials Available</h3>
+
+  <p>
+    Course materials have not been uploaded yet.
+    Please check back later.
+  </p>
+
+</div>
+
+<!-- Materials Grid -->
+
+<div
+  class="materials-grid"
+  *ngIf="!loading && !error && materials.length > 0"
+>
+
+  <!-- Existing material cards here -->
+
+</div>
+<!--  -->
 <div class="materials-grid">
   <mat-card *ngFor="let m of materials" class="material-card">
     <mat-card-header>

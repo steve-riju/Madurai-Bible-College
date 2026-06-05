@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TeacherMaterialsService, Material } from '../services/teacher-materials.service';
 import { AuthService } from '../../../shared/auth.service';
+import {  HttpEventType } from '@angular/common/http';
 
 @Component({
   selector: 'app-materials',
@@ -20,6 +21,17 @@ export class MaterialsComponent implements OnInit {
   description = '';
   selectedCourseId: number | null = null;
   editingMaterial: Material | null = null;
+
+  uploadProgress = 0;
+  uploading = false;
+  uploadedSize = '';
+  totalSize = '';
+  uploadSpeed = '';
+  remainingTime = '';
+  uploadCompleted = false;
+  uploadStatusMessage = '';
+
+  private uploadStartTime = 0;
 
   constructor(
     private materialService: TeacherMaterialsService,
@@ -59,21 +71,81 @@ export class MaterialsComponent implements OnInit {
   }
 
   uploadMaterial() {
-    if (!this.selectedFile || !this.selectedCourseId) {
-      alert('Please select a file and course');
-      return;
-    }
-    this.materialService.uploadMaterial(
-      this.selectedFile,
-      this.title,
-      this.description,
-      this.selectedCourseId,
-      this.teacherUsername
-    ).subscribe(() => {
-      this.loadMaterials(this.selectedCourseId!);
-      this.resetForm();
-    });
+
+  if (!this.selectedFile || !this.selectedCourseId) {
+    alert('Please select a file and course');
+    return;
   }
+
+  this.uploading = true;
+  this.uploadProgress = 0;
+  this.uploadStartTime = Date.now();
+  this.materialService.uploadMaterial(
+    this.selectedFile,
+    this.title,
+    this.description,
+    this.selectedCourseId,
+    this.teacherUsername
+  )
+  .subscribe({
+    next: (event) => {
+      if (event.type === HttpEventType.UploadProgress) {
+          const loaded = event.loaded;
+          const total = event.total || 1;
+
+          this.uploadProgress = Math.round((loaded / total) * 100);
+
+          this.uploadedSize = this.formatBytes(loaded);
+
+          this.totalSize = this.formatBytes(total);
+
+          const elapsedSeconds = (Date.now() - this.uploadStartTime) / 1000;
+
+          const bytesPerSecond = loaded / Math.max(elapsedSeconds, 1);
+
+          this.uploadSpeed = `${this.formatBytes(bytesPerSecond)}/s`;
+
+          const remainingBytes = total - loaded;
+
+          const remainingSeconds = remainingBytes / Math.max(bytesPerSecond, 1);
+
+          this.remainingTime = this.formatTime(remainingSeconds);
+        }
+
+        if (event.type === HttpEventType.Response) {
+
+          this.uploadProgress = 100;
+          this.uploading = false;
+
+          this.uploadCompleted = true;
+          this.uploadStatusMessage = 'Upload completed successfully';
+
+          this.loadMaterials(this.selectedCourseId!);
+
+          setTimeout(() => {
+            this.resetForm();
+          }, 2000);
+        }
+
+    },
+
+      error: (err) => {
+
+        this.uploading = false;
+        this.uploadCompleted = false;
+
+        this.uploadStatusMessage = 'Upload failed';
+
+        console.error(err);
+
+        setTimeout(() => {
+          this.uploadStatusMessage = '';
+        }, 3000);
+      }
+
+    });
+
+}
 
   editMaterial(material: Material) {
     this.editingMaterial = { ...material };
@@ -114,5 +186,50 @@ export class MaterialsComponent implements OnInit {
     this.description = '';
     this.selectedCourseId = null;
     this.editingMaterial = null;
+
+    this.fileError = null;
+
+    this.uploadProgress = 0;
+    this.uploading = false;
+
+    this.uploadCompleted = false;
+    this.uploadStatusMessage = '';
+
+    this.uploadedSize = '';
+    this.totalSize = '';
+    this.uploadSpeed = '';
+    this.remainingTime = '';
   }
+
+  formatBytes(bytes: number): string {
+
+  if (!bytes) return '0 B';
+
+  const units = ['B', 'KB', 'MB', 'GB'];
+  let i = 0;
+  let size = bytes;
+
+  while (size >= 1024 && i < units.length - 1) {
+    size /= 1024;
+    i++;
+  }
+
+  return `${size.toFixed(1)} ${units[i]}`;
+}
+
+formatTime(seconds: number): string {
+
+  if (!isFinite(seconds) || seconds < 0) {
+    return '--';
+  }
+
+  if (seconds < 60) {
+    return `${Math.ceil(seconds)} sec`;
+  }
+
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.ceil(seconds % 60);
+
+  return `${mins}m ${secs}s`;
+}
 }

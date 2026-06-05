@@ -2,6 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+  import {
+  HttpEvent,
+  HttpRequest
+} from '@angular/common/http';
 
 export interface Material {
   id: number;
@@ -32,16 +36,44 @@ export class TeacherMaterialsService {
   }
 
   // 🔹 Upload new material
-  uploadMaterial(file: File, title: string, description: string, courseId: number, teacherUsername: string): Observable<Material> {
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('title', title);
-    formData.append('description', description);
-    formData.append('courseId', courseId.toString());
-    formData.append('teacherUsername', teacherUsername);
+  // uploadMaterial(file: File, title: string, description: string, courseId: number, teacherUsername: string): Observable<Material> {
+  //   const formData = new FormData();
+  //   formData.append('file', file);
+  //   formData.append('title', title);
+  //   formData.append('description', description);
+  //   formData.append('courseId', courseId.toString());
+  //   formData.append('teacherUsername', teacherUsername);
 
-    return this.http.post<Material>(this.apiUrl, formData);
-  }
+  //   return this.http.post<Material>(this.apiUrl, formData);
+  // }
+
+  uploadMaterial(
+  file: File,
+  title: string,
+  description: string,
+  courseId: number,
+  teacherUsername: string
+): Observable<HttpEvent<any>> {
+
+  const formData = new FormData();
+
+  formData.append('file', file);
+  formData.append('title', title);
+  formData.append('description', description);
+  formData.append('courseId', courseId.toString());
+  formData.append('teacherUsername', teacherUsername);
+
+  const req = new HttpRequest(
+    'POST',
+    this.apiUrl,
+    formData,
+    {
+      reportProgress: true
+    }
+  );
+
+  return this.http.request(req);
+}
 
   // 🔹 Update existing material
   updateMaterial(id: number, title: string, description: string): Observable<Material> {

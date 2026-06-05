@@ -11,21 +11,38 @@ export class MaterialsComponent implements OnInit {
   @Input() courseId!: number;   // passed from parent (courses view)
   materials: any[] = [];
 
+  loading = true;
+  error = false;
+
   constructor(
     private courseService: StudentCoursesService,
     private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit(): void {
-    if (this.courseId) {
-      this.courseService.getCourseMaterials(this.courseId).subscribe({
-        next: (res) => {
-          this.materials = res;
-        },
-        error: (err) => console.error('Failed to fetch materials', err)
-      });
+
+  if (!this.courseId) return;
+
+  this.loading = true;
+  this.error = false;
+
+  this.courseService.getCourseMaterials(this.courseId).subscribe({
+
+    next: (res) => {
+      this.materials = res;
+      this.loading = false;
+    },
+
+    error: (err) => {
+      console.error('Failed to fetch materials', err);
+
+      this.loading = false;
+      this.error = true;
     }
-  }
+
+  });
+
+}
 
   getSafeUrl(fileUrl: string): SafeResourceUrl {
     return this.sanitizer.bypassSecurityTrustResourceUrl(fileUrl);
