@@ -1,0 +1,717 @@
+<!-- =========================================================
+     MBC PROFILE SPLASH
+     ========================================================= -->
+
+<app-profile-splash
+  *ngIf="showSplash">
+</app-profile-splash>
+
+
+<!-- =========================================================
+     PROFILE NOT FOUND
+     ========================================================= -->
+
+<div
+  class="profile-not-found"
+  *ngIf="!showSplash && profileNotFound">
+<title>404 Not Found</title>
+  <img
+    src="assets/branding/mbc-logo.png"
+    alt="Madurai Bible College">
+
+  <h1>
+    Profile Not Found
+  </h1>
+
+  <p>
+    The requested MBC profile could not be found.
+  </p>
+
+</div>
+
+
+<!-- =========================================================
+     PROFILE
+     ========================================================= -->
+
+<main
+  class="profile-page"
+  *ngIf="!showSplash && profile">
+
+
+  <!-- =======================================================
+       HEADER
+       ======================================================= -->
+
+  <header class="profile-header">
+
+    <div class="header-decoration"></div>
+
+    <img
+      class="college-logo"
+      src="assets/branding/mbc-logo.png"
+      alt="Madurai Bible College">
+
+    <h1 class="college-name">
+      Madurai Bible College
+    </h1>
+
+    <p class="tagline">
+      {{ college.tagline }}
+    </p>
+
+
+    <!-- 70th Anniversary -->
+
+    <div
+      class="anniversary-badge"
+      aria-label="70 years of Madurai Bible College">
+
+      <span class="anniversary-number">
+        70
+      </span>
+
+      <span class="anniversary-years">
+        YEARS
+      </span>
+
+      <span class="anniversary-range">
+        1955–2025
+      </span>
+
+    </div>
+
+  </header>
+
+
+  <!-- =======================================================
+       PROFILE CARD
+       ======================================================= -->
+
+  <section class="profile-card">
+
+
+    <!-- PROFILE PHOTO -->
+
+    <div class="photo-wrapper">
+
+      <img
+        class="profile-photo"
+        [src]="profile.photo"
+        [alt]="profile.name">
+
+    </div>
+
+
+    <!-- NAME -->
+
+    <h2 class="profile-name">
+      {{ profile.name }}
+    </h2>
+
+
+    <!-- STUDENT COURSE -->
+
+    <p
+      class="profile-role"
+      *ngIf="isStudent">
+
+      {{ profile.course }}
+
+    </p>
+
+
+    <!-- STAFF DESIGNATION -->
+
+    <p
+      class="profile-role"
+      *ngIf="isStaff">
+
+      {{ profile.designation }}
+
+    </p>
+
+
+    <!-- STATUS -->
+
+    <div class="profile-status">
+
+      <span
+        class="verified"
+        *ngIf="profile.verified">
+
+        <svg
+          viewBox="0 0 24 24"
+          aria-hidden="true">
+
+          <path
+            d="M12 2l2.1 1.2 2.4-.1 1.1 2.1 2.1 1.1-.1 2.4L23 11l-1.2 2.1.1 2.4-2.1 1.1-1.1 2.1-2.4-.1L12 20l-2.1-1.2-2.4.1-1.1-2.1-2.1-1.1.1-2.4L1 11l1.2-2.1-.1-2.4 2.1-1.1 1.1-2.1 2.4.1L12 2z">
+          </path>
+
+          <path
+            class="check"
+            d="M8 12.5l2.5 2.5L16 9.5">
+          </path>
+
+        </svg>
+
+        Official MBC Profile
+
+      </span>
+
+
+      <span class="status">
+
+        <span class="status-dot"></span>
+
+        {{ statusLabel }}
+
+      </span>
+
+    </div>
+
+
+    <!-- =====================================================
+         ACADEMIC INFORMATION
+         ===================================================== -->
+
+    <section
+      class="information-section"
+      *ngIf="isStudent">
+
+      <div class="section-heading">
+
+        <span class="section-heading-line"></span>
+
+        <h3>
+          Academic Information
+        </h3>
+
+        <span class="section-heading-line"></span>
+
+      </div>
+
+
+      <div class="information-grid">
+
+        <div class="information-item">
+
+          <span class="information-label">
+            Registration No.
+          </span>
+
+          <strong class="information-value">
+            {{ profile.registrationNumber }}
+          </strong>
+
+        </div>
+
+
+        <div class="information-item">
+
+          <span class="information-label">
+            Admission No.
+          </span>
+
+          <strong class="information-value">
+            {{ profile.admissionNumber }}
+          </strong>
+
+        </div>
+
+
+        <div class="information-item">
+
+          <span class="information-label">
+            Academic Year
+          </span>
+
+          <strong class="information-value">
+            {{ profile.academicYear }}
+          </strong>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         STAFF INFORMATION
+         ===================================================== -->
+
+    <section
+      class="information-section"
+      *ngIf="isStaff">
+
+      <div class="section-heading">
+
+        <span class="section-heading-line"></span>
+
+        <h3>
+          Staff Information
+        </h3>
+
+        <span class="section-heading-line"></span>
+
+      </div>
+
+
+      <div class="information-grid">
+
+        <div class="information-item">
+
+          <span class="information-label">
+            Employee ID
+          </span>
+
+          <strong class="information-value">
+            {{ profile.employeeId }}
+          </strong>
+
+        </div>
+
+      </div>
+
+      <div class="information-grid">
+
+        <div class="information-item">
+
+          <span class="information-label">
+            Designation
+          </span>
+
+          <strong class="information-value">
+            {{ profile.designation }}
+          </strong>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         CONTACT INFORMATION
+         ===================================================== -->
+
+    <section class="information-section">
+
+      <div class="section-heading">
+
+        <span class="section-heading-line"></span>
+
+        <h3>
+          Contact Information
+        </h3>
+
+        <span class="section-heading-line"></span>
+
+      </div>
+
+
+      <div class="contact-list">
+
+
+        <!-- PHONE -->
+
+        <div
+          class="contact-item"
+          *ngIf="profile.phone">
+
+          <div class="contact-icon">
+
+            <svg
+              viewBox="0 0 24 24"
+              aria-hidden="true">
+
+              <path
+                d="M6.6 2h3l1.2 5-2 1.7a16 16 0 0 0 6.5 6.5l1.7-2 5 1.2v3c0 1.1-.9 2-2 2C11.7 19.4 4.6 12.3 4.6 4c0-1.1.9-2 2-2z">
+              </path>
+
+            </svg>
+
+          </div>
+
+          <div class="contact-content">
+
+            <span>
+              Phone
+            </span>
+
+            <strong>
+              {{ profile.phone }}
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <!-- EMAIL -->
+
+        <div
+          class="contact-item"
+          *ngIf="profile.email">
+
+          <div class="contact-icon">
+
+            <svg
+              viewBox="0 0 24 24"
+              aria-hidden="true">
+
+              <rect
+                x="3"
+                y="5"
+                width="18"
+                height="14"
+                rx="2">
+              </rect>
+
+              <path
+                d="M3 7l9 6 9-6">
+              </path>
+
+            </svg>
+
+          </div>
+
+          <div class="contact-content">
+
+            <span>
+              Email
+            </span>
+
+            <strong class="email-value">
+              {{ profile.email }}
+            </strong>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         SOCIAL LINKS
+         ===================================================== -->
+
+    <section
+      class="social-section"
+      *ngIf="profile.socialLinks">
+
+      <div class="section-heading">
+
+        <span class="section-heading-line"></span>
+
+        <h3>
+          Connect
+        </h3>
+
+        <span class="section-heading-line"></span>
+
+      </div>
+
+
+      <div class="social-links">
+
+
+        <!-- YOUTUBE -->
+
+        <a
+          *ngIf="profile.socialLinks.youtube"
+          [href]="profile.socialLinks.youtube"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="YouTube">
+
+          <svg
+            viewBox="0 0 24 24"
+            aria-hidden="true">
+
+            <path
+              d="M21.6 7.2a2.9 2.9 0 0 0-2-2C17.8 4.7 12 4.7 12 4.7s-5.8 0-7.6.5a2.9 2.9 0 0 0-2 2A30 30 0 0 0 1.9 12a30 30 0 0 0 .5 4.8 2.9 2.9 0 0 0 2 2c1.8.5 7.6.5 7.6.5s5.8 0 7.6-.5a2.9 2.9 0 0 0 2-2 30 30 0 0 0 .5-4.8 30 30 0 0 0-.5-4.8z">
+            </path>
+
+            <path
+              class="social-icon-cutout"
+              d="M10 9l5 3-5 3V9z">
+            </path>
+
+          </svg>
+
+          <span>
+            YouTube
+          </span>
+
+        </a>
+
+
+        <!-- INSTAGRAM -->
+
+        <a
+          *ngIf="profile.socialLinks.instagram"
+          [href]="profile.socialLinks.instagram"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Instagram">
+
+          <svg
+            viewBox="0 0 24 24"
+            aria-hidden="true">
+
+            <rect
+              x="3"
+              y="3"
+              width="18"
+              height="18"
+              rx="5">
+            </rect>
+
+            <circle
+              cx="12"
+              cy="12"
+              r="4">
+            </circle>
+
+            <circle
+              class="instagram-dot"
+              cx="17.5"
+              cy="6.5"
+              r="1">
+            </circle>
+
+          </svg>
+
+          <span>
+            Instagram
+          </span>
+
+        </a>
+
+
+        <!-- FACEBOOK -->
+
+        <a
+          *ngIf="profile.socialLinks.facebook"
+          [href]="profile.socialLinks.facebook"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Facebook">
+
+          <svg
+            viewBox="0 0 24 24"
+            aria-hidden="true">
+
+            <path
+              d="M14 8h3V4h-3c-3 0-5 2-5 5v3H6v4h3v4h4v-4h3l1-4h-4V9c0-.7.3-1 1-1z">
+            </path>
+
+          </svg>
+
+          <span>
+            Facebook
+          </span>
+
+        </a>
+
+
+        <!-- LINKEDIN -->
+
+        <a
+          *ngIf="profile.socialLinks.linkedin"
+          [href]="profile.socialLinks.linkedin"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="LinkedIn">
+
+          <svg
+            viewBox="0 0 24 24"
+            aria-hidden="true">
+
+            <rect
+              x="4"
+              y="4"
+              width="16"
+              height="16"
+              rx="2">
+            </rect>
+
+            <path
+              class="social-icon-cutout"
+              d="M8 10v6M8 7v.1M11 16v-6M11 13c0-2 1-3 3-3s3 1 3 3v3">
+            </path>
+
+          </svg>
+
+          <span>
+            LinkedIn
+          </span>
+
+        </a>
+
+
+        <!-- WEBSITE -->
+
+        <a
+          *ngIf="profile.socialLinks.website"
+          [href]="profile.socialLinks.website"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Website">
+
+          <svg
+            viewBox="0 0 24 24"
+            aria-hidden="true">
+
+            <circle
+              cx="12"
+              cy="12"
+              r="9">
+            </circle>
+
+            <path
+              d="M3 12h18M12 3c2.2 2.4 3.3 5.4 3.3 9s-1.1 6.6-3.3 9c-2.2-2.4-3.3-5.4-3.3-9S9.8 5.4 12 3z">
+            </path>
+
+          </svg>
+
+          <span>
+            Student Portal
+          </span>
+
+        </a>
+
+      </div>
+
+    </section>
+
+  </section>
+
+
+  <!-- =======================================================
+       SCRIPTURE
+       ======================================================= -->
+
+  <section class="scripture">
+
+    <div class="scripture-decoration">
+      ✦
+    </div>
+
+    <blockquote>
+      "{{ college.verse.text }}"
+    </blockquote>
+
+    <cite>
+      {{ college.verse.reference }}
+    </cite>
+
+  </section>
+
+
+  <!-- =======================================================
+       COLLEGE INFORMATION
+       ======================================================= -->
+
+  <section class="college-section">
+
+    <div class="college-brand">
+
+      <img
+        class="footer-logo"
+        src="assets/branding/mbc-logo.png"
+        alt="Madurai Bible College">
+
+      <div>
+
+        <h2>
+          {{ college.name }}
+        </h2>
+
+        <p class="college-tagline">
+          {{ college.tagline }}
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <div class="college-divider"></div>
+
+
+    <div class="college-details">
+
+      <div class="college-detail">
+        <span class="college-detail-label">
+          Address
+        </span>
+
+        <span>
+          {{ college.address }}
+        </span>
+      </div>
+
+
+      <div class="college-detail">
+        <span class="college-detail-label">
+          Email
+        </span>
+
+        <span>
+          {{ college.email }}
+        </span>
+      </div>
+
+
+      <div class="college-detail">
+        <span class="college-detail-label">
+          Phone
+        </span>
+
+        <span>
+          {{ college.phone }}
+        </span>
+      </div>
+
+
+      <div class="college-detail">
+        <span class="college-detail-label">
+          Website
+        </span>
+
+        <span>
+          {{ college.website.replace('https://', '') }}
+        </span>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =======================================================
+       FOOTER
+       ======================================================= -->
+
+  <footer>
+
+    <div class="footer-anniversary">
+      <span></span>
+
+      <strong>
+        Teaching &amp; Serving Since 1955
+      </strong>
+
+      <span></span>
+    </div>
+
+  </footer>
+
+</main>
