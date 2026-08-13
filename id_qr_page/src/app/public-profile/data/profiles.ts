@@ -970,13 +970,57 @@ export const PROFILES: Profile[] = [
       'MBCNT01',
 
     designation:
-      'personal assistant',
+      'Non Teaching Staff',
 
     phone:
       '96262 65496',
 
     email:
-      '',
+      'j9812838@gmail.com',
+
+    status:
+      'ACTIVE',
+
+    verified:
+      true,
+
+    socialLinks: {
+      facebook:
+        'https://www.facebook.com/maduraibiblecollege/',
+
+      instagram:
+        'https://www.instagram.com/maduraibiblecollege/',
+
+      youtube:
+        'https://www.youtube.com/@MaduraiBibleCollege',
+
+      website:
+        'https://campusmbc.org/'
+    }
+  },
+
+
+  {
+    slug: 'k-ramalingam',
+
+    type: 'STAFF',
+
+    name: 'K. Ramalingam',
+
+    photo:
+      'assets/profiles/staff/k-ramalingam.jpeg',
+
+    employeeId:
+      'MBCNT10',
+
+    designation:
+      'Teaching Staff',
+
+    phone:
+      '94429 15267',
+
+    email:
+      'krlingam49@gmail.com',
 
     status:
       'ACTIVE',
