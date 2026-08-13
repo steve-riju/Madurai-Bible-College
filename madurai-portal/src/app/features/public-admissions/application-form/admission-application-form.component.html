@@ -71,7 +71,7 @@
           </div>
 
           <div class="actions">
-            <button type="button" class="btn-secondary" routerLink="/admissions">Cancel</button>
+            <button type="button" class="btn-secondary" routerLink="/apply">Cancel</button>
             <button
               type="submit"
               class="btn-primary"
@@ -91,7 +91,7 @@
         <h1>Application Submitted</h1>
         <p>Your application for {{ admissionForm.title }} has been received.</p>
         <p *ngIf="submissionId" class="reference">Reference ID: {{ submissionId }}</p>
-        <button type="button" class="btn-primary" routerLink="/admissions">View Other Forms</button>
+        <button type="button" class="btn-primary" routerLink="/apply">View Other Forms</button>
       </section>
     </ng-container>
   </main>
