@@ -1,11 +1,19 @@
 <section class="public-admissions">
-  <header class="public-header">
-    <div>
-      <p class="eyebrow">Madurai Bible College</p>
-      <h1>Admissions</h1>
-    </div>
-    <a routerLink="/auth/login" class="admin-link">Portal Login</a>
-  </header>
+<header class="public-header">
+  <div class="header-title">
+    <p class="eyebrow">Madurai Bible College</p>
+    <h1>Admissions</h1>
+  </div>
+
+  <a routerLink="/" class="header-logo" aria-label="Madurai Bible College">
+    <img
+      src="assets/images/logo-nbg.png"
+      alt="Madurai Bible College Logo"
+    />
+  </a>
+
+  <a routerLink="/auth/login" class="admin-link">Portal Login</a>
+</header>
 
   <main class="content">
     <div class="intro">
@@ -25,7 +33,8 @@
 
     <div *ngIf="!loading && !error && forms.length === 0" class="state">
       <mat-icon>inventory_2</mat-icon>
-      <span>No admission forms are available right now.</span>
+      <!-- <span>No admission forms are available right now.</span> -->
+      <span>If you are not able to see any forms, please call to 85900 89384 for application related queries.</span>
     </div>
 
     <div *ngIf="!loading && forms.length" class="forms-grid">
@@ -33,7 +42,7 @@
         class="form-card"
         *ngFor="let form of forms"
         [class.form-card--closed]="!form.open"
-        [routerLink]="form.open ? ['/admissions', form.slug || form.id] : null"
+        [routerLink]="form.open ? ['/apply', form.slug || form.id] : null"
       >
         <div class="form-icon">
           <mat-icon>{{ form.open ? 'assignment' : 'event_busy' }}</mat-icon>
