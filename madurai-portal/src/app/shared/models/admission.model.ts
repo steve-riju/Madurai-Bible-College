@@ -1,7 +1,7 @@
 export interface AdmissionFormField {
   key: string;
   label: string;
-  type: 'text' | 'number' | 'select' | 'textarea' | 'tel';
+  type: 'text' | 'number' | 'select' | 'textarea' | 'tel' | 'email';
   required: boolean;
   maxLength?: number;
   options?: string[];
@@ -26,6 +26,7 @@ export interface AdmissionSubmission {
   formTitle: string;
   formSlug: string;
   fullNameWithInitials: string;
+  email?: string;
   age?: number;
   gender?: string;
   maritalStatus?: string;

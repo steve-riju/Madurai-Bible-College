@@ -142,7 +142,7 @@
         <option value="ACCEPTED">Accepted</option>
         <option value="REJECTED">Rejected</option>
       </select>
-      <input [(ngModel)]="searchTerm" placeholder="Search applicant, city, phone..." />
+      <input [(ngModel)]="searchTerm" placeholder="Search applicant, email, city, phone..." />
       <button class="btn-secondary" (click)="loadSubmissions()">Refresh</button>
     </div>
 
@@ -207,6 +207,7 @@
 
         <dl class="detail-list">
           <div><dt>Age</dt><dd>{{ selectedSubmission.age }}</dd></div>
+          <div><dt>Email</dt><dd>{{ selectedSubmission.email }}</dd></div>
           <div><dt>Gender</dt><dd>{{ selectedSubmission.gender }}</dd></div>
           <div><dt>Marital Status</dt><dd>{{ selectedSubmission.maritalStatus }}</dd></div>
           <div><dt>Course Applied</dt><dd>{{ selectedSubmission.courseApplied }}</dd></div>

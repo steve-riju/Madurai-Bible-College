@@ -50,7 +50,7 @@ export class AdmissionsComponent implements OnInit {
     return this.submissions.filter(submission => {
       const formOk = !this.selectedFormFilter || submission.formId === Number(this.selectedFormFilter);
       const statusOk = !this.statusFilter || submission.status === this.statusFilter;
-      const text = `${submission.fullNameWithInitials} ${submission.whatsappNumber || ''} ${submission.cityTown || ''} ${submission.formTitle}`.toLowerCase();
+      const text = `${submission.fullNameWithInitials} ${submission.email || ''} ${submission.whatsappNumber || ''} ${submission.cityTown || ''} ${submission.formTitle}`.toLowerCase();
       const searchOk = !search || text.includes(search);
       return formOk && statusOk && searchOk;
     });

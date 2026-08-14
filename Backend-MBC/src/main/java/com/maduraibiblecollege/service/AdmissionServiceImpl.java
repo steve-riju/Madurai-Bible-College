@@ -37,6 +37,9 @@ public class AdmissionServiceImpl implements AdmissionService {
 
     private static final Pattern SLUG_PATTERN = Pattern.compile("[^a-z0-9]+");
     private static final Pattern WHATSAPP_PATTERN = Pattern.compile("^[0-9+\\-\\s]{10}$");
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}$", Pattern.CASE_INSENSITIVE);
+    private static final List<String> OCCUPATION_OPTIONS = List.of("Working", "Not working", "Home Make", "other");
+    private static final List<String> QUALIFICATION_OPTIONS = List.of("10th", "12th", "diploma", "degree", "other");
 
     private final AdmissionFormRepository formRepository;
     private final AdmissionSubmissionRepository submissionRepository;
@@ -77,6 +80,7 @@ public class AdmissionServiceImpl implements AdmissionService {
         AdmissionSubmission submission = new AdmissionSubmission();
         submission.setForm(form);
         submission.setFullNameWithInitials(answers.get("fullNameWithInitials"));
+        submission.setEmail(answers.get("email"));
         submission.setAge(parseAge(answers.get("age")));
         submission.setGender(answers.get("gender"));
         submission.setMaritalStatus(answers.get("maritalStatus"));
@@ -185,12 +189,13 @@ public class AdmissionServiceImpl implements AdmissionService {
     public List<AdmissionFormFieldDto> defaultFields() {
         return List.of(
                 field("fullNameWithInitials", "Full Name with Initials", "text", true, 150),
+                field("email", "Email", "email", true, 150),
                 field("age", "Age", "number", true, 3),
                 field("gender", "Gender", "select", true, null, List.of("Female", "Male", "Other")),
                 field("maritalStatus", "Marital Status", "select", true, null, List.of("Single", "Married", "Widowed")),
                 field("courseApplied", "Course Applied", "text", true, 150),
-                field("qualification", "Qualification", "text", true, 150),
-                field("currentOccupation", "Current Occupation", "text", true, 150),
+                field("qualification", "Qualification", "select", true, 150, QUALIFICATION_OPTIONS),
+                field("currentOccupation", "Current Occupation", "select", true, 150, OCCUPATION_OPTIONS),
                 field("fullAddress", "Full Address", "textarea", true, 1000),
                 field("cityTown", "City/Town", "text", true, 120),
                 field("whatsappNumber", "WhatsApp Number", "tel", true, 30),
@@ -255,6 +260,7 @@ public class AdmissionServiceImpl implements AdmissionService {
                 .formTitle(form.getTitle())
                 .formSlug(form.getSlug())
                 .fullNameWithInitials(submission.getFullNameWithInitials())
+                .email(submission.getEmail())
                 .age(submission.getAge())
                 .gender(submission.getGender())
                 .maritalStatus(submission.getMaritalStatus())
@@ -314,10 +320,53 @@ public class AdmissionServiceImpl implements AdmissionService {
                     fieldsJson,
                     new TypeReference<List<AdmissionFormFieldDto>>() {}
             );
-            return fields == null || fields.isEmpty() ? defaultFields() : fields;
+            return fields == null || fields.isEmpty() ? defaultFields() : normalizeFields(fields);
         } catch (JsonProcessingException ex) {
             return defaultFields();
         }
+    }
+
+    private List<AdmissionFormFieldDto> normalizeFields(List<AdmissionFormFieldDto> fields) {
+        List<AdmissionFormFieldDto> normalized = new ArrayList<>();
+        boolean hasEmail = false;
+        boolean hasQualification = false;
+        boolean hasCurrentOccupation = false;
+
+        for (AdmissionFormFieldDto field : fields) {
+            String key = field.getKey();
+            if ("email".equals(key)) {
+                normalized.add(field("email", "Email", "email", true, 150));
+                hasEmail = true;
+                continue;
+            }
+            if ("qualification".equals(key)) {
+                normalized.add(field("qualification", "Qualification", "select", true, 150, QUALIFICATION_OPTIONS));
+                hasQualification = true;
+                continue;
+            }
+            if ("currentOccupation".equals(key)) {
+                normalized.add(field("currentOccupation", "Current Occupation", "select", true, 150, OCCUPATION_OPTIONS));
+                hasCurrentOccupation = true;
+                continue;
+            }
+
+            normalized.add(field);
+            if ("fullNameWithInitials".equals(key) && fields.stream().noneMatch(existing -> "email".equals(existing.getKey()))) {
+                normalized.add(field("email", "Email", "email", true, 150));
+                hasEmail = true;
+            }
+        }
+
+        if (!hasEmail) {
+            normalized.add(field("email", "Email", "email", true, 150));
+        }
+        if (!hasQualification) {
+            normalized.add(field("qualification", "Qualification", "select", true, 150, QUALIFICATION_OPTIONS));
+        }
+        if (!hasCurrentOccupation) {
+            normalized.add(field("currentOccupation", "Current Occupation", "select", true, 150, OCCUPATION_OPTIONS));
+        }
+        return normalized;
     }
 
     private String writeFields(List<AdmissionFormFieldDto> fields) {
@@ -354,6 +403,11 @@ public class AdmissionServiceImpl implements AdmissionService {
         String whatsapp = answers.get("whatsappNumber");
         if (whatsapp != null && !whatsapp.isBlank() && !WHATSAPP_PATTERN.matcher(whatsapp).matches()) {
             errors.add("WhatsApp Number must be a valid phone number");
+        }
+
+        String email = answers.get("email");
+        if (email != null && !email.isBlank() && !EMAIL_PATTERN.matcher(email).matches()) {
+            errors.add("Email must be a valid email address");
         }
 
         if (!errors.isEmpty()) {

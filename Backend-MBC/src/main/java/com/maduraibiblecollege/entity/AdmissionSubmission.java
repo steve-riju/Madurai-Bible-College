@@ -39,6 +39,9 @@ public class AdmissionSubmission {
     @Column(nullable = false, length = 150)
     private String fullNameWithInitials;
 
+    @Column(length = 150)
+    private String email;
+
     private Integer age;
 
     @Column(length = 30)

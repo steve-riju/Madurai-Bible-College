@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS admission_submissions (
   id BIGINT NOT NULL AUTO_INCREMENT,
   form_id BIGINT NOT NULL,
   full_name_with_initials VARCHAR(150) NOT NULL,
+  email VARCHAR(150),
   age INT,
   gender VARCHAR(30),
   marital_status VARCHAR(50),

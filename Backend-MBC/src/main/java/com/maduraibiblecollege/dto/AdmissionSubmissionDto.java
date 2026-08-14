@@ -19,6 +19,7 @@ public class AdmissionSubmissionDto {
     private String formTitle;
     private String formSlug;
     private String fullNameWithInitials;
+    private String email;
     private Integer age;
     private String gender;
     private String maritalStatus;

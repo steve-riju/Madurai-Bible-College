@@ -59,6 +59,14 @@
               </select>
 
               <input
+                *ngIf="fieldHasOtherOption(field) && isOtherSelected(field)"
+                type="text"
+                [formControlName]="otherControlName(field)"
+                [attr.maxlength]="field.maxLength || null"
+                [placeholder]="'Enter ' + field.label"
+              />
+
+              <input
                 *ngSwitchDefault
                 [id]="field.key"
                 [type]="field.type || 'text'"
@@ -68,6 +76,7 @@
             </ng-container>
 
             <p class="field-error" *ngIf="fieldError(field)">{{ fieldError(field) }}</p>
+            <p class="field-error" *ngIf="otherFieldError(field)">{{ otherFieldError(field) }}</p>
           </div>
 
           <div class="actions">
