@@ -264,7 +264,7 @@ export const PROFILES: Profile[] = [
     name: 'Mahalingam',
 
     photo:
-      'assets/profiles/students/subathiran.jpeg',
+      'assets/profiles/students/mahalingam.jpeg',
 
     course:
       'Bachelor of Theology',
@@ -305,6 +305,201 @@ export const PROFILES: Profile[] = [
     }
   },
 
+    {
+    slug: 'blesson-paul',
+
+    type: 'STUDENT',
+
+    name: 'Blesson Paul',
+
+    photo:
+      'assets/profiles/students/blesson-paul.jpeg',
+
+    course:
+      'Certificate of Theology',
+
+    registrationNumber:
+      'MBCCTh2601',
+
+    admissionNumber:
+      '1512',
+
+    phone:
+      '88073 17834',
+
+    email:
+      'blessonpaulprabhu@gmail.com',
+
+    academicYear:
+      '2026-2027',
+
+    status:
+      'ACTIVE',
+
+    verified:
+      true,
+
+    socialLinks: {
+      facebook:
+        'https://www.facebook.com/maduraibiblecollege/',
+
+      instagram:
+        'https://www.instagram.com/maduraibiblecollege/',
+
+      youtube:
+        'https://www.youtube.com/@MaduraiBibleCollege',
+
+      website:
+        'https://campusmbc.org/'
+    }
+  },
+
+    {
+    slug: 'raja-velu',
+
+    type: 'STUDENT',
+
+    name: 'Raja Velu',
+
+    photo:
+      'assets/profiles/students/raja-velu.jpeg',
+
+    course:
+      'Certificate of Theology',
+
+    registrationNumber:
+      'MBCCTh2602',
+
+    admissionNumber:
+      '1513',
+
+    phone:
+      '76958 83015',
+
+    email:
+      'rajarajav1974114@gmail.com',
+
+    academicYear:
+      '2026-2027',
+
+    status:
+      'ACTIVE',
+
+    verified:
+      true,
+
+    socialLinks: {
+      facebook:
+        'https://www.facebook.com/maduraibiblecollege/',
+
+      instagram:
+        'https://www.instagram.com/maduraibiblecollege/',
+
+      youtube:
+        'https://www.youtube.com/@MaduraiBibleCollege',
+
+      website:
+        'https://campusmbc.org/'
+    }
+  },
+
+    {
+    slug: 'praventhan',
+
+    type: 'STUDENT',
+
+    name: 'Praventhan A',
+
+    photo:
+      'assets/profiles/students/praventhan.jpeg',
+
+    course:
+      'Certificate of Theology',
+
+    registrationNumber:
+      'MBCCTh2603',
+
+    admissionNumber:
+      '1514',
+
+    phone:
+      '99443 87518',
+
+    email:
+      'samsundar3107@gmail.com',
+
+    academicYear:
+      '2026-2027',
+
+    status:
+      'ACTIVE',
+
+    verified:
+      true,
+
+    socialLinks: {
+      facebook:
+        'https://www.facebook.com/maduraibiblecollege/',
+
+      instagram:
+        'https://www.instagram.com/maduraibiblecollege/',
+
+      youtube:
+        'https://www.youtube.com/@MaduraiBibleCollege',
+
+      website:
+        'https://campusmbc.org/'
+    }
+  },
+
+    {
+    slug: 'jegan',
+
+    type: 'STUDENT',
+
+    name: 'B Jegan',
+
+    photo:
+      'assets/profiles/students/jegan.jpeg',
+
+    course:
+      'Bachelor of Theology',
+
+    registrationNumber:
+      'MBCBTh2603',
+
+    admissionNumber:
+      '1515',
+
+    phone:
+      '87782 85332',
+
+    email:
+      'jeganbasker2004@gmail.com',
+
+    academicYear:
+      '2026-2029',
+
+    status:
+      'ACTIVE',
+
+    verified:
+      true,
+
+    socialLinks: {
+      facebook:
+        'https://www.facebook.com/maduraibiblecollege/',
+
+      instagram:
+        'https://www.instagram.com/maduraibiblecollege/',
+
+      youtube:
+        'https://www.youtube.com/@MaduraiBibleCollege',
+
+      website:
+        'https://campusmbc.org/'
+    }
+  },
 
   {
     slug: 'k-karuppasamy',
@@ -520,7 +715,7 @@ export const PROFILES: Profile[] = [
       'Master of Theology',
 
     registrationNumber:
-      'MBCMTh2501',
+      'MBCMTh2403',
 
     admissionNumber:
       '1504',
@@ -532,7 +727,7 @@ export const PROFILES: Profile[] = [
       'jeyakumarv76@gmail.com',
 
     academicYear:
-      '2025-2028',
+      '2024-2027',
 
     status:
       'ACTIVE',
