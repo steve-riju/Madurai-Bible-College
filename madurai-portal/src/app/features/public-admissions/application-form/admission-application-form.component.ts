@@ -183,6 +183,6 @@ export class AdmissionApplicationFormComponent implements OnInit {
     if (typeof err?.error === 'string') {
       return err.error;
     }
-    return 'Unable to submit the application. Please check the form and try again.';
+    return 'Unable to submit the application. Please check the form and try again or connect with 85900 89384.';
   }
 }
