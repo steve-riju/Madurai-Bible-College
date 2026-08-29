@@ -191,7 +191,7 @@ public class AdmissionServiceImpl implements AdmissionService {
                 field("fullNameWithInitials", "Full Name with Initials", "text", true, 150),
                 field("email", "Email", "email", true, 150),
                 field("age", "Age", "number", true, 3),
-                field("gender", "Gender", "select", true, null, List.of("Female", "Male", "Other")),
+                field("gender", "Gender", "select", true, null, List.of( "Male", "Female", "Other")),
                 field("maritalStatus", "Marital Status", "select", true, null, List.of("Single", "Married", "Widowed")),
                 field("courseApplied", "Course Applied", "text", true, 150),
                 field("qualification", "Qualification", "select", true, 150, QUALIFICATION_OPTIONS),
