@@ -17,6 +17,10 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(private authService: AuthService, private router: Router) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    if (this.shouldSkipAuth(req)) {
+      return next.handle(req);
+    }
+
     const token = this.authService.getAccessToken();
     let authReq = req;
 
@@ -26,8 +30,8 @@ export class AuthInterceptor implements HttpInterceptor {
 
     return next.handle(authReq).pipe(
       catchError(error => {
-        if (error instanceof HttpErrorResponse && error.status === 403) {
-          return this.handle403Error(authReq, next);
+        if (error instanceof HttpErrorResponse && error.status === 401) {
+          return this.handleUnauthorizedError(authReq, next);
         }
         return throwError(() => error);
       })
@@ -40,9 +44,9 @@ export class AuthInterceptor implements HttpInterceptor {
     });
   }
 
-  private handle403Error(request: HttpRequest<any>, next: HttpHandler) {
-    if (request.url.includes('/auth/refresh')) {
-      this.authService.logout();
+  private handleUnauthorizedError(request: HttpRequest<any>, next: HttpHandler) {
+    if (request.url.includes('/auth/refresh') || !localStorage.getItem('refreshToken')) {
+      this.authService.clearAuthState();
       this.router.navigate(['/auth/login'], { queryParams: { sessionExpired: true } });
       return throwError(() => new Error('Session expired, please re-login'));
     }
@@ -55,10 +59,19 @@ export class AuthInterceptor implements HttpInterceptor {
         return next.handle(newReq);
       }),
       catchError(() => {
-        this.authService.logout();
+        this.authService.clearAuthState();
         this.router.navigate(['/auth/login'], { queryParams: { sessionExpired: true } });
         return throwError(() => new Error('Session expired, please re-login'));
       })
     );
+  }
+
+  private shouldSkipAuth(req: HttpRequest<any>): boolean {
+    const url = req.url.toLowerCase();
+    return url.includes('/api/auth/login') ||
+      url.includes('/api/auth/refresh') ||
+      url.includes('/api/auth/forgot-password') ||
+      url.includes('/api/auth/reset-password') ||
+      url.includes('/api/public/');
   }
 }

@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -37,6 +39,24 @@ public class SecurityConfig {
         .csrf(csrf -> csrf.disable())
         .cors(Customizer.withDefaults())
         .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .exceptionHandling(ex -> ex
+            .authenticationEntryPoint((request, response, authException) -> {
+              response.setStatus(HttpStatus.UNAUTHORIZED.value());
+              response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+              response.getWriter().write(String.format(
+                  "{\"status\":401,\"error\":\"Unauthorized\",\"message\":\"Authentication is required.\",\"path\":\"%s\"}",
+                  request.getRequestURI()
+              ));
+            })
+            .accessDeniedHandler((request, response, accessDeniedException) -> {
+              response.setStatus(HttpStatus.FORBIDDEN.value());
+              response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+              response.getWriter().write(String.format(
+                  "{\"status\":403,\"error\":\"Access Denied\",\"message\":\"You don't have permission to access this resource.\",\"path\":\"%s\"}",
+                  request.getRequestURI()
+              ));
+            })
+        )
         .authorizeHttpRequests(auth -> auth
             .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
             .requestMatchers("/api/auth/**").permitAll()

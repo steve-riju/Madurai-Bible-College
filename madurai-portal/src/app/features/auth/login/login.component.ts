@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { trigger, style, animate, transition } from '@angular/animations';
 import { AuthService } from '../../../shared/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -95,9 +96,9 @@ export class LoginComponent {
         this.loading = false;
         // redirect handled in service
       },
-     error: () => {
+     error: (err: unknown) => {
       this.loading = false;
-      this.showError('Invalid credentials. Please try again.');
+      this.showError(this.loginErrorMessage(err), 9000);
     }
     });
   }
@@ -108,5 +109,25 @@ export class LoginComponent {
       this.showError('Your session has expired. Please log in again.', 9000);
     }
     });
+  }
+
+  private loginErrorMessage(error: unknown): string {
+    if (!(error instanceof HttpErrorResponse)) {
+      return 'Unable to complete login right now.\n\nPlease try again later or contact MBC Admin:\n85900-89384';
+    }
+
+    if (error.status === 401) {
+      return 'Invalid username or password.';
+    }
+
+    if (error.status === 0 || error.status === 502 || error.status === 503 || error.status === 504) {
+      return 'Unable to connect to the MBC server.\n\nPlease try again later or contact MBC Admin:\n85900-89384';
+    }
+
+    if (error.status >= 500) {
+      return 'Something went wrong on the MBC server.\n\nPlease try again later or contact MBC Admin:\n85900-89384';
+    }
+
+    return 'Unable to complete login right now.\n\nPlease try again later or contact MBC Admin:\n85900-89384';
   }
 }

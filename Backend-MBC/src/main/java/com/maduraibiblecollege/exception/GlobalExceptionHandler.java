@@ -7,6 +7,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
@@ -119,6 +120,19 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(body);
 	}
 
+	@ExceptionHandler(AuthenticationException.class)
+	public ResponseEntity<ApiError> handleAuthenticationException(AuthenticationException ex, HttpServletRequest req) {
+		ApiError body = new ApiError(
+				Instant.now(),
+				HttpStatus.UNAUTHORIZED.value(),
+				"Invalid Credentials",
+				"Invalid username or password.",
+				req.getRequestURI(),
+				null
+		);
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
+	}
+
 	@ExceptionHandler(MaxUploadSizeExceededException.class)
 	public ResponseEntity<ApiError> handleMaxUploadSizeExceeded(MaxUploadSizeExceededException ex, HttpServletRequest req) {
 		ApiError body = new ApiError(
@@ -167,19 +181,33 @@ public class GlobalExceptionHandler {
 	    io.jsonwebtoken.ExpiredJwtException.class,
 	    io.jsonwebtoken.MalformedJwtException.class,
 	    io.jsonwebtoken.SignatureException.class,
-	    io.jsonwebtoken.UnsupportedJwtException.class,
-	    IllegalArgumentException.class
+	    io.jsonwebtoken.UnsupportedJwtException.class
 	})
 	public ResponseEntity<ApiError> handleJwtException(RuntimeException ex, HttpServletRequest req) {
 	    ApiError body = new ApiError(
 	            Instant.now(),
-	            HttpStatus.FORBIDDEN.value(),
+	            HttpStatus.UNAUTHORIZED.value(),
 	            "JWT Authentication Failed",
-	            ex.getMessage() != null ? ex.getMessage() : "Invalid or expired token.",
+	            ex instanceof io.jsonwebtoken.ExpiredJwtException
+						? "Authentication token has expired."
+						: "Invalid authentication token.",
 	            req.getRequestURI(),
 	            null
 	    );
-	    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(body);
+	    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
+	}
+
+	@ExceptionHandler(IllegalArgumentException.class)
+	public ResponseEntity<ApiError> handleIllegalArgument(IllegalArgumentException ex, HttpServletRequest req) {
+		ApiError body = new ApiError(
+				Instant.now(),
+				HttpStatus.BAD_REQUEST.value(),
+				"Bad Request",
+				ex.getMessage() != null ? ex.getMessage() : "Invalid request.",
+				req.getRequestURI(),
+				null
+		);
+		return ResponseEntity.badRequest().body(body);
 	}
 
 

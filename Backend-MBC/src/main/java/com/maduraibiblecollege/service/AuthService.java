@@ -10,6 +10,7 @@ import com.maduraibiblecollege.dto.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -62,7 +63,7 @@ public class AuthService {
   public AuthResponse refresh(String refreshToken) {
     String username = jwtService.extractUsername(refreshToken);
     UserDetails user = userRepository.findByUsername(username).orElseThrow();
-    if (!jwtService.isTokenValid(refreshToken, user)) throw new IllegalArgumentException("Invalid refresh token");
+    if (!jwtService.isTokenValid(refreshToken, user)) throw new BadCredentialsException("Invalid refresh token");
     String access = jwtService.generateAccessToken(user);
     var u = (User) user;
     return new AuthResponse(access, refreshToken, "Bearer", user.getUsername(), ((User) user).getRole().name(), u.getId(), u.getName());

@@ -23,6 +23,7 @@ export class AuthService {
   constructor(private router: Router, private http: HttpClient) {}
 
   login(username: string, password: string): Observable<AuthResponse> {
+    this.clearAuthState();
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, { username, password }).pipe(
       tap((response) => {
         const normalizedRole = response.role.toLowerCase();
@@ -46,13 +47,17 @@ export class AuthService {
   }
 
   logout(): void {
+    this.clearAuthState();
+    this.router.navigate(['/auth/login']);
+  }
+
+  clearAuthState(): void {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('userRole');
     localStorage.removeItem('username');
     localStorage.removeItem('id');
     localStorage.removeItem('name');
-    this.router.navigate(['/auth/login']);
   }
 
   getUserRole(): string | null {
