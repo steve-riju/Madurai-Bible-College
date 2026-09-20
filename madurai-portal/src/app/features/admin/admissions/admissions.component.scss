@@ -159,6 +159,40 @@
   }
 }
 
+.export-controls {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  border: 1px solid #e8eef6;
+  border-radius: 8px;
+  padding: 12px;
+  background: #fff;
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-weight: 700;
+    flex: 1 1 280px;
+  }
+
+  select {
+    @include mobile-input;
+    min-height: 112px;
+  }
+}
+
+.export-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+  flex: 1 1 320px;
+}
+
 .btn-primary,
 .btn-secondary,
 .btn-danger,

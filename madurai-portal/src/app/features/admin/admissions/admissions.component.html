@@ -146,6 +146,24 @@
       <button class="btn-secondary" (click)="loadSubmissions()">Refresh</button>
     </div>
 
+    <div class="export-controls">
+      <label>
+        <span>Export Course Applied</span>
+        <select multiple [(ngModel)]="selectedExportCourses">
+          <option *ngFor="let course of courseExportOptions" [value]="course">{{ course }}</option>
+        </select>
+      </label>
+      <div class="export-actions">
+        <span class="muted">{{ exportSubmissionCount }} applications selected for export</span>
+        <button class="btn-secondary" type="button" (click)="clearExportCourseFilter()" [disabled]="!selectedExportCourses.length">
+          All Submissions
+        </button>
+        <button class="btn-primary" type="button" (click)="exportApplications()" [disabled]="!submissions.length">
+          Export Excel
+        </button>
+      </div>
+    </div>
+
     <div class="submissions-layout">
       <div class="table-card">
         <h3>Submitted Applications</h3>

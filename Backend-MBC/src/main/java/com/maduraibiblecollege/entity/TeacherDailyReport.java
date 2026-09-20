@@ -24,9 +24,13 @@ public class TeacherDailyReport {
     private String teacherName;     
 
     private LocalDate date;
+
+    private Long batchId;
     
     @Column(length = 100)
     private String batchName;
+
+    private Long courseAssignedId;
     
     @Column(length = 200)
     private String courseName;

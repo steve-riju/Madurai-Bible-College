@@ -19,7 +19,9 @@ public class TeacherDailyReportDto {
     private Long teacherId;
     private String teacherName;
     private LocalDate date;
+    private Long batchId;
     private String batchName;
+    private Long courseAssignedId;
     private String courseName;
     private String semester;
     private String lessonCovered;

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { saveAs } from 'file-saver';
 import { AdmissionForm, AdmissionSubmission } from '../../../shared/models/admission.model';
 import { ErrorUtilsService } from '../../../shared/services/error-utils.service';
 import { AdminAdmissionsService, AdmissionFormPayload } from '../services/admin-admissions.service';
@@ -17,6 +18,7 @@ export class AdmissionsComponent implements OnInit {
   selectedFormFilter = '';
   statusFilter = '';
   searchTerm = '';
+  selectedExportCourses: string[] = [];
   loadingForms = false;
   loadingSubmissions = false;
   savingForm = false;
@@ -54,6 +56,18 @@ export class AdmissionsComponent implements OnInit {
       const searchOk = !search || text.includes(search);
       return formOk && statusOk && searchOk;
     });
+  }
+
+  get courseExportOptions(): string[] {
+    return Array.from(new Set(
+      this.submissions
+        .map(submission => submission.courseApplied || submission.formTitle)
+        .filter((course): course is string => !!course && course.trim().length > 0)
+    )).sort((a, b) => a.localeCompare(b));
+  }
+
+  get exportSubmissionCount(): number {
+    return this.exportableSubmissions.length;
   }
 
   loadForms(): void {
@@ -191,6 +205,82 @@ export class AdmissionsComponent implements OnInit {
     this.updateSubmissionStatus(submission, status as AdmissionSubmission['status']);
   }
 
+  exportApplications(): void {
+    const submissions = this.exportableSubmissions;
+    if (!submissions.length) {
+      this.errorUtils.showWarning('No applications match the selected export filter.');
+      return;
+    }
+
+    const columns = [
+      'Reference ID',
+      'Submitted At',
+      'Status',
+      'Form',
+      'Full Name',
+      'Email',
+      'Age',
+      'Gender',
+      'Marital Status',
+      'Course Applied',
+      'Qualification',
+      'Current Occupation',
+      'Address',
+      'City/Town',
+      'WhatsApp',
+      'Church/Assembly',
+      'Evangelist/Pastor'
+    ];
+
+    const rows = submissions.map(submission => [
+      submission.id,
+      this.formatExportDate(submission.submittedAt),
+      submission.status,
+      submission.formTitle,
+      submission.fullNameWithInitials,
+      submission.email,
+      submission.age,
+      submission.gender,
+      submission.maritalStatus,
+      submission.courseApplied,
+      submission.qualification,
+      submission.currentOccupation,
+      submission.fullAddress,
+      submission.cityTown,
+      submission.whatsappNumber,
+      submission.churchAssemblyName,
+      submission.evangelistPastorName
+    ]);
+
+    const table = `
+      <html>
+        <head>
+          <meta charset="utf-8" />
+          <style>
+            table { border-collapse: collapse; }
+            th, td { border: 1px solid #d9e2ef; padding: 6px 8px; mso-number-format: "\\@"; }
+            th { background: #e8eef6; font-weight: 700; }
+          </style>
+        </head>
+        <body>
+          <table>
+            <thead><tr>${columns.map(column => `<th>${this.escapeExcelHtml(column)}</th>`).join('')}</tr></thead>
+            <tbody>
+              ${rows.map(row => `<tr>${row.map(value => `<td>${this.escapeExcelHtml(value)}</td>`).join('')}</tr>`).join('')}
+            </tbody>
+          </table>
+        </body>
+      </html>`;
+
+    const year = new Date().getFullYear();
+    const blob = new Blob([table], { type: 'application/vnd.ms-excel;charset=utf-8;' });
+    saveAs(blob, `MBC online applications ${year}.xls`);
+  }
+
+  clearExportCourseFilter(): void {
+    this.selectedExportCourses = [];
+  }
+
   statusLabel(form: AdmissionForm): string {
     if (!form.active) return 'Inactive';
     return form.open ? 'Open' : 'Closed';
@@ -199,5 +289,27 @@ export class AdmissionsComponent implements OnInit {
   private toDatetimeLocal(value: string): string {
     if (!value) return '';
     return value.slice(0, 16);
+  }
+
+  private get exportableSubmissions(): AdmissionSubmission[] {
+    if (!this.selectedExportCourses.length) {
+      return this.submissions;
+    }
+    return this.submissions.filter(submission =>
+      this.selectedExportCourses.includes(submission.courseApplied || submission.formTitle)
+    );
+  }
+
+  private formatExportDate(value: string): string {
+    return value ? new Date(value).toLocaleString() : '';
+  }
+
+  private escapeExcelHtml(value: unknown): string {
+    return String(value ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
   }
 }

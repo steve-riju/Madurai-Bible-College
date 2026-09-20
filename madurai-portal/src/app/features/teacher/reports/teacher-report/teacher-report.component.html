@@ -10,20 +10,51 @@
       </mat-form-field>
 
       <mat-form-field appearance="outline">
-        <mat-label>Batch Name</mat-label>
-        <input matInput placeholder="e.g. Batch A" formControlName="batchName" required>
+        <mat-label>Search Batch</mat-label>
+        <input matInput [(ngModel)]="batchSearch" [ngModelOptions]="{standalone: true}">
       </mat-form-field>
     </div>
 
     <div class="row">
       <mat-form-field appearance="outline">
+        <mat-label>Batch Name</mat-label>
+        <mat-select formControlName="batchId" (selectionChange)="onBatchChange($event.value)" required>
+          <mat-option *ngIf="loadingAllocations" disabled>Loading assigned batches...</mat-option>
+          <mat-option *ngIf="!loadingAllocations && !batchOptions.length" disabled>No assigned batches found</mat-option>
+          <mat-option *ngFor="let allocation of batchOptions" [value]="allocation.batchId">
+            {{ allocation.batchName }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Search Semester</mat-label>
+        <input matInput [(ngModel)]="semesterSearch" [ngModelOptions]="{standalone: true}">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
         <mat-label>Semester</mat-label>
-        <input matInput placeholder="e.g. Spring 2025" formControlName="semester" required>
+        <mat-select formControlName="semester" (selectionChange)="onSemesterChange()" required>
+          <mat-option *ngIf="!semesterOptions.length" disabled>Select a batch first</mat-option>
+          <mat-option *ngFor="let semester of semesterOptions" [value]="semester">{{ semester }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    
+    <div class="row">
+      <mat-form-field appearance="outline">
+        <mat-label>Search Course</mat-label>
+        <input matInput [(ngModel)]="courseSearch" [ngModelOptions]="{standalone: true}">
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>Course Name</mat-label>
-        <input matInput placeholder="e.g. Data Structures" formControlName="courseName" required>
+        <mat-select formControlName="courseAssignedId" (selectionChange)="onCourseChange($event.value)" required>
+          <mat-option *ngIf="!courseOptions.length" disabled>Select a batch and semester first</mat-option>
+          <mat-option *ngFor="let allocation of courseOptions" [value]="allocation.courseAssignedId">
+            {{ allocation.courseName }}
+          </mat-option>
+        </mat-select>
       </mat-form-field>
     </div>
 

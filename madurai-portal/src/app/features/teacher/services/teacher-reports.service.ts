@@ -1,7 +1,7 @@
 // teacher-reports.service.ts
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { TeacherDailyReportDto } from '../models/teacher-report';
+import { HttpClient } from '@angular/common/http';
+import { TeacherDailyReportDto, TeacherReportAllocation } from '../models/teacher-report';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 
@@ -21,6 +21,10 @@ export class TeacherReportsService {
 
   getReportsByTeacher(teacherId: number): Observable<TeacherDailyReportDto[]> {
     return this.http.get<TeacherDailyReportDto[]>(`${this.apiUrl}/teacher/${teacherId}`);
+  }
+
+  getReportAllocations(): Observable<TeacherReportAllocation[]> {
+    return this.http.get<TeacherReportAllocation[]>(`${this.apiUrl}/allocations`);
   }
 
 }

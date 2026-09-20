@@ -4,6 +4,8 @@ export interface TeacherDailyReportDto {
   teacherName?: string;
   batchId?: number;
   batchName?: string;
+  courseAssignedId?: number;
+  courseName?: string;
   semester?: string;
   date?: string; // ISO date string
   lessonCovered?: string;
@@ -12,4 +14,14 @@ export interface TeacherDailyReportDto {
   assignmentsGiven?: string;
   additionalNotes?: string;
   createdAt?: string; // ISO datetime
+}
+
+export interface TeacherReportAllocation {
+  batchId: number;
+  batchName: string;
+  courseAssignedId: number;
+  courseId: number;
+  courseName: string;
+  semesterId: number;
+  semesterName: string;
 }
