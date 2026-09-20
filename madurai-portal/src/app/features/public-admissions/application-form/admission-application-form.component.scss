@@ -136,6 +136,12 @@
     @include mobile-input;
     font-family: inherit;
   }
+
+  input[readonly] {
+    background: #f3f6fb;
+    color: $light-text-color;
+    cursor: not-allowed;
+  }
 }
 
 .field-error {

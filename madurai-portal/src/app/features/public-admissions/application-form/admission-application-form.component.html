@@ -72,6 +72,8 @@
                 [type]="field.type || 'text'"
                 [formControlName]="field.key"
                 [attr.maxlength]="field.maxLength || null"
+                [readonly]="field.key === 'courseApplied'"
+                [attr.aria-readonly]="field.key === 'courseApplied' ? 'true' : null"
               />
             </ng-container>
 

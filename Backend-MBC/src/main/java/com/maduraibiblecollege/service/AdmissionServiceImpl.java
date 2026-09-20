@@ -38,7 +38,7 @@ public class AdmissionServiceImpl implements AdmissionService {
     private static final Pattern SLUG_PATTERN = Pattern.compile("[^a-z0-9]+");
     private static final Pattern WHATSAPP_PATTERN = Pattern.compile("^[0-9+\\-\\s]{10}$");
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}$", Pattern.CASE_INSENSITIVE);
-    private static final List<String> OCCUPATION_OPTIONS = List.of("Working", "Not working", "Homemaker", "Other");
+    private static final List<String> OCCUPATION_OPTIONS = List.of("Working", "Not Working", "Homemaker", "Other");
     private static final List<String> QUALIFICATION_OPTIONS = List.of("10th", "12th", "Diploma", "Degree", "Other");
 
     private final AdmissionFormRepository formRepository;
@@ -308,7 +308,7 @@ public class AdmissionServiceImpl implements AdmissionService {
         if (fields == null || fields.isEmpty()) {
             return defaultFields();
         }
-        return fields;
+        return normalizeFields(fields);
     }
 
     private List<AdmissionFormFieldDto> readFields(String fieldsJson) {
